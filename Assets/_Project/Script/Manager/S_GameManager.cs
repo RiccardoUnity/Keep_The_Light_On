@@ -4,13 +4,14 @@ using UnityEngine;
 
 namespace StaticData
 {
+    //Data => Property; Logic => Function;
     public static class S_GameManager
     {
-
-    }
-
-    public static class TranslateLanguages
-    {
-        
+        public static class StringConst
+        {
+            public static string Horizontal { get => "Horizontal"; }
+            public static string Vertical { get => "Vertical"; }
+            public static string Jump { get => "Jump"; }
+        }
     }
 }

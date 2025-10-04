@@ -1,0 +1,76 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerGroundCheck : MonoBehaviour
+{
+    #region MyAwake
+    private bool _isMyAwake;
+    public void MyAwake()
+    {
+        if (_isMyAwake)
+        {
+            Debug.LogWarning("MyAwake of the PlayerGroundCheck has already executed", gameObject);
+        }
+        else
+        {
+            _isMyAwake = true;
+
+            PlayerManager.Instance.playerController.onJump += SetIsInJump;
+        }
+    }
+    #endregion
+
+    private bool _isFrameCheck;
+    private float _radius = 0.1f;
+    private Vector3 _offset = new Vector3(0f, 0.075f, 0f);
+    [SerializeField] private LayerMask _groundLayerMask = (1 << 0);
+    private QueryTriggerInteraction _qti = QueryTriggerInteraction.Ignore;
+
+    private bool _isJumpStart;
+    public bool isGrounded { get; private set; }
+    public event Action<bool> onGroundedChange;
+
+    private void SetIsInJump()
+    {
+        if (!_isJumpStart)
+        {
+            _isJumpStart = true;
+            isGrounded = false;
+            onGroundedChange?.Invoke(isGrounded);
+        }
+    }
+
+    void Update()
+    {
+        if (_isFrameCheck)
+        {
+            if (Physics.CheckSphere(transform.position + _offset, _radius, _groundLayerMask, _qti))
+            {
+                if (!isGrounded && !_isJumpStart)
+                {
+                    isGrounded = true;
+                    onGroundedChange?.Invoke(isGrounded);
+                }
+            }
+            else
+            {
+                if (_isJumpStart)
+                {
+                    _isJumpStart = false;
+                }
+                if (isGrounded)
+                {
+                    isGrounded = false;
+                    onGroundedChange?.Invoke(isGrounded);
+                }
+            }
+        }
+        else
+        {
+            //In this frame, the ground doesn't check
+        }
+        _isFrameCheck = !_isFrameCheck;
+    }
+}
