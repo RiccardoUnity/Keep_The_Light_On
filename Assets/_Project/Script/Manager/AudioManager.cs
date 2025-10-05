@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioManager : SingletonGeneric<AudioManager>
+public class AudioManager : Singleton_Generic<AudioManager>
 {
     protected override bool ShouldBeDestroyOnLoad() => false;
 
