@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GTM = GameTimeManager;
+using GTM = S_TimeManager;
 using PM = PlayerManager;
 
 [Serializable]

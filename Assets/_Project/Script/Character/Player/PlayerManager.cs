@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
-using GTM = GameTimeManager;
+using GTM = S_TimeManager;
 
 [RequireComponent(typeof(PlayerGroundCheck))]
 [RequireComponent(typeof(PlayerController))]

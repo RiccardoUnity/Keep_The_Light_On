@@ -3,72 +3,88 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameTimeManager : Singleton_Generic<GameTimeManager>
+public static class S_TimeManager
 {
-    #region Singleton
-    protected override bool ShouldBeDestroyOnLoad() => true;
-
-    static GameTimeManager()
-    {
-        _useResources = false;
-        _resourcesPath = "";
-    }
-    #endregion
-
-    [SerializeField] private bool _isNewGame = true;
-    [SerializeField] private int _startHourDay;   //Only new game
-    [SerializeField] private int _startMinutesDay;   //Only new game
-    [SerializeField] private int _gameDayInRealMinutes = 30;
-    private int _gameDayInRealSeconds;
-    public float realSecondToGameSecond {  get; private set; }
-    public int currentSecondDay { get; private set; }
-    public int currentDay { get; private set; }
+    private static int _gameDayInRealSeconds = -1;
+    public static float realSecondToGameSecond {  get; private set; }
+    public static int currentSecondDay { get; private set; }
+    public static int currentDay { get; private set; }
     private const int _secondDelay = 2;
-    public int SecondDelay { get => _secondDelay; }
+    public static int SecondDelay { get => _secondDelay; }
 
-    private bool _alreadyStart;
-    private bool _isGameTimeOn = true;
-    private bool _isGamePause;
-    private IEnumerator _gameTime;
-    private WaitForSeconds _delay;
+    private static bool _isStartTimeSetted;
+    private static bool _isGameTimeOn = true;
+    private static bool _isGamePause;
+    private static IEnumerator _gameTime;
+    private static WaitForSeconds _delay;
 
-    [SerializeField] private Light _mainLight;
-    public Transform mainLight { get => _mainLight.transform; }
-    private Vector3 _angleSecondLightV3;
+    
+    private static Vector3 _angleSecondLightV3;
 
-    public DayTime DayTime { get; private set; }
-    private int[] _daylyBand = new int[4];
+    public static DayTime DayTime { get; private set; }
+    private static int[] _daylyBand = new int[4];
 
-    public event Action onSecondDayChange;
-    public event Action onDayChange;
-    public event Action onDawn;
-    public event Action onDay;
-    public event Action onDusk;
-    public event Action onNight;
+    public static event Action onSecondDayChange;
+    public static event Action onDayChange;
+    public static event Action onDawn;
+    public static event Action onDay;
+    public static event Action onDusk;
+    public static event Action onNight;
 
-    void OnEnable()
+    public static void SetUp()
     {
-        if (_alreadyStart)
+        if (GameSceneManager.Instance.isNewGame)
         {
-            SetStartRotationMainLight();
-            StartCoroutine(_gameTime);
+            int startHours = GameSceneManager.Instance.startHours;
+            int startMinutes = GameSceneManager.Instance.startMinutes;
+            currentSecondDay = _gameDayInRealSeconds * ((startHours * 60 * 60) + startMinutes * 60) / (24 * 60 * 60);
         }
     }
+
+    public static bool StartTime(int currentSecondDay, int currentDay)
+    {
+        if (_isStartTimeSetted)
+        {
+            Debug.LogError("Time has already setted");
+            return false;
+        }
+        else
+        {
+            _isStartTimeSetted = true;
+            S_TimeManager.currentSecondDay = currentSecondDay;
+            S_TimeManager.currentDay = currentDay;
+            return true;
+        }
+    }
+
+    private static void SetGameDayInRealSeconds()
+    {
+        _gameDayInRealSeconds = GameSceneManager.Instance.gameDayInRealMinutes * 60;
+    }
+
+    //00.00 => 270°; 06.00 => 180°; 12.00 => 90°; 18.00 => 0°;
+    public static void SetStartRotationMainLight(ref Light mainLight)
+    {
+        if (_gameDayInRealSeconds < 0)
+        {
+            SetGameDayInRealSeconds();
+        }
+
+        float angleSecondLight = 360f / _gameDayInRealSeconds;
+        float angleXLight = (angleSecondLight * _gameDayInRealSeconds * 0.75f) - (angleSecondLight * currentSecondDay);
+        mainLight.transform.eulerAngles = new Vector3(angleXLight, mainLight.transform.eulerAngles.y, mainLight.transform.eulerAngles.z);
+        _angleSecondLightV3 = new Vector3(angleSecondLight, 0f, 0f);
+    }
+
+    
 
     void Start()
     {
-        if (_mainLight == null)
-        {
-            Debug.LogError("Main Light missing", gameObject);
-        }
+        
 
         //SetUp StartTime
         _gameDayInRealSeconds = _gameDayInRealMinutes * 60;
-        if (_isNewGame)
-        {
-            _isNewGame = false;
-            currentSecondDay = _gameDayInRealSeconds * ((_startHourDay * 60 * 60) + _startMinutesDay * 60) / (24 * 60 * 60);
-        }
+        
         realSecondToGameSecond = _gameDayInRealSeconds / (24 * 60 * 60);
         SetStartRotationMainLight();
         SetDailyBand();
@@ -148,16 +164,9 @@ public class GameTimeManager : Singleton_Generic<GameTimeManager>
         SetDayTime();
     }
 
-    //00.00 => 270°; 06.00 => 180°; 12.00 => 90°; 18.00 => 0°;
-    private void SetStartRotationMainLight()
-    {
-        float angleSecondLight = 360f / _gameDayInRealSeconds;
-        float angleXLight = (angleSecondLight * _gameDayInRealSeconds * 0.75f) - (angleSecondLight * currentSecondDay);
-        _mainLight.transform.eulerAngles = new Vector3(angleXLight, _mainLight.transform.eulerAngles.y, _mainLight.transform.eulerAngles.z);
-        _angleSecondLightV3 = new Vector3(angleSecondLight, 0f, 0f);
-    }
+    
 
-    private void SetDayTime()
+    private static void SetDayTime()
     {
         if (DayTime == DayTime.Night && currentSecondDay > _daylyBand[0])
         {
