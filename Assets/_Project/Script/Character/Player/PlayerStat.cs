@@ -2,10 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GTM = S_TimeManager;
 
 [Serializable]
-public abstract class PlayerStat_Generic
+public abstract class PlayerStat
 {
     public class Modifier
     {
@@ -18,12 +17,12 @@ public abstract class PlayerStat_Generic
             _duration = duration;
             Moltiplier = moltiplier;
             _onDestroy = onDestroy;
-            GTM.Instance.onSecondDayChange += UpdateDuration;
+            GameWorldManager.Instance.timeGame.onSecondDayChange += UpdateDuration;
         }
 
         private void UpdateDuration()
         {
-            _duration -= GTM.Instance.SecondDelay;
+            _duration -= GameWorldManager.Instance.timeGame.SecondDelay;
             if (_duration <= 0)
             {
                 _onDestroy?.Invoke(this);
@@ -34,29 +33,30 @@ public abstract class PlayerStat_Generic
     private float _value = 1f;
     public float value { get => _value; protected set => _value = Mathf.Clamp01(value); }
 
-    private bool _isAlreadySubscribe;
+    private bool _hasAlreadyAwaked;
     protected List<Modifier> _modifiers = new List<Modifier>(2);
 
     public event Action onValueZero;
     public event Action onValueOne;
 
-    public void Subscribe()
+    protected static int GenerateKey() => 11;
+
+    public virtual bool MyStart()
     {
-        if (!_isAlreadySubscribe)
+        if (_hasAlreadyAwaked)
         {
-            GTM.Instance.onSecondDayChange += UpdateValue;
-            _isAlreadySubscribe = true;
+            return false;
+        }
+        else
+        {
+            _hasAlreadyAwaked = true;
+            GameWorldManager.Instance.timeGame.onSecondDayChange += UpdateValue;
+            OnAwake();
+            return true;
         }
     }
 
-    public void UnSubscribe()
-    {
-        if (_isAlreadySubscribe)
-        {
-            GTM.Instance.onSecondDayChange -= UpdateValue;
-            _isAlreadySubscribe = false;
-        }
-    }
+    protected abstract void OnAwake();
 
     public void UpdateValue()
     {

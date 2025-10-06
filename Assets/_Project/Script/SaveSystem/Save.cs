@@ -6,7 +6,7 @@ namespace Save
     [Serializable]
     public struct Vector3Save
     {
-        public float[] axis;
+        [SerializeField] private float[] axis;
 
         public Vector3Save(Vector3 vector)
         {
@@ -20,12 +20,14 @@ namespace Save
             axis[1] = vector.y;
             axis[2] = vector.z;
         }
+
+        public Vector3 Load() => new Vector3(axis[0], axis[1], axis[2]);
     }
 
     [Serializable]
     public struct QuaternionSave
     {
-        public float[] axis;
+        [SerializeField] private float[] axis;
 
         public QuaternionSave(Quaternion quaternion)
         {
@@ -35,10 +37,12 @@ namespace Save
 
         public void Update(Quaternion quaternion)
         {
-            axis[0] = quaternion.w;
-            axis[1] = quaternion.x;
-            axis[2] = quaternion.y;
-            axis[3] = quaternion.z;
+            axis[0] = quaternion.x;
+            axis[1] = quaternion.y;
+            axis[2] = quaternion.z;
+            axis[3] = quaternion.w;
         }
+
+        public Quaternion Load() => new Quaternion(axis[0], axis[1], axis[2], axis[3]);
     }
 }

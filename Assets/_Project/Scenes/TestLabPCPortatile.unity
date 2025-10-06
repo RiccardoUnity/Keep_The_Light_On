@@ -920,23 +920,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &4973556738930150649
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8498879506177045055}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb68855d0faf1a44d9ad95999b536a7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isNewGame: 1
-  _startHourDay: 6
-  _startMinutesDay: 0
-  _gameDayInRealMinutes: 30
-  _mainLight: {fileID: 1337935645}
 --- !u!4 &5846841717025734911
 Transform:
   m_ObjectHideFlags: 0
@@ -1058,14 +1041,35 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6926025673129988216}
-  - component: {fileID: 4973556738930150649}
+  - component: {fileID: 8498879506177045056}
   m_Layer: 0
-  m_Name: GameTimeManager
+  m_Name: GameWorldManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8498879506177045056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8498879506177045055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1596eebdd7a5fa648be3fd551ccbad1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isNewGame: 1
+  _startHours: 6
+  _startMinutes: 0
+  _gameDayInRealMinutes: 30
+  _mainLight: {fileID: 1337935645}
+  _blockMainLight:
+    serializedVersion: 2
+    m_Bits: 1
+  _mainSO: {fileID: 0}
 --- !u!4 &8559251500645373387
 Transform:
   m_ObjectHideFlags: 0
@@ -1093,7 +1097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c5c9a1643fbcb42846fc7b6f8108f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _head: {fileID: 0}
+  _head: {fileID: 5846841717025734911}
 --- !u!4 &8942552418769075946
 Transform:
   m_ObjectHideFlags: 0

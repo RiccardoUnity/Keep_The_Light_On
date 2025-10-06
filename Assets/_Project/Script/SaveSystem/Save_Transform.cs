@@ -9,15 +9,16 @@ public class Save_Transform
     [SerializeField] private Vector3Save _position;
     [SerializeField] private QuaternionSave _rotation;
 
-    public Save_Transform(Transform transform)
-    {
-        _transform = transform;
-        Save();
-    }
-
-    public void Save()
+    public virtual void Save()
     {
         _position.Update(_transform.position);
         _rotation.Update(_transform.rotation);
+    }
+
+    public virtual void Load(Transform transform)
+    {
+        _transform = transform;
+        _transform.position = _position.Load();
+        _transform.rotation = _rotation.Load();
     }
 }

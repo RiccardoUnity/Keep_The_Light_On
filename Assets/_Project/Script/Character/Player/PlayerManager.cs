@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
-using GTM = S_TimeManager;
+using GTM = TimeGame;
 
 [RequireComponent(typeof(PlayerGroundCheck))]
 [RequireComponent(typeof(PlayerController))]
@@ -31,14 +30,21 @@ public class PlayerManager : Singleton_Generic<PlayerManager>
     protected override void Awake()
     {
         base.Awake();
+
         playerGroundCheck = GetComponent<PlayerGroundCheck>();
         playerController = GetComponent<PlayerController>();
 
         playerGroundCheck.MyAwake();
         playerController.MyAwake();
 
+        //Load data
+        //S_SaveSystem.
+    }
+
+    void Start()
+    {
         //Stats
-        endurance = new PlayerStat_Endurance();
-        endurance.Subscribe();
+        endurance = PlayerStat_Endurance.Instance(11);
+        endurance.MyStart();
     }
 }

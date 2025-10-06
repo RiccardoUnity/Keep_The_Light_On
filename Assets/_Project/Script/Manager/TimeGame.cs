@@ -2,46 +2,54 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GWM = GameWorldManager;
 
-public static class S_TimeManager
+public class TimeGame
 {
-    private static int _gameDayInRealSeconds = -1;
-    public static float realSecondToGameSecond {  get; private set; }
-    public static int currentSecondDay { get; private set; }
-    public static int currentDay { get; private set; }
-    private const int _secondDelay = 2;
-    public static int SecondDelay { get => _secondDelay; }
+    #region LikeSingleton
+    private TimeGame() { }
 
-    private static bool _isStartTimeSetted;
-    private static bool _isGameTimeOn = true;
-    private static bool _isGamePause;
-    private static IEnumerator _gameTime;
-    private static WaitForSeconds _delay;
-
-    
-    private static Vector3 _angleSecondLightV3;
-
-    public static DayTime DayTime { get; private set; }
-    private static int[] _daylyBand = new int[4];
-
-    public static event Action onSecondDayChange;
-    public static event Action onDayChange;
-    public static event Action onDawn;
-    public static event Action onDay;
-    public static event Action onDusk;
-    public static event Action onNight;
-
-    public static void SetUp()
+    public static TimeGame Instance(int key)
     {
-        if (GameSceneManager.Instance.isNewGame)
+        if (key == GenerateKey())
         {
-            int startHours = GameSceneManager.Instance.startHours;
-            int startMinutes = GameSceneManager.Instance.startMinutes;
-            currentSecondDay = _gameDayInRealSeconds * ((startHours * 60 * 60) + startMinutes * 60) / (24 * 60 * 60);
+            return new TimeGame();
         }
+        return null;
     }
 
-    public static bool StartTime(int currentSecondDay, int currentDay)
+    private static int GenerateKey() => 10;
+    #endregion
+
+    private int _gameDayInRealSeconds = -1;
+    public float realSecondToGameSecond {  get; private set; }
+    public int currentSecondDay { get; private set; }
+    public int currentDay { get; private set; }
+    private const int _secondDelay = 2;
+    public int SecondDelay { get => _secondDelay; }
+
+    private bool _isStartTimeSetted;
+    private bool _isStarted;
+    private bool _isTimeGameOn = true;
+    private bool _isGamePause;
+    private IEnumerator _gameTime;
+    private WaitForSeconds _delay;
+
+    private Transform _mainLight;
+    private Vector3 _angleSecondLightV3;
+
+    public DayTime DayTime { get; private set; }
+    private int[] _daylyBand = new int[4];
+
+    public event Action onSecondDayChange;
+    public event Action onDayChange;
+    public event Action onDawn;
+    public event Action onDay;
+    public event Action onDusk;
+    public event Action onNight;
+
+    //In Loading
+    public bool StartTime(int currentSecondDay, int currentDay)
     {
         if (_isStartTimeSetted)
         {
@@ -51,48 +59,53 @@ public static class S_TimeManager
         else
         {
             _isStartTimeSetted = true;
-            S_TimeManager.currentSecondDay = currentSecondDay;
-            S_TimeManager.currentDay = currentDay;
+            this.currentSecondDay = currentSecondDay;
+            this.currentDay = currentDay;
             return true;
         }
     }
 
-    private static void SetGameDayInRealSeconds()
+    //In Start of GameSceneManager
+    public bool MyStart(Light mainLight, out IEnumerator time)
     {
-        _gameDayInRealSeconds = GameSceneManager.Instance.gameDayInRealMinutes * 60;
+        if (_isStarted)
+        {
+            Debug.LogError("Time has already started");
+            time = null;
+            return false;
+        }
+        else
+        {
+            _isStarted = true;
+
+            _gameDayInRealSeconds = GWM.Instance.gameDayInRealMinutes * 60;
+            realSecondToGameSecond = (24 * 60 * 60) / _gameDayInRealSeconds;
+
+            if (GWM.Instance.isNewGame)
+            {
+                int startHours = GWM.Instance.startHours;
+                int startMinutes = GWM.Instance.startMinutes;
+                currentSecondDay = _gameDayInRealSeconds * ((startHours * 60 * 60) + startMinutes * 60) / (24 * 60 * 60);
+            }
+
+            _mainLight = mainLight.transform;
+            SetRotationMainLight();
+
+            SetDailyBand();
+            _delay = new WaitForSeconds(_secondDelay);
+            time = GameTime();
+            
+            return true;
+        }
     }
 
     //00.00 => 270°; 06.00 => 180°; 12.00 => 90°; 18.00 => 0°;
-    public static void SetStartRotationMainLight(ref Light mainLight)
+    public void SetRotationMainLight()
     {
-        if (_gameDayInRealSeconds < 0)
-        {
-            SetGameDayInRealSeconds();
-        }
-
         float angleSecondLight = 360f / _gameDayInRealSeconds;
         float angleXLight = (angleSecondLight * _gameDayInRealSeconds * 0.75f) - (angleSecondLight * currentSecondDay);
-        mainLight.transform.eulerAngles = new Vector3(angleXLight, mainLight.transform.eulerAngles.y, mainLight.transform.eulerAngles.z);
+        _mainLight.eulerAngles = new Vector3(angleXLight, _mainLight.eulerAngles.y, _mainLight.eulerAngles.z);
         _angleSecondLightV3 = new Vector3(angleSecondLight, 0f, 0f);
-    }
-
-    
-
-    void Start()
-    {
-        
-
-        //SetUp StartTime
-        _gameDayInRealSeconds = _gameDayInRealMinutes * 60;
-        
-        realSecondToGameSecond = _gameDayInRealSeconds / (24 * 60 * 60);
-        SetStartRotationMainLight();
-        SetDailyBand();
-
-        _delay = new WaitForSeconds(_secondDelay);
-        _gameTime = GameTime();
-        StartCoroutine(_gameTime);
-        _alreadyStart = true;
     }
 
     private void SetDailyBand()
@@ -125,12 +138,12 @@ public static class S_TimeManager
         }
     }
 
-    private void SetIsGameTimeOn(bool value) => _isGameTimeOn = value;
+    private void SetIsGameTimeOn(bool value) => _isTimeGameOn = value;
     private void SetIsGamePause(bool value) => _isGamePause = value;
 
     private IEnumerator GameTime()
     {
-        while (_isGameTimeOn)
+        while (_isTimeGameOn)
         {
             yield return _delay;
             //Game in Pause
@@ -148,7 +161,7 @@ public static class S_TimeManager
 
     private void GameInPlay()
     {
-        currentSecondDay *= _secondDelay;
+        currentSecondDay += _secondDelay;
         onSecondDayChange?.Invoke();
         //A day is passed
         if (currentSecondDay >= _gameDayInRealSeconds)
@@ -159,14 +172,12 @@ public static class S_TimeManager
         }
 
         //Main Light change direction
-        _mainLight.transform.eulerAngles += _angleSecondLightV3 * _secondDelay;
+        _mainLight.eulerAngles += _angleSecondLightV3 * _secondDelay;
 
         SetDayTime();
     }
 
-    
-
-    private static void SetDayTime()
+    private void SetDayTime()
     {
         if (DayTime == DayTime.Night && currentSecondDay > _daylyBand[0])
         {

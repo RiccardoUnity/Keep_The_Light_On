@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
-//Connect static class / asset / gameObject in scene
-public class GameSceneManager : Singleton_Generic<GameSceneManager>
+//Connect class / static class / asset / gameObject in scene
+public class GameWorldManager : Singleton_Generic<GameWorldManager>
 {
     #region Singleton
     protected override bool ShouldBeDestroyOnLoad() => true;
 
-    static GameSceneManager()
+    static GameWorldManager()
     {
         _useResources = false;
         _resourcesPath = "";
@@ -24,10 +25,18 @@ public class GameSceneManager : Singleton_Generic<GameSceneManager>
     public int startMinutes { get => _startMinutes; }
     [SerializeField] private int _gameDayInRealMinutes = 30;
     public int gameDayInRealMinutes { get => _gameDayInRealMinutes; }
-    private bool _isTimeAlreadyStart;
+    private bool _hasTimeAlreadyStart;
+    public TimeGame timeGame { get; private set; }
+    private static int GenerateKeyTimeGame() => 10;
+    private IEnumerator _time;
 
     [Header("Main GameObject")]
     [SerializeField] private Light _mainLight;
+    public Transform mainLight { get => _mainLight.transform; }
+    [SerializeField] private LayerMask _blockMainLight = (1 << 0);
+    public LayerMask blockMainLight { get => _blockMainLight; }
+    private QueryTriggerInteraction _qti = QueryTriggerInteraction.Ignore;
+    public QueryTriggerInteraction qti { get => _qti; }
 
     [Header("Asset")]
     [SerializeField] private ScriptableObject _mainSO;
@@ -46,8 +55,11 @@ public class GameSceneManager : Singleton_Generic<GameSceneManager>
         //Safe execute
         if (!_hasAnError)
         {
-            //Load data in scene
-            S_SaveSystem.LoadInScene();
+            //Create TimeGame
+            timeGame = TimeGame.Instance(GenerateKeyTimeGame());
+
+            //Load data
+            S_SaveSystem.LoadGameWorldManager();
         }
     }
 
@@ -55,10 +67,10 @@ public class GameSceneManager : Singleton_Generic<GameSceneManager>
     {
         if (!_hasAnError)
         {
-            if (_isTimeAlreadyStart)
+            if (_hasTimeAlreadyStart)
             {
-                S_TimeManager.SetStartRotationMainLight(ref _mainLight);
-                //StartCoroutine();
+                timeGame.SetRotationMainLight();
+                StartCoroutine(_time);
             }
         }
     }
@@ -68,11 +80,13 @@ public class GameSceneManager : Singleton_Generic<GameSceneManager>
         if (!_hasAnError)
         {
             //Time Start
-            if (S_TimeManager.currentSecondDay != 0 || S_TimeManager.currentDay != 0)
+            if (timeGame.currentSecondDay != 0 || timeGame.currentDay != 0)
             {
                 _isNewGame = false;
             }
-            S_TimeManager.SetUp();
+            timeGame.MyStart(_mainLight, out _time);
+            _hasTimeAlreadyStart = true;
+            StartCoroutine(_time);
         }
     }
 }
