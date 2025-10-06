@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public abstract class PlayerStat
 {
-    public class Modifier
+    protected class Modifier
     {
         private int _duration;
         public float Moltiplier { get; private set; }
@@ -30,33 +30,33 @@ public abstract class PlayerStat
         }
     }
 
+    public static Key Key = new Key();
+
     private float _value = 1f;
     public float value { get => _value; protected set => _value = Mathf.Clamp01(value); }
 
-    private bool _hasAlreadyAwaked;
+    private bool _hasAlreadyStarted;
     protected List<Modifier> _modifiers = new List<Modifier>(2);
 
     public event Action onValueZero;
     public event Action onValueOne;
 
-    protected static int GenerateKey() => 11;
-
     public virtual bool MyStart()
     {
-        if (_hasAlreadyAwaked)
+        if (_hasAlreadyStarted)
         {
             return false;
         }
         else
         {
-            _hasAlreadyAwaked = true;
+            _hasAlreadyStarted = true;
             GameWorldManager.Instance.timeGame.onSecondDayChange += UpdateValue;
-            OnAwake();
+            OnStart();
             return true;
         }
     }
 
-    protected abstract void OnAwake();
+    protected abstract void OnStart();
 
     public void UpdateValue()
     {
@@ -88,7 +88,7 @@ public abstract class PlayerStat
         _modifiers.Add(modifier);
     }
 
-    public void RemoveModifier(Modifier modifier)
+    private void RemoveModifier(Modifier modifier)
     {
         _modifiers.Remove(modifier);
     }

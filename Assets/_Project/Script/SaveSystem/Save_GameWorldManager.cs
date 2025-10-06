@@ -1,20 +1,23 @@
 ﻿using System;
 
-[Serializable]
-public class Save_GameWorldManager
+public static partial class S_SaveSystem
 {
-    //Time
-    public int currentSecondDay;
-    public int currentDay;
-
-    public void Save()
+    [Serializable]
+    private class Save_GameWorldManager
     {
-        currentSecondDay = GameWorldManager.Instance.timeGame.currentSecondDay;
-        currentDay = GameWorldManager.Instance.timeGame.currentDay;
-    }
+        //Time
+        public int currentSecondDay;
+        public int currentDay;
 
-    public void Load()
-    {
-        GameWorldManager.Instance.timeGame.StartTime(currentSecondDay, currentDay);
+        public void Save()
+        {
+            currentSecondDay = GameWorldManager.Instance.timeGame.currentSecondDay;
+            currentDay = GameWorldManager.Instance.timeGame.currentDay;
+        }
+
+        public void Load()
+        {
+            GameWorldManager.Instance.timeGame.StartTime(currentSecondDay, currentDay);
+        }
     }
 }

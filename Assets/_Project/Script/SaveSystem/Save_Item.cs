@@ -1,15 +1,62 @@
-﻿using UnityEngine;
+﻿using Save;
 using System;
-using Save;
+using System.Collections.Generic;
+using UnityEngine;
 
-[Serializable]
-public class Save_Item : Save_Transform
+public static partial class S_SaveSystem
 {
-    //_id riferimento in una lista di ScriptableObject in cui sono raccolti tutti gli item
-    [SerializeField] private int _id;
-
-    public Save_Item(Transform transform, int id) : base()
+    [Serializable]
+    private class Save_Item : Save_Transform
     {
-        _id = id;
+        [SerializeField] private SO_Item _soItem;
+
+        public Save_Item(Transform transform, SO_Item soItem) : base(transform)
+        {
+            _soItem = soItem;
+        }
+
+        public override void Save()
+        {
+            base.Save();
+
+        }
+
+        public override void Load()
+        {
+            base.Load();
+        }
+    }
+
+    private static Queue<Item> _items = new Queue<Item>();
+
+    public static bool AddItem(Item item)
+    {
+        if (_items.Contains(item))
+        {
+            return false;
+        }
+        else
+        {
+            _items.Enqueue(item);
+            return true;
+        }
+    }
+
+    public static bool LoadItems()
+    {
+        if (_loadingComplete)
+        {
+
+            if (_debug)
+            {
+                Debug.Log("Save_Items loaded in scene");
+            }
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning("There isn't Save_Items to load");
+            return false;
+        }
     }
 }

@@ -8,6 +8,18 @@ using GWM = GameWorldManager;
 [Serializable]
 public class PlayerStat_Endurance : PlayerStat
 {
+    #region LikeSingleton
+    private PlayerStat_Endurance() : base() { }
+    public static PlayerStat_Endurance Instance(int key)
+    {
+        if (key == Key.GetKey())
+        {
+            return new PlayerStat_Endurance();
+        }
+        return null;
+    }
+    #endregion
+
     private bool _hasOnSun;
     private int  _minutesGameTimeOnSun = 60;
     private int _secondsGameTimeOnSun;
@@ -15,18 +27,7 @@ public class PlayerStat_Endurance : PlayerStat
     private int _secondsGameTimeOffSun;
     private float _distanceRay = 15f;
 
-    public static PlayerStat_Endurance Instance(int key)
-    {
-        if (key == GenerateKey())
-        {
-            return new PlayerStat_Endurance();
-        }
-        return null;
-    }
-
-    private PlayerStat_Endurance() : base() { }
-
-    protected override void OnAwake()
+    protected override void OnStart()
     {
         _secondsGameTimeOnSun = (int)(_minutesGameTimeOnSun * 60 * GWM.Instance.timeGame.realSecondToGameSecond);
         _secondsGameTimeOffSun = (int)(_minutesGameTimeOffSun * 60 * GWM.Instance.timeGame.realSecondToGameSecond);

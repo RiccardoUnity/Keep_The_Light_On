@@ -14,32 +14,34 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     }
     #endregion
 
+    public static Key Key = new Key();
+
     private bool _hasAnError;
 
     [Header("Game Time")]
-    [SerializeField] private bool _isNewGame = true;
-    public bool isNewGame { get => _isNewGame; }
-    [SerializeField] private int _startHours;
-    public int startHours { get => _startHours; }
-    [SerializeField] private int _startMinutes;
-    public int startMinutes { get => _startMinutes; }
-    [SerializeField] private int _gameDayInRealMinutes = 30;
-    public int gameDayInRealMinutes { get => _gameDayInRealMinutes; }
     private bool _hasTimeAlreadyStart;
-    public TimeGame timeGame { get; private set; }
-    private static int GenerateKeyTimeGame() => 10;
     private IEnumerator _time;
+    public TimeGame timeGame { get; private set; }
+    public bool isNewGame { get => _isNewGame; }
+    [SerializeField] private bool _isNewGame = true;
+    public int startHours { get => _startHours; }
+    [SerializeField] private int _startHours;
+    public int startMinutes { get => _startMinutes; }
+    [SerializeField] private int _startMinutes;
+    public int gameDayInRealMinutes { get => _gameDayInRealMinutes; }
+    [SerializeField] private int _gameDayInRealMinutes = 30;
 
     [Header("Main GameObject")]
     [SerializeField] private Light _mainLight;
     public Transform mainLight { get => _mainLight.transform; }
-    [SerializeField] private LayerMask _blockMainLight = (1 << 0);
+    
     public LayerMask blockMainLight { get => _blockMainLight; }
-    private QueryTriggerInteraction _qti = QueryTriggerInteraction.Ignore;
+    [SerializeField] private LayerMask _blockMainLight = (1 << 0);
     public QueryTriggerInteraction qti { get => _qti; }
+    private QueryTriggerInteraction _qti = QueryTriggerInteraction.Ignore;
 
     [Header("Asset")]
-    [SerializeField] private ScriptableObject _mainSO;
+    [SerializeField] private SO_ItemManager _SOItemManager;
 
     protected override void Awake()
     {
@@ -56,9 +58,9 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
         if (!_hasAnError)
         {
             //Create TimeGame
-            timeGame = TimeGame.Instance(GenerateKeyTimeGame());
+            timeGame = TimeGame.Instance(Key.GetKey());
 
-            //Load data
+            //Load internal data
             S_SaveSystem.LoadGameWorldManager();
         }
     }
@@ -79,6 +81,9 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     {
         if (!_hasAnError)
         {
+            //Load external data
+            S_SaveSystem.LoadItems();
+
             //Time Start
             if (timeGame.currentSecondDay != 0 || timeGame.currentDay != 0)
             {
@@ -89,4 +94,6 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             StartCoroutine(_time);
         }
     }
+
+
 }

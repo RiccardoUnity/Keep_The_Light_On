@@ -25,6 +25,7 @@ public class PlayerManager : Singleton_Generic<PlayerManager>
     public PlayerController playerController { get; private set; }
 
     //Stats
+    public static Key Key = new Key();
     public PlayerStat_Endurance endurance { get; private set; }
 
     protected override void Awake()
@@ -37,14 +38,16 @@ public class PlayerManager : Singleton_Generic<PlayerManager>
         playerGroundCheck.MyAwake();
         playerController.MyAwake();
 
+        //Stats
+        endurance = PlayerStat_Endurance.Instance(Key.GetKey());
+
         //Load data
-        //S_SaveSystem.
+        S_SaveSystem.LoadPlayerManager();
     }
 
     void Start()
     {
         //Stats
-        endurance = PlayerStat_Endurance.Instance(11);
         endurance.MyStart();
     }
 }

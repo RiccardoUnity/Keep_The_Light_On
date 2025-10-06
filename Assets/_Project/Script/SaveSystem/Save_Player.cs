@@ -2,22 +2,29 @@
 using System;
 using Save;
 
-[Serializable]
-public class Save_Player : Save_Transform
+public static partial class S_SaveSystem
 {
-    public Save_Player() : base()
+    [Serializable]
+    private class Save_Player : Save_Transform
     {
+        public PlayerManager playerManager;
 
-    }
+        public Save_Player(Transform transform, PlayerManager playerManager) : base(transform)
+        {
+            this.playerManager = playerManager;
 
-    public override void Save()
-    {
-        base.Save();
+        }
 
-    }
+        public override void Save()
+        {
+            base.Save();
 
-    public void Load()
-    {
-        
+        }
+
+        public override void Load()
+        {
+            base.Load();
+
+        }
     }
 }

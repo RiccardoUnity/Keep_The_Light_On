@@ -11,22 +11,22 @@ public class TimeGame
 
     public static TimeGame Instance(int key)
     {
-        if (key == GenerateKey())
+        if (key == Key.GetKey())
         {
             return new TimeGame();
         }
         return null;
     }
-
-    private static int GenerateKey() => 10;
+    
+    public static Key Key = new Key();
     #endregion
 
     private int _gameDayInRealSeconds = -1;
     public float realSecondToGameSecond {  get; private set; }
     public int currentSecondDay { get; private set; }
     public int currentDay { get; private set; }
-    private const int _secondDelay = 2;
     public int SecondDelay { get => _secondDelay; }
+    private const int _secondDelay = 2;
 
     private bool _isStartTimeSetted;
     private bool _isStarted;
