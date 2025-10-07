@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GTM = TimeGame;
+using GTM = TimeManager;
 
 [RequireComponent(typeof(PlayerGroundCheck))]
 [RequireComponent(typeof(PlayerController))]
@@ -41,8 +41,15 @@ public class PlayerManager : Singleton_Generic<PlayerManager>
         //Stats
         endurance = PlayerStat_Endurance.Instance(Key.GetKey());
 
-        //Load data
-        S_SaveSystem.LoadPlayerManager();
+        //Load internal data
+        if (S_SaveSystem.IsLoadingComplete)
+        {
+            S_SaveSystem.LoadPlayerManager();
+        }
+        else
+        {
+
+        }
     }
 
     void Start()

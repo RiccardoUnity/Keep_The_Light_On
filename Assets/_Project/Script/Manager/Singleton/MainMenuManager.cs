@@ -43,7 +43,8 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
     private void SetKeyGameWorldManager(int key)
     {
         GameWorldManager.Key.SetKey(key);
-        TimeGame.Key.SetKey(key);
+        TimeManager.Key.SetKey(key);
+        PoolManager.Key.SetKey(key);
     }
 
     private void SetKeyPlayerManager(int key)

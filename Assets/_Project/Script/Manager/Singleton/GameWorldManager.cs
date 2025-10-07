@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 //Connect class / static class / asset / gameObject in scene
@@ -18,18 +19,21 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
     private bool _hasAnError;
 
-    [Header("Game Time")]
+    [Header("Time Manager")]
     private bool _hasTimeAlreadyStart;
     private IEnumerator _time;
-    public TimeGame timeGame { get; private set; }
-    public bool isNewGame { get => _isNewGame; }
+    public TimeManager TimeManager { get; private set; }
+    public bool IsNewGame { get => _isNewGame; }
     [SerializeField] private bool _isNewGame = true;
-    public int startHours { get => _startHours; }
+    public int StartHours { get => _startHours; }
     [SerializeField] private int _startHours;
-    public int startMinutes { get => _startMinutes; }
+    public int StartMinutes { get => _startMinutes; }
     [SerializeField] private int _startMinutes;
-    public int gameDayInRealMinutes { get => _gameDayInRealMinutes; }
+    public int GameDayInRealMinutes { get => _gameDayInRealMinutes; }
     [SerializeField] private int _gameDayInRealMinutes = 30;
+
+    //[Header("Pool Manager")]
+    public PoolManager PoolManager { get; private set; }
 
     [Header("Main GameObject")]
     [SerializeField] private Light _mainLight;
@@ -57,11 +61,19 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
         //Safe execute
         if (!_hasAnError)
         {
-            //Create TimeGame
-            timeGame = TimeGame.Instance(Key.GetKey());
+            //Create Manager
+            TimeManager = TimeManager.Instance(Key.GetKey());
+            PoolManager = PoolManager.Instance(Key.GetKey());
 
             //Load internal data
-            S_SaveSystem.LoadGameWorldManager();
+            if (S_SaveSystem.IsLoadingComplete)
+            {
+                S_SaveSystem.LoadGameWorldManager();
+            }
+            else
+            {
+
+            }
         }
     }
 
@@ -71,7 +83,7 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
         {
             if (_hasTimeAlreadyStart)
             {
-                timeGame.SetRotationMainLight();
+                TimeManager.SetRotationMainLight();
                 StartCoroutine(_time);
             }
         }
@@ -82,18 +94,20 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
         if (!_hasAnError)
         {
             //Load external data
-            S_SaveSystem.LoadItems();
+            if (S_SaveSystem.IsLoadingComplete)
+            {
+                S_SaveSystem.LoadItems();
+            }
+            else
+            {
+                S_SaveSystem.CheckSaveItem();
+            }
 
             //Time Start
-            if (timeGame.currentSecondDay != 0 || timeGame.currentDay != 0)
-            {
-                _isNewGame = false;
-            }
-            timeGame.MyStart(_mainLight, out _time);
+            TimeManager.MyStart(_mainLight, out _time);
+            _isNewGame = false;
             _hasTimeAlreadyStart = true;
             StartCoroutine(_time);
         }
     }
-
-
 }

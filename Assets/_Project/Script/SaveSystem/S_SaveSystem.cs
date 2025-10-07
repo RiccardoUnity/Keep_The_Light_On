@@ -8,17 +8,31 @@ public static partial class S_SaveSystem
     private static int _slot = -1;
     private static string _pathRepoSlot;
     private static string _fileJSonString;
-    private static bool _loadingComplete;
+    private static string _extention = ".txt";
+    public static bool IsLoadingComplete { get => _isLoadingComplete; }
+    private static bool _isLoadingComplete;
 
     private static Save_GameWorldManager _saveGameWorldManager;
     private static Save_Player _savePlayer;
+    private static Queue<Save_Item> _toLoadItems = new Queue<Save_Item>();
 
     public static void SetDebug(bool value) => _debug = value;
 
+    //In MainMenu New Game
+    public static int NewSlot()
+    {
+        int index = Directory.GetDirectories(Application.persistentDataPath).Length;
+        Directory.CreateDirectory(Application.persistentDataPath + $"/{index.ToString()}");
+        return index;
+    }
+
+    //In MainMenu Load Game
     public static bool SetSlot(int slot)
     {
         if (_slot < 0)
         {
+            int index = Directory.GetDirectories(Application.persistentDataPath).Length;
+            if (slot >= 0 && slot < index)
             _slot = slot;
             _pathRepoSlot = Application.persistentDataPath + $"/{_slot.ToString()}";
             return true;
@@ -42,6 +56,7 @@ public static partial class S_SaveSystem
         }
     }
 
+    //In MainMenu before to load the GameScene
     public static bool LoadSlot()
     {
         if (_slot < 0)
@@ -55,9 +70,9 @@ public static partial class S_SaveSystem
             try
             {
                 //Save_GameWorldManager
-                if (File.Exists(_pathRepoSlot + $"/{nameof(Save_GameWorldManager)}.txt"))
+                if (File.Exists(_pathRepoSlot + $"/{nameof(Save_GameWorldManager)}{_extention}"))
                 {
-                    _fileJSonString = File.ReadAllText(_pathRepoSlot + $"/{nameof(Save_GameWorldManager)}.txt");
+                    _fileJSonString = File.ReadAllText(_pathRepoSlot + $"/{nameof(Save_GameWorldManager)}{_extention}");
                     _saveGameWorldManager = JsonUtility.FromJson<Save_GameWorldManager>(_fileJSonString);
                     if (_debug)
                     {
@@ -65,16 +80,30 @@ public static partial class S_SaveSystem
                     }
                 }
                 //Save_Player
-                if (File.Exists(_pathRepoSlot + $"/{nameof(Save_Player)}.txt"))
+                if (File.Exists(_pathRepoSlot + $"/{nameof(Save_Player)}{_extention}"))
                 {
-                    _fileJSonString = File.ReadAllText(_pathRepoSlot + $"/{nameof(Save_Player)}.txt");
+                    _fileJSonString = File.ReadAllText(_pathRepoSlot + $"/{nameof(Save_Player)}{_extention}");
                     _savePlayer = JsonUtility.FromJson<Save_Player>(_fileJSonString);
                     if (_debug)
                     {
                         Debug.Log("Save_Player loaded");
                     }
                 }
-                _loadingComplete = true;
+                if (Directory.Exists(_pathRepoSlot + $"/{nameof(Save_Item)}"))
+                {
+                    string[] files = Directory.GetFiles(_pathRepoSlot + $"/{nameof(Save_Item)}", $".{_extention}");
+                    foreach (string file in files)
+                    {
+                        Save_Item saveItem = new Save_Item(true);
+                        saveItem = JsonUtility.FromJson<Save_Item>(file);
+                        _toLoadItems.Enqueue(saveItem);
+                    }
+                    if (_debug)
+                    {
+                        Debug.Log("Save_Item loaded");
+                    }
+                }
+                _isLoadingComplete = true;
             }
             catch
             {
@@ -85,6 +114,7 @@ public static partial class S_SaveSystem
         }
     }
 
+    //In GameScene after Start
     public static bool SaveSlot(bool exit = false)
     {
         if (_slot < 0)
@@ -98,23 +128,34 @@ public static partial class S_SaveSystem
 
             //Save classes
             _saveGameWorldManager.Save();
+            _savePlayer.Save();
+            foreach(Save_Item saveItem in _saveItems)
+            {
+                saveItem.Save();
+            }
 
             //Write save classes
             try
             {
                 //Save_GameWorldManager
-                _fileJSonString = JsonUtility.ToJson(_saveGameWorldManager);
-                File.WriteAllText(_pathRepoSlot + $"/{nameof(Save_GameWorldManager)}.txt", _fileJSonString);
+                _fileJSonString = JsonUtility.ToJson(_saveGameWorldManager, true);
+                File.WriteAllText(_pathRepoSlot + $"/{nameof(Save_GameWorldManager)}{_extention}", _fileJSonString);
                 if (_debug)
                 {
                     Debug.Log("Save_GameScene saved");
                 }
                 //Save_Player
-                _fileJSonString = JsonUtility.ToJson(_savePlayer);
-                File.WriteAllText(_pathRepoSlot + $"/{nameof(Save_Player)}.txt", _fileJSonString);
+                _fileJSonString = JsonUtility.ToJson(_savePlayer, true);
+                File.WriteAllText(_pathRepoSlot + $"/{nameof(Save_Player)}{_extention}", _fileJSonString);
                 if (_debug)
                 {
                     Debug.Log("Save_GameScene saved");
+                }
+                //Save_Item
+                foreach (Save_Item saveItem in _saveItems)
+                {
+                    _fileJSonString = JsonUtility.ToJson(saveItem, true);
+                    File.WriteAllText(_pathRepoSlot + $"/{nameof(Save_Item)}/{saveItem.Id}{_extention}", _fileJSonString);
                 }
             }
             catch
@@ -128,7 +169,7 @@ public static partial class S_SaveSystem
                 _slot = -1;
                 _pathRepoSlot = "";
                 _fileJSonString = "";
-                _loadingComplete = false;
+                _isLoadingComplete = false;
 
                 _saveGameWorldManager = null;
                 _savePlayer = null;
@@ -137,39 +178,23 @@ public static partial class S_SaveSystem
         }
     }
 
-    public static bool LoadGameWorldManager()
+    //In Awake
+    public static void LoadGameWorldManager()
     {
-        if (_loadingComplete)
+        _saveGameWorldManager.Load();
+        if (_debug)
         {
-            _saveGameWorldManager.Load();
-            if (_debug)
-            {
-                Debug.Log("Save_GameWorldManager loaded in scene");
-            }
-            return true;
-        }
-        else
-        {
-            Debug.LogWarning("There isn't Save_GameWorldManager to load");
-            return false;
+            Debug.Log("Save_GameWorldManager loaded in scene");
         }
     }
 
-    public static bool LoadPlayerManager()
+    //In Awake
+    public static void LoadPlayerManager()
     {
-        if (_loadingComplete)
+        _savePlayer.Load();
+        if (_debug)
         {
-            _savePlayer.Load();
-            if (_debug)
-            {
-                Debug.Log("Save_Player loaded in scene");
-            }
-            return true;
-        }
-        else
-        {
-            Debug.LogWarning("There isn't Save_Player to load");
-            return false;
+            Debug.Log("Save_Player loaded in scene");
         }
     }
 

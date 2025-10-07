@@ -11,13 +11,13 @@ public static partial class S_SaveSystem
 
         public void Save()
         {
-            currentSecondDay = GameWorldManager.Instance.timeGame.currentSecondDay;
-            currentDay = GameWorldManager.Instance.timeGame.currentDay;
+            currentSecondDay = GameWorldManager.Instance.TimeManager.currentSecondDay;
+            currentDay = GameWorldManager.Instance.TimeManager.currentDay;
         }
 
         public void Load()
         {
-            GameWorldManager.Instance.timeGame.StartTime(currentSecondDay, currentDay);
+            GameWorldManager.Instance.TimeManager.StartTime(currentSecondDay, currentDay);
         }
     }
 }

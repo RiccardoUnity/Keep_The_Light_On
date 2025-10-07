@@ -15,6 +15,6 @@ public class SO_Item : ScriptableObject
     public Sprite Icon { get => _icon; }
     [SerializeField] private Sprite _icon;
 
-    public GameObject Prefab { get => _prefab; }
-    [SerializeField] public GameObject _prefab;
+    public Item Prefab { get => _prefab; }
+    [SerializeField] public Item _prefab;
 }

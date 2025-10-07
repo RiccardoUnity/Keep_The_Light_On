@@ -17,12 +17,12 @@ public abstract class PlayerStat
             _duration = duration;
             Moltiplier = moltiplier;
             _onDestroy = onDestroy;
-            GameWorldManager.Instance.timeGame.onSecondDayChange += UpdateDuration;
+            GameWorldManager.Instance.TimeManager.onSecondDayChange += UpdateDuration;
         }
 
         private void UpdateDuration()
         {
-            _duration -= GameWorldManager.Instance.timeGame.SecondDelay;
+            _duration -= GameWorldManager.Instance.TimeManager.SecondDelay;
             if (_duration <= 0)
             {
                 _onDestroy?.Invoke(this);
@@ -50,7 +50,7 @@ public abstract class PlayerStat
         else
         {
             _hasAlreadyStarted = true;
-            GameWorldManager.Instance.timeGame.onSecondDayChange += UpdateValue;
+            GameWorldManager.Instance.TimeManager.onSecondDayChange += UpdateValue;
             OnStart();
             return true;
         }

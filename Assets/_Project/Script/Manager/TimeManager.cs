@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using GWM = GameWorldManager;
 
-public class TimeGame
+public class TimeManager
 {
     #region LikeSingleton
-    private TimeGame() { }
+    private TimeManager() { }
 
-    public static TimeGame Instance(int key)
+    public static TimeManager Instance(int key)
     {
         if (key == Key.GetKey())
         {
-            return new TimeGame();
+            return new TimeManager();
         }
         return null;
     }
@@ -78,13 +78,13 @@ public class TimeGame
         {
             _isStarted = true;
 
-            _gameDayInRealSeconds = GWM.Instance.gameDayInRealMinutes * 60;
+            _gameDayInRealSeconds = GWM.Instance.GameDayInRealMinutes * 60;
             realSecondToGameSecond = (24 * 60 * 60) / _gameDayInRealSeconds;
 
-            if (GWM.Instance.isNewGame)
+            if (GWM.Instance.IsNewGame)
             {
-                int startHours = GWM.Instance.startHours;
-                int startMinutes = GWM.Instance.startMinutes;
+                int startHours = GWM.Instance.StartHours;
+                int startMinutes = GWM.Instance.StartMinutes;
                 currentSecondDay = _gameDayInRealSeconds * ((startHours * 60 * 60) + startMinutes * 60) / (24 * 60 * 60);
             }
 

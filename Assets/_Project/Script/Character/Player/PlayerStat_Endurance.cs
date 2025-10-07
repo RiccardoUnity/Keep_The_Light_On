@@ -29,13 +29,13 @@ public class PlayerStat_Endurance : PlayerStat
 
     protected override void OnStart()
     {
-        _secondsGameTimeOnSun = (int)(_minutesGameTimeOnSun * 60 * GWM.Instance.timeGame.realSecondToGameSecond);
-        _secondsGameTimeOffSun = (int)(_minutesGameTimeOffSun * 60 * GWM.Instance.timeGame.realSecondToGameSecond);
+        _secondsGameTimeOnSun = (int)(_minutesGameTimeOnSun * 60 * GWM.Instance.TimeManager.realSecondToGameSecond);
+        _secondsGameTimeOffSun = (int)(_minutesGameTimeOffSun * 60 * GWM.Instance.TimeManager.realSecondToGameSecond);
     }
 
     protected override void CheckValue()
     {
-        if (GWM.Instance.timeGame.DayTime == DayTime.Day)
+        if (GWM.Instance.TimeManager.DayTime == DayTime.Day)
         {
             Ray ray = new Ray(PM.Instance.head.position, GWM.Instance.mainLight.rotation * Vector3.forward);
             if(Physics.Raycast(ray, _distanceRay, GWM.Instance.blockMainLight, GWM.Instance.qti))
