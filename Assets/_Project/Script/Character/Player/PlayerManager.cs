@@ -42,7 +42,7 @@ public class PlayerManager : Singleton_Generic<PlayerManager>
         endurance = PlayerStat_Endurance.Instance(Key.GetKey());
 
         //Load internal data
-        if (S_SaveSystem.IsLoadingComplete)
+        if (S_SaveSystem.HasALoading)
         {
             S_SaveSystem.LoadPlayerManager();
         }

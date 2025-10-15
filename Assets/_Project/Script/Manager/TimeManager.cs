@@ -7,7 +7,13 @@ using GWM = GameWorldManager;
 public class TimeManager
 {
     #region LikeSingleton
-    private TimeManager() { }
+    private TimeManager()
+    {
+        if (GWM.Instance.MainDebug)
+        {
+            Debug.Log("TimeManager Initialized");
+        }
+    }
 
     public static TimeManager Instance(int key)
     {
@@ -81,7 +87,7 @@ public class TimeManager
             _gameDayInRealSeconds = GWM.Instance.GameDayInRealMinutes * 60;
             realSecondToGameSecond = (24 * 60 * 60) / _gameDayInRealSeconds;
 
-            if (GWM.Instance.IsNewGame)
+            if (!S_SaveSystem.HasALoading)
             {
                 int startHours = GWM.Instance.StartHours;
                 int startMinutes = GWM.Instance.StartMinutes;

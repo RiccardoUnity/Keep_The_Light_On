@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Project/Scenes/TestLabPCFisso.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/_Project/Scenes/0 - Pre-MainMenu.unity
+    guid: 1676d7122f4a61c45b36bfb61fd89935
+  - enabled: 1
+    path: Assets/_Project/Scenes/1 - MainMenu.unity
+    guid: 8cb1cbae2bcc15b489543170b53f548a
+  - enabled: 1
+    path: Assets/_Project/Scenes/2 - OpenWorld.unity
+    guid: 937672b3f48bca3458fac17a44ff7bf3
   m_configObjects: {}

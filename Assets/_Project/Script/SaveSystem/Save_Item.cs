@@ -13,7 +13,7 @@ public static partial class S_SaveSystem
         [SerializeField] private int _id;
         private static int _idCount;
 
-        private Item _item;
+        private Data_Item _dataItem;
         private int _key;
 
         [SerializeField] private Vector3Save _position;
@@ -24,22 +24,21 @@ public static partial class S_SaveSystem
         [SerializeField] private float _condition;
         [SerializeField] private ItemState _state;
 
-        public Save_Item(bool loading, Item item = null)
+        public Save_Item(bool loading, Data_Item dataItem = null)
         {
             ++_idCount;
             GenerateKey();
             if (loading)
             {
-
+                
             }
             else
             {
                 _id = _idCount;
-                _item = item;
-                _item.SetSaveItem(_key, _id);
-
-                _soItem = _item.SOItem;
-                Save();
+                if (dataItem != null)
+                {
+                    OutPool(dataItem);
+                }
             }
         }
 
@@ -54,72 +53,64 @@ public static partial class S_SaveSystem
 
         public void Save()
         {
-            _position.Update(_item.transform.position);
-            _rotation.Update(_item.transform.rotation);
-            _condition = _item.Condition;
-            _state = _item.State;
+            _position.Update(_dataItem.PrefabItem.transform.position);
+            _rotation.Update(_dataItem.PrefabItem.transform.rotation);
+            _condition = _dataItem.Condition;
+            _state = _dataItem.State;
         }
 
         public void Load()
         {
-            _item.transform.position = _position.Load();
-            _item.transform.rotation = _rotation.Load();
-            _item.LoadSaveItem(_key, _condition, _state);
+            _dataItem.PrefabItem.transform.position = _position.Load();
+            _dataItem.PrefabItem.transform.rotation = _rotation.Load();
+            _dataItem.SetUp(_key, _condition, _state);
         }
 
-        public void SetItem(Item item)
+        public void LoadDataItem(Data_Item dataItem)
         {
-            if (_item == null && item.SetSaveItem(_key, _id))
+            if (_dataItem == null && dataItem.SetSaveItem(_key, _id))
             {
-                item.LoadSaveItem(_key, _condition, _state);
+                dataItem.SetUp(_key, _condition, _state);
             }
         }
 
-        public void IntoPool(int key)
+        #region Pool
+        public void InPool(int key)
         {
             if(key == _key)
             {
-                _item = null;
+                _dataItem = null;
             }
         }
+
+        public void OutPool(Data_Item dataItem)
+        {
+            if (_dataItem == null)
+            {
+                _dataItem = dataItem;
+                _dataItem.SetSaveItem(_key, _id);
+                _soItem = _dataItem.SOItem;
+                Save();
+            }
+        }
+        #endregion
     }
 
-    private static Queue<Item> _items = new Queue<Item>();
     private static List<Save_Item> _saveItems = new List<Save_Item>();
     private static Queue<Save_Item> _poolSaveItem = new Queue<Save_Item>();
 
-    //In Awake New Game or Instantiate New Item
-    public static bool AddItem(Item item)
+    //From Data_Item
+    public static void LockSaveItem(Data_Item dataItem)
     {
-        if (_items.Contains(item))
+        Save_Item saveItem;
+        if (_poolSaveItem.Count > 0)
         {
-            return false;
+            saveItem = _poolSaveItem.Dequeue();
+            saveItem.OutPool(dataItem);
         }
         else
         {
-            _items.Enqueue(item);
-            return true;
-        }
-    }
-
-    //In Start New Game or Instantiate New Item
-    public static void CheckSaveItem()
-    {
-        Item tempItem;
-        Save_Item saveItem;
-        while (_items.Count > 0)
-        {
-            tempItem = _items.Dequeue();
-            if (_poolSaveItem.Count > 0)
-            {
-                saveItem = _poolSaveItem.Dequeue();
-                saveItem.SetItem(tempItem);
-            }
-            else
-            {
-                saveItem = new Save_Item(false, tempItem);
-            } 
-            _saveItems.Add(saveItem);
+            saveItem = new Save_Item(false, dataItem);
         }
     }
 
@@ -129,7 +120,7 @@ public static partial class S_SaveSystem
         {
             if (saveItem.Id == id)
             {
-                saveItem.IntoPool(key);
+                saveItem.InPool(key);
                 _poolSaveItem.Enqueue(saveItem);
                 return true;
             }
@@ -144,13 +135,14 @@ public static partial class S_SaveSystem
         while (_toLoadItems.Count > 0)
         {
             saveItem = _toLoadItems.Dequeue();
-            Item item = GameWorldManager.Instance.PoolManager.RemoveItemFromPool(saveItem.SO_Item);
-            saveItem.SetItem(item);
+            Data_Item dataItem = GameWorldManager.Instance.PoolManager.RemoveDataItemFromPool(saveItem.SO_Item, 1f, ItemState.New);
+            saveItem.LoadDataItem(dataItem);
         }
         if (_debug)
         {
             Debug.Log("Save_Items loaded in scene");
         }
-        _isLoadingComplete = false;
+
+        _hasALoading = false;
     }
 }

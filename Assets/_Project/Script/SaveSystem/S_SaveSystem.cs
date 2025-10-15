@@ -9,8 +9,8 @@ public static partial class S_SaveSystem
     private static string _pathRepoSlot;
     private static string _fileJSonString;
     private static string _extention = ".txt";
-    public static bool IsLoadingComplete { get => _isLoadingComplete; }
-    private static bool _isLoadingComplete;
+    public static bool HasALoading { get => _hasALoading; }
+    private static bool _hasALoading;
 
     private static Save_GameWorldManager _saveGameWorldManager;
     private static Save_Player _savePlayer;
@@ -23,6 +23,7 @@ public static partial class S_SaveSystem
     {
         int index = Directory.GetDirectories(Application.persistentDataPath).Length;
         Directory.CreateDirectory(Application.persistentDataPath + $"/{index.ToString()}");
+        _slot = index;
         return index;
     }
 
@@ -33,15 +34,17 @@ public static partial class S_SaveSystem
         {
             int index = Directory.GetDirectories(Application.persistentDataPath).Length;
             if (slot >= 0 && slot < index)
-            _slot = slot;
-            _pathRepoSlot = Application.persistentDataPath + $"/{_slot.ToString()}";
-            return true;
+            {
+                _slot = slot;
+                _pathRepoSlot = Application.persistentDataPath + $"/{_slot.ToString()}";
+                return true;
+            }
         }
         else
         {
             Debug.LogWarning("SaveSlot to reset slot and change it");
-            return false;
         }
+        return false;
     }
 
     private static void InitClasses()
@@ -52,7 +55,7 @@ public static partial class S_SaveSystem
         }
         if (_savePlayer == null)
         {
-            _savePlayer = new Save_Player(PlayerManager.Instance.transform, PlayerManager.Instance);
+            _savePlayer = new Save_Player(PlayerManager.Instance);
         }
     }
 
@@ -103,7 +106,7 @@ public static partial class S_SaveSystem
                         Debug.Log("Save_Item loaded");
                     }
                 }
-                _isLoadingComplete = true;
+                _hasALoading = true;
             }
             catch
             {
@@ -163,22 +166,23 @@ public static partial class S_SaveSystem
                 Debug.LogError("Fatal Error while Saving");
             }
 
-            //Exit to MainMenu
+            //Exit from GameScene to MainMenu
             if (exit)
             {
                 _slot = -1;
                 _pathRepoSlot = "";
                 _fileJSonString = "";
-                _isLoadingComplete = false;
+                _hasALoading = false;
 
                 _saveGameWorldManager = null;
                 _savePlayer = null;
+                //Save_Item ...
             }
             return true;
         }
     }
 
-    //In Awake
+    //In GameScene in Awake
     public static void LoadGameWorldManager()
     {
         _saveGameWorldManager.Load();
@@ -188,7 +192,7 @@ public static partial class S_SaveSystem
         }
     }
 
-    //In Awake
+    //In GameScene in Awake
     public static void LoadPlayerManager()
     {
         _savePlayer.Load();

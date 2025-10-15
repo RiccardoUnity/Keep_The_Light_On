@@ -1,30 +1,32 @@
-﻿using UnityEngine;
+﻿using Save;
 using System;
-using Save;
+using UnityEngine;
 
 public static partial class S_SaveSystem
 {
     [Serializable]
-    private class Save_Player : Save_Transform
+    private class Save_Player
     {
-        public PlayerManager playerManager;
+        private PlayerManager _playerManager;
+        [SerializeField] private Vector3Save _position;
+        [SerializeField] private QuaternionSave _rotation;
 
-        public Save_Player(Transform transform, PlayerManager playerManager) : base(transform)
+        public Save_Player(PlayerManager playerManager)
         {
-            this.playerManager = playerManager;
+            _playerManager = playerManager;
 
         }
 
-        public override void Save()
+        public void Save()
         {
-            base.Save();
-
+            _position.Update(_playerManager.transform.position);
+            _rotation.Update(_playerManager.transform.rotation);
         }
 
-        public override void Load()
+        public void Load()
         {
-            base.Load();
-
+            _playerManager.transform.position = _position.Load();
+            _playerManager.transform.rotation = _rotation.Load();
         }
     }
 }

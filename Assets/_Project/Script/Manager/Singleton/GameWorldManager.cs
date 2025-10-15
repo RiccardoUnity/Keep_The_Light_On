@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 //Connect class / static class / asset / gameObject in scene
@@ -18,13 +17,13 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     public static Key Key = new Key();
 
     private bool _hasAnError;
+    public bool MainDebug { get => _mainDebug; }
+    [SerializeField] private bool _mainDebug;
 
     [Header("Time Manager")]
     private bool _hasTimeAlreadyStart;
     private IEnumerator _time;
     public TimeManager TimeManager { get; private set; }
-    public bool IsNewGame { get => _isNewGame; }
-    [SerializeField] private bool _isNewGame = true;
     public int StartHours { get => _startHours; }
     [SerializeField] private int _startHours;
     public int StartMinutes { get => _startMinutes; }
@@ -66,7 +65,7 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             PoolManager = PoolManager.Instance(Key.GetKey());
 
             //Load internal data
-            if (S_SaveSystem.IsLoadingComplete)
+            if (S_SaveSystem.HasALoading)
             {
                 S_SaveSystem.LoadGameWorldManager();
             }
@@ -94,18 +93,13 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
         if (!_hasAnError)
         {
             //Load external data
-            if (S_SaveSystem.IsLoadingComplete)
+            if (S_SaveSystem.HasALoading)
             {
                 S_SaveSystem.LoadItems();
-            }
-            else
-            {
-                S_SaveSystem.CheckSaveItem();
             }
 
             //Time Start
             TimeManager.MyStart(_mainLight, out _time);
-            _isNewGame = false;
             _hasTimeAlreadyStart = true;
             StartCoroutine(_time);
         }
