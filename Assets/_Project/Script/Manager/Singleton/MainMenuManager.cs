@@ -28,6 +28,7 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
     protected override void Awake()
     {
         base.Awake();
+        Debug.Log(Application.persistentDataPath);
 
         //Generate keys for class in the game
         SceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -46,8 +47,6 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
             while (key == 0);
             action.Invoke(key);
         }
-
-        Debug.Log(Application.persistentDataPath);
 
         //Init buttons MainMenu
         DeactiveAllPanels();

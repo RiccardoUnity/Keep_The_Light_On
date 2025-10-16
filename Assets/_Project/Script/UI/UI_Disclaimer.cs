@@ -10,8 +10,12 @@ public class UI_Disclaimer : MonoBehaviour
     IEnumerator Start()
     {
         _skip.gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         yield return new WaitForSeconds(_awaitSecond + Fader.Instance.TimeCoroutine);
         _skip.gameObject.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void ToMainMenu() => Fader.Instance.ToScene(SceneManager.GetActiveScene().buildIndex + 1);

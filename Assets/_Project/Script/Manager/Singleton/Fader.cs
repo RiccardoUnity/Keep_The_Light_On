@@ -48,6 +48,8 @@ public class Fader : Singleton_Generic<Fader>
         if (!bypass)
         {
             _scene = scene;
+            _isToBlack = true;
+            _currentTime = 0f;
         }
         if (_effect == null)
         {

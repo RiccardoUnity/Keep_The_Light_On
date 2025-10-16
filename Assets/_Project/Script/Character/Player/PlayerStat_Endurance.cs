@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using PM = PlayerManager;
 using GWM = GameWorldManager;
 
 [Serializable]
@@ -20,6 +19,8 @@ public class PlayerStat_Endurance : PlayerStat
     }
     #endregion
 
+    private PlayerManager _playerManager;
+
     private bool _hasOnSun;
     private int  _minutesGameTimeOnSun = 60;
     private int _secondsGameTimeOnSun;
@@ -29,15 +30,16 @@ public class PlayerStat_Endurance : PlayerStat
 
     protected override void OnStart()
     {
-        _secondsGameTimeOnSun = (int)(_minutesGameTimeOnSun * 60 * GWM.Instance.TimeManager.realSecondToGameSecond);
-        _secondsGameTimeOffSun = (int)(_minutesGameTimeOffSun * 60 * GWM.Instance.TimeManager.realSecondToGameSecond);
+        _secondsGameTimeOnSun = (int)(_minutesGameTimeOnSun * 60 * _timeManager.realSecondToGameSecond);
+        _secondsGameTimeOffSun = (int)(_minutesGameTimeOffSun * 60 * _timeManager.realSecondToGameSecond);
+        _playerManager = GWM.Instance.PlayerManager;
     }
 
     protected override void CheckValue()
     {
-        if (GWM.Instance.TimeManager.DayTime == DayTime.Day)
+        if (_timeManager.DayTime == DayTime.Day)
         {
-            Ray ray = new Ray(PM.Instance.head.position, GWM.Instance.mainLight.rotation * Vector3.forward);
+            Ray ray = new Ray(_playerManager.Head.position, GWM.Instance.mainLight.rotation * Vector3.forward);
             if(Physics.Raycast(ray, _distanceRay, GWM.Instance.blockMainLight, GWM.Instance.qti))
             {
                 _hasOnSun = true;

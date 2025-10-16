@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using InfoScene = StaticData.S_GameManager.InfoScene;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,7 +9,7 @@ using UnityEditor;
 
 public class UI_MainMenu : MonoBehaviour
 {
-    private bool _isAwakeSetted;
+    private bool _isMyAwake;
 
     [Header("Buttons")]
     [SerializeField] private UI_Button _resume;
@@ -23,13 +23,15 @@ public class UI_MainMenu : MonoBehaviour
 
     public void MyAwake()
     {
-        if (_isAwakeSetted)
+        if (_isMyAwake)
         {
             Debug.Log("MyAwake has already setted", gameObject);
         }
         else
         {
-            _isAwakeSetted = true;
+            _isMyAwake = true;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
 
             //Resume Init
             _lastSlot = S_SaveSystem.LastSlotUsed();
@@ -52,7 +54,7 @@ public class UI_MainMenu : MonoBehaviour
     {
         S_SaveSystem.NewSlot();
         //Load scene
-        Fader.Instance.ToScene(SceneManager.GetActiveScene().buildIndex + 1);
+        Fader.Instance.ToScene(InfoScene.GameWorld);
     }
 
     public void LoadGame()

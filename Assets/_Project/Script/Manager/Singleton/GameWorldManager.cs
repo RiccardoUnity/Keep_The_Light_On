@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using StringConst = StaticData.S_GameManager.StringConst;
 
 //Connect class / static class / asset / gameObject in scene
 public class GameWorldManager : Singleton_Generic<GameWorldManager>
@@ -31,9 +32,6 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     public int GameDayInRealMinutes { get => _gameDayInRealMinutes; }
     [SerializeField] private int _gameDayInRealMinutes = 30;
 
-    //[Header("Pool Manager")]
-    public PoolManager PoolManager { get; private set; }
-
     [Header("Main GameObject")]
     [SerializeField] private Light _mainLight;
     public Transform mainLight { get => _mainLight.transform; }
@@ -43,18 +41,44 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     public QueryTriggerInteraction qti { get => _qti; }
     private QueryTriggerInteraction _qti = QueryTriggerInteraction.Ignore;
 
+    public PlayerManager PlayerManager { get => _playerManager; }
+    [SerializeField] private PlayerManager _playerManager;
+
+    [Header("UI")]
+    [SerializeField] private UI_Pause _uiPause;
+    public UI_Pause UIPause { get => _uiPause; }
+
     [Header("Asset")]
-    [SerializeField] private SO_ItemManager _SOItemManager;
+    [SerializeField] private SO_ItemManager _soItemManager;
+
+    //Other
+    public PoolManager PoolManager { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
+        Debug.Log(Application.persistentDataPath);
 
         //Check error
         if (_mainLight == null)
         {
             _hasAnError = true;
             Debug.LogError("Main Light missing", gameObject);
+        }
+        if (_playerManager == null)
+        {
+            _hasAnError = true;
+            Debug.LogError("Player Manager missing", gameObject);
+        }
+        if (_uiPause == null)
+        {
+            _hasAnError = true;
+            Debug.LogError("UI Pause missing", gameObject);
+        }
+        if (_soItemManager == null)
+        {
+            _hasAnError = true;
+            Debug.LogError("SO Item Manager missing", gameObject);
         }
 
         //Safe execute
@@ -64,7 +88,8 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             TimeManager = TimeManager.Instance(Key.GetKey());
             PoolManager = PoolManager.Instance(Key.GetKey());
 
-            //Load internal data
+            //Load data
+            _uiPause.MyAwake();
             if (S_SaveSystem.HasALoading)
             {
                 S_SaveSystem.LoadGameWorldManager();
@@ -73,6 +98,9 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             {
 
             }
+
+            //Player (included Player Load in MyAwake)
+            _playerManager.MyAwake();
         }
     }
 
@@ -102,6 +130,14 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             TimeManager.MyStart(_mainLight, out _time);
             _hasTimeAlreadyStart = true;
             StartCoroutine(_time);
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetButtonDown(StringConst.Escape))
+        {
+            _uiPause.gameObject.SetActive(!_uiPause.gameObject.activeSelf);
         }
     }
 }

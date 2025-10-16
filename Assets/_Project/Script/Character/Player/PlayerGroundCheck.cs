@@ -5,23 +5,7 @@ using UnityEngine;
 
 public class PlayerGroundCheck : MonoBehaviour
 {
-    #region MyAwake
-    private bool _isMyAwake;
-    public void MyAwake()
-    {
-        if (_isMyAwake)
-        {
-            Debug.LogWarning("MyAwake of the PlayerGroundCheck has already executed", gameObject);
-        }
-        else
-        {
-            _isMyAwake = true;
-
-            PlayerManager.Instance.playerController.onJump += SetIsInJump;
-        }
-    }
-    #endregion
-
+    private PlayerManager _playerManager;
     private bool _isFrameCheck;
     private float _radius = 0.1f;
     private Vector3 _offset = new Vector3(0f, 0.075f, 0f);
@@ -31,6 +15,23 @@ public class PlayerGroundCheck : MonoBehaviour
     private bool _isJumpStart;
     public bool isGrounded { get; private set; }
     public event Action<bool> onGroundedChange;
+
+    private bool _isMyAwake;
+
+    public void MyAwake()
+    {
+        if (_isMyAwake)
+        {
+            Debug.Log("MyAwake has already setted", gameObject);
+        }
+        else
+        {
+            _isMyAwake = true;
+
+            _playerManager = GameWorldManager.Instance.PlayerManager;
+            _playerManager.PlayerController.onJump += SetIsInJump;
+        }
+    }
 
     private void SetIsInJump()
     {

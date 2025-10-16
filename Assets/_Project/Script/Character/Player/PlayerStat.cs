@@ -41,6 +41,8 @@ public abstract class PlayerStat
     public event Action onValueZero;
     public event Action onValueOne;
 
+    protected TimeManager _timeManager;
+
     public virtual bool MyStart()
     {
         if (_hasAlreadyStarted)
@@ -50,7 +52,8 @@ public abstract class PlayerStat
         else
         {
             _hasAlreadyStarted = true;
-            GameWorldManager.Instance.TimeManager.onSecondDayChange += UpdateValue;
+            _timeManager = GameWorldManager.Instance.TimeManager;
+            _timeManager.onSecondDayChange += UpdateValue;
             OnStart();
             return true;
         }

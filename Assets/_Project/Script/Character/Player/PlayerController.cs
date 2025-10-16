@@ -7,6 +7,8 @@ using StringConst = StaticData.S_GameManager.StringConst;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody _rb;
+    private PlayerManager _playerManager;
+    private UI_Option _option;
 
     private bool _isMoveOn = true;
     private float _right;
@@ -21,24 +23,33 @@ public class PlayerController : MonoBehaviour
     private bool _canJump = true;
     public event Action onJump;
 
-    #region MyAwake
+    private float _mouseX;
+    private float _mouseY;
+    private float _pitch;   //Rotation long axis X
+    private float _yaw;     //Rotation long axis Y
+    private const float _sensitivityX = 800f;
+    private const float _sensitivityY = 400f;
+    [SerializeField] private float _pitchLimit = 80f;
+    
     private bool _isMyAwake;
+
     public void MyAwake()
     {
         if (_isMyAwake)
         {
-            Debug.LogWarning("MyAwake of the PlayerController has already executed", gameObject);
+            Debug.Log("MyAwake has already setted", gameObject);
         }
         else
         {
             _isMyAwake = true;
             _gravityMagnitude = Physics.gravity.magnitude;
             _rb = GetComponent<Rigidbody>();
+            _playerManager = GameWorldManager.Instance.PlayerManager;
+            _option = GameWorldManager.Instance.UIPause.UIOption;
 
-            PlayerManager.Instance.playerGroundCheck.onGroundedChange += SetCanJump;
+            _playerManager.PlayerGroundCheck.onGroundedChange += SetCanJump;
         }
     }
-    #endregion
 
     private void SetIsMoveOn(bool value) => _isMoveOn = value;
     private void SetCanJump(bool value) => _canJump = value;
@@ -50,11 +61,27 @@ public class PlayerController : MonoBehaviour
         {
             _keyJumpPress = Input.GetButton(StringConst.Jump);
         }
+
+        //Rotation Input
+        _mouseX = Input.GetAxis(StringConst.MouseX) * _sensitivityX * _option.MouseSensitivity * (_option.InvertMouseX ? -1 : 1);
+        _mouseY = Input.GetAxis(StringConst.MouseY) * _sensitivityY * _option.MouseSensitivity * (_option.InvertMouseY ? -1 : 1);
+
+        if (_mouseX != 0f || _mouseY != 0f)
+        {
+            //Camera
+            _pitch += _mouseY * Time.deltaTime;
+            _pitch = Mathf.Clamp(_pitch, -_pitchLimit, _pitchLimit);
+            _playerManager.Camera.transform.eulerAngles = new Vector3(_pitch, _yaw, 0f);
+
+            //Player
+            _yaw += _mouseX * Time.deltaTime;
+            transform.eulerAngles = new Vector3(0f, _yaw, 0f);
+        }
     }
 
     void FixedUpdate()
     {
-        if (PlayerManager.Instance.playerGroundCheck.isGrounded)
+        if (_playerManager.PlayerGroundCheck.isGrounded)
         {
             if (_keyJumpPress)
             {
@@ -88,7 +115,7 @@ public class PlayerController : MonoBehaviour
         MoveDirection();
     }
 
-    private void MoveDirection() => _rb.MovePosition(_rb.position + _direction * (_speed * Time.fixedDeltaTime));
+    private void MoveDirection() => _rb.MovePosition(_rb.position + transform.rotation * _direction * (_speed * Time.fixedDeltaTime));
 
     private void Jump()
     {

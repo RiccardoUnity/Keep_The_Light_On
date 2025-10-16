@@ -1,60 +1,62 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GTM = TimeManager;
 
 [RequireComponent(typeof(PlayerGroundCheck))]
 [RequireComponent(typeof(PlayerController))]
-public class PlayerManager : Singleton_Generic<PlayerManager>
+public class PlayerManager : MonoBehaviour
 {
-    #region Singleton
-    protected override bool ShouldBeDestroyOnLoad() => true;
+    private bool _isMyAwake;
 
-    static PlayerManager()
-    {
-        _useResources = false;
-        _resourcesPath = "";
-    }
-    #endregion
-
+    public Transform Head { get => _head; }
     [SerializeField] private Transform _head;
-    public Transform head { get =>  _head; }
+
+    public CinemachineVirtualCamera Camera { get => _camera; }
+    [SerializeField] private CinemachineVirtualCamera _camera;
 
     //Component
-    public PlayerGroundCheck playerGroundCheck { get; private set; }
-    public PlayerController playerController { get; private set; }
+    public PlayerGroundCheck PlayerGroundCheck { get; private set; }
+    public PlayerController PlayerController { get; private set; }
 
     //Stats
     public static Key Key = new Key();
-    public PlayerStat_Endurance endurance { get; private set; }
+    public PlayerStat_Endurance Endurance { get; private set; }
 
-    protected override void Awake()
+    public void MyAwake()
     {
-        base.Awake();
-
-        playerGroundCheck = GetComponent<PlayerGroundCheck>();
-        playerController = GetComponent<PlayerController>();
-
-        playerGroundCheck.MyAwake();
-        playerController.MyAwake();
-
-        //Stats
-        endurance = PlayerStat_Endurance.Instance(Key.GetKey());
-
-        //Load internal data
-        if (S_SaveSystem.HasALoading)
+        if (_isMyAwake)
         {
-            S_SaveSystem.LoadPlayerManager();
+            Debug.Log("MyAwake has already setted", gameObject);
         }
         else
         {
+            _isMyAwake = true;
 
+            PlayerGroundCheck = GetComponent<PlayerGroundCheck>();
+            PlayerController = GetComponent<PlayerController>();
+
+            PlayerGroundCheck.MyAwake();
+            PlayerController.MyAwake();
+
+            //Stats
+            Endurance = PlayerStat_Endurance.Instance(Key.GetKey());
+
+            //Load internal data
+            if (S_SaveSystem.HasALoading)
+            {
+                S_SaveSystem.LoadPlayerManager();
+            }
+            else
+            {
+
+            }
         }
     }
 
     void Start()
     {
         //Stats
-        endurance.MyStart();
+        Endurance.MyStart();
     }
 }

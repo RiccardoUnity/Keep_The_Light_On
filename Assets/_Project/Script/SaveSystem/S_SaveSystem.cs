@@ -55,7 +55,7 @@ public static partial class S_SaveSystem
         }
         if (_savePlayer == null)
         {
-            _savePlayer = new Save_Player(PlayerManager.Instance);
+            _savePlayer = new Save_Player();
         }
     }
 

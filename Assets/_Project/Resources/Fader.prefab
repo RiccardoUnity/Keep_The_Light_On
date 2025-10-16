@@ -266,6 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cac3283d509e47e4ba135ef7c82d4305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bypass: 1
   _background: {fileID: 4154470588500859096}
   _foreground: {fileID: 6387211787744191267}
   _timeCoroutine: 2

@@ -11,22 +11,26 @@ public static partial class S_SaveSystem
         [SerializeField] private Vector3Save _position;
         [SerializeField] private QuaternionSave _rotation;
 
-        public Save_Player(PlayerManager playerManager)
+        public bool Save()
         {
-            _playerManager = playerManager;
-
+            if (_playerManager != null)
+            {
+                _position.Update(_playerManager.transform.position);
+                _rotation.Update(_playerManager.transform.rotation);
+                return true;
+            }
+            return false;
         }
 
-        public void Save()
+        public bool Load()
         {
-            _position.Update(_playerManager.transform.position);
-            _rotation.Update(_playerManager.transform.rotation);
-        }
-
-        public void Load()
-        {
-            _playerManager.transform.position = _position.Load();
-            _playerManager.transform.rotation = _rotation.Load();
+            if (_playerManager != null)
+            {
+                _playerManager.transform.position = _position.Load();
+                _playerManager.transform.rotation = _rotation.Load();
+                return true;
+            }
+            return false;
         }
     }
 }
