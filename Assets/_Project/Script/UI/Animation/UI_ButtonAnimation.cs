@@ -97,8 +97,10 @@ public class UI_ButtonAnimation : MonoBehaviour, IPointerEnterHandler, IPointerE
     {
         if (_animation != null)
         {
+            _currentState = ButtonState.None;
             _targetState = ButtonState.None;
             _animationVerse = false;
+            _currentTime = 0f;
             StartCoroutine(_animation);
         }
     }

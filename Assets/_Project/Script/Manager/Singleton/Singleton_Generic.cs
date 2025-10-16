@@ -17,6 +17,12 @@ public abstract class Singleton_Generic<T> : MonoBehaviour where T : MonoBehavio
                 else
                 {
                     GameObject gameObject = new GameObject(typeof(T).ToString(), typeof(T));
+                    if (_useResources && !_correctInstantiate)
+                    {
+                        Destroy(gameObject);
+                        _correctInstantiate = true;
+                        Instantiate(Resources.Load<GameObject>(_resourcesPath));
+                    }
                 }
             }
             return _instance;
@@ -29,16 +35,20 @@ public abstract class Singleton_Generic<T> : MonoBehaviour where T : MonoBehavio
 
     protected static bool _useResources;
     protected static string _resourcesPath;
+    private static bool _correctInstantiate;
 
     protected virtual void Awake()
     {
         if (_instance == null)
         {
-            _instance = this as T;
-            if (!ShouldBeDestroyOnLoad())
+            if (_useResources && _correctInstantiate || !_useResources)
             {
-                Debug.LogWarning($"-- Singleton {typeof(T)} inserito in DontDestroyOnLoad --");
-                DontDestroyOnLoad(gameObject);
+                _instance = this as T;
+                if (!ShouldBeDestroyOnLoad())
+                {
+                    Debug.LogWarning($"-- Singleton {typeof(T)} inserito in DontDestroyOnLoad --");
+                    DontDestroyOnLoad(gameObject);
+                }
             }
         }
         else

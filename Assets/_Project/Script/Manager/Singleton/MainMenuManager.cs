@@ -22,8 +22,8 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
     [SerializeField] private UI_MainMenu _uiMainMenu;
     public UI_Option UIOption { get => _uiOption; }
     [SerializeField] private UI_Option _uiOption;
-    public RectTransform Credits { get =>  _credits; }
-    [SerializeField] private RectTransform _credits;
+    public UI_Credits Credits { get =>  _uiCredits; }
+    [SerializeField] private UI_Credits _uiCredits;
 
     protected override void Awake()
     {
@@ -74,9 +74,12 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
     {
         _uiMainMenu.gameObject.SetActive(false);
         _uiOption.gameObject.SetActive(false);
+        _uiCredits.gameObject.SetActive(false);
     }
 
     public void ActiveMainMenu() => _uiMainMenu.gameObject.SetActive(true);
 
     public void ActiveOption() => _uiOption.gameObject.SetActive(true);
+
+    public void ActiveCredits() => _uiCredits.gameObject.SetActive(true);
 }

@@ -30,6 +30,12 @@ public class UI_Button : MonoBehaviour
         _activeColorText = _text.color;
     }
 
+    void OnEnable()
+    {
+        OnExit();
+        OnHover(0f);
+    }
+
     public void SetActive(bool value)
     {
         _active = value;

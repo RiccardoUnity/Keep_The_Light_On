@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -50,6 +52,7 @@ public class UI_MainMenu : MonoBehaviour
     {
         S_SaveSystem.NewSlot();
         //Load scene
+        Fader.Instance.ToScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void LoadGame()
@@ -65,7 +68,8 @@ public class UI_MainMenu : MonoBehaviour
 
     public void Credits()
     {
-
+        MainMenuManager.Instance.DeactiveAllPanels();
+        MainMenuManager.Instance.ActiveCredits();
     }
 
     public void Exit()

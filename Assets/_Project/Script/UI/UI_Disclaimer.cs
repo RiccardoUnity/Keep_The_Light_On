@@ -10,13 +10,9 @@ public class UI_Disclaimer : MonoBehaviour
     IEnumerator Start()
     {
         _skip.gameObject.SetActive(false);
-        yield return new WaitForSeconds(_awaitSecond);
+        yield return new WaitForSeconds(_awaitSecond + Fader.Instance.TimeCoroutine);
         _skip.gameObject.SetActive(true);
     }
 
-    public void ToMainMenu()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
-
+    public void ToMainMenu() => Fader.Instance.ToScene(SceneManager.GetActiveScene().buildIndex + 1);
 }
