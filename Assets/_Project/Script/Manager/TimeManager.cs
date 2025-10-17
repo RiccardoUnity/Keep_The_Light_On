@@ -28,9 +28,9 @@ public class TimeManager
     #endregion
 
     private int _gameDayInRealSeconds = -1;
-    public float realSecondToGameSecond {  get; private set; }
-    public int currentSecondDay { get; private set; }
-    public int currentDay { get; private set; }
+    public float RealSecondToGameSecond {  get; private set; }
+    public int CurrentSecondDay { get; private set; }
+    public int CurrentDay { get; private set; }
     public int SecondDelay { get => _secondDelay; }
     private const int _secondDelay = 2;
 
@@ -65,8 +65,8 @@ public class TimeManager
         else
         {
             _isStartTimeSetted = true;
-            this.currentSecondDay = currentSecondDay;
-            this.currentDay = currentDay;
+            CurrentSecondDay = currentSecondDay;
+            CurrentDay = currentDay;
             return true;
         }
     }
@@ -85,13 +85,13 @@ public class TimeManager
             _isStarted = true;
 
             _gameDayInRealSeconds = GWM.Instance.GameDayInRealMinutes * 60;
-            realSecondToGameSecond = (24 * 60 * 60) / _gameDayInRealSeconds;
+            RealSecondToGameSecond = (24 * 60 * 60) / _gameDayInRealSeconds;
 
             if (!S_SaveSystem.HasALoading)
             {
                 int startHours = GWM.Instance.StartHours;
                 int startMinutes = GWM.Instance.StartMinutes;
-                currentSecondDay = _gameDayInRealSeconds * ((startHours * 60 * 60) + startMinutes * 60) / (24 * 60 * 60);
+                CurrentSecondDay = _gameDayInRealSeconds * ((startHours * 60 * 60) + startMinutes * 60) / (24 * 60 * 60);
             }
 
             _mainLight = mainLight.transform;
@@ -109,7 +109,7 @@ public class TimeManager
     public void SetRotationMainLight()
     {
         float angleSecondLight = 360f / _gameDayInRealSeconds;
-        float angleXLight = (angleSecondLight * _gameDayInRealSeconds * 0.75f) - (angleSecondLight * currentSecondDay);
+        float angleXLight = (angleSecondLight * _gameDayInRealSeconds * 0.75f) - (angleSecondLight * CurrentSecondDay);
         _mainLight.eulerAngles = new Vector3(angleXLight, _mainLight.eulerAngles.y, _mainLight.eulerAngles.z);
         _angleSecondLightV3 = new Vector3(angleSecondLight, 0f, 0f);
     }
@@ -122,19 +122,19 @@ public class TimeManager
         _daylyBand[2] = secondHour * 17;
         _daylyBand[3] = secondHour * 19;
 
-        if (currentSecondDay < _daylyBand[0])
+        if (CurrentSecondDay < _daylyBand[0])
         {
             DayTime = DayTime.Night;
         }
-        else if (currentDay < _daylyBand[1])
+        else if (CurrentDay < _daylyBand[1])
         {
             DayTime = DayTime.Dawn;
         }
-        else if (currentDay < _daylyBand[2])
+        else if (CurrentDay < _daylyBand[2])
         {
             DayTime = DayTime.Day;
         }
-        else if (currentDay < _daylyBand[3])
+        else if (CurrentDay < _daylyBand[3])
         {
             DayTime = DayTime.Dusk;
         }
@@ -151,7 +151,6 @@ public class TimeManager
     {
         while (_isTimeGameOn)
         {
-            yield return _delay;
             //Game in Pause
             if (_isGamePause)
             {
@@ -162,45 +161,45 @@ public class TimeManager
             {
                 GameInPlay();
             }
+            yield return _delay;
         }
     }
 
     private void GameInPlay()
     {
-        currentSecondDay += _secondDelay;
-        onSecondDayChange?.Invoke();
-        //A day is passed
-        if (currentSecondDay >= _gameDayInRealSeconds)
-        {
-            ++currentDay;
-            currentSecondDay -= _gameDayInRealSeconds;
-            onDayChange?.Invoke();
-        }
-
         //Main Light change direction
         _mainLight.eulerAngles += _angleSecondLightV3 * _secondDelay;
 
+        CurrentSecondDay += _secondDelay;
         SetDayTime();
+        onSecondDayChange?.Invoke();
+        //A day is passed
+        if (CurrentSecondDay >= _gameDayInRealSeconds)
+        {
+            ++CurrentDay;
+            CurrentSecondDay -= _gameDayInRealSeconds;
+            onDayChange?.Invoke();
+        }
     }
 
     private void SetDayTime()
     {
-        if (DayTime == DayTime.Night && currentSecondDay > _daylyBand[0])
+        if (DayTime == DayTime.Night && CurrentSecondDay > _daylyBand[0])
         {
             DayTime = DayTime.Dawn;
             onDawn?.Invoke();
         }
-        else if (DayTime == DayTime.Dawn && currentSecondDay > _daylyBand[1])
+        else if (DayTime == DayTime.Dawn && CurrentSecondDay > _daylyBand[1])
         {
             DayTime = DayTime.Day;
             onDay?.Invoke();
         }
-        else if (DayTime == DayTime.Day && currentSecondDay > _daylyBand[2])
+        else if (DayTime == DayTime.Day && CurrentSecondDay > _daylyBand[2])
         {
             DayTime = DayTime.Dusk;
             onDusk?.Invoke();
         }
-        else if (DayTime == DayTime.Dusk && currentSecondDay > _daylyBand[3])
+        else if (DayTime == DayTime.Dusk && CurrentSecondDay > _daylyBand[3])
         {
             DayTime = DayTime.Night;
             onNight?.Invoke();

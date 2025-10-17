@@ -12,6 +12,7 @@ namespace StaticData
             //Input
             public static string Horizontal { get => "Horizontal"; }
             public static string Vertical { get => "Vertical"; }
+            public static string Run { get => "Fire3"; }
             public static string Jump { get => "Jump"; }
             public static string MouseX { get => "Mouse X"; }
             public static string MouseY { get => "Mouse Y"; }

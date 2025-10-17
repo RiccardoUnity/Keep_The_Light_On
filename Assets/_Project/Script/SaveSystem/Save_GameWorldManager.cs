@@ -11,8 +11,8 @@ public static partial class S_SaveSystem
 
         public void Save()
         {
-            currentSecondDay = GameWorldManager.Instance.TimeManager.currentSecondDay;
-            currentDay = GameWorldManager.Instance.TimeManager.currentDay;
+            currentSecondDay = GameWorldManager.Instance.TimeManager.CurrentSecondDay;
+            currentDay = GameWorldManager.Instance.TimeManager.CurrentDay;
         }
 
         public void Load()

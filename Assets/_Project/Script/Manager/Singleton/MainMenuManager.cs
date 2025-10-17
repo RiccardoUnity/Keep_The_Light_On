@@ -64,7 +64,15 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
     private void SetKeyPlayerManager(int key)
     {
         PlayerManager.Key.SetKey(key);
-        PlayerStat_Endurance.Key.SetKey(key);
+        PS_Life.Key.SetKey(key);
+        PS_Endurance.Key.SetKey(key);
+        PS_Rest.Key.SetKey(key);
+        PS_Hunger.Key.SetKey(key);
+        PS_Thirst.Key.SetKey(key);
+        PS_Stamina.Key.SetKey(key);
+        PS_SunStroke.Key.SetKey(key);
+        PS_StomacStroke.Key.SetKey(key);
+        PS_HeartStroke.Key.SetKey(key);
     }
 
 

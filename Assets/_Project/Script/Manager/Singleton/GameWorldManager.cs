@@ -46,6 +46,7 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
     [Header("UI")]
     [SerializeField] private UI_Pause _uiPause;
+    [SerializeField] private UI_Stats _uiStats;
     public UI_Pause UIPause { get => _uiPause; }
 
     [Header("Asset")]
@@ -89,7 +90,6 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             PoolManager = PoolManager.Instance(Key.GetKey());
 
             //Load data
-            _uiPause.MyAwake();
             if (S_SaveSystem.HasALoading)
             {
                 S_SaveSystem.LoadGameWorldManager();
@@ -101,6 +101,10 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
             //Player (included Player Load in MyAwake)
             _playerManager.MyAwake();
+
+            //UI
+            _uiPause.MyAwake();
+            _uiStats.MyAwake();
         }
     }
 

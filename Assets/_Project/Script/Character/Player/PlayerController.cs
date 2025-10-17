@@ -13,9 +13,11 @@ public class PlayerController : MonoBehaviour
     private bool _isMoveOn = true;
     private float _right;
     private float _forward;
+    private bool _isRun;
     private float _lenght;
     private Vector3 _direction;
-    [SerializeField] private float _speed = 4f;
+    [SerializeField] private float _walkSpeed = 4f;
+    [SerializeField] private float _runSpeed = 6f;
 
     [SerializeField] private float _heightJump = 1f;
     private float _gravityMagnitude;
@@ -30,6 +32,11 @@ public class PlayerController : MonoBehaviour
     private const float _sensitivityX = 800f;
     private const float _sensitivityY = 400f;
     [SerializeField] private float _pitchLimit = 80f;
+
+    //To PS_Rest
+    private float _walkTimeToProcess;
+    private float _runTimeToProcess;
+    private int _jumpToProcess;
     
     private bool _isMyAwake;
 
@@ -77,6 +84,11 @@ public class PlayerController : MonoBehaviour
             _yaw += _mouseX * Time.deltaTime;
             transform.eulerAngles = new Vector3(0f, _yaw, 0f);
         }
+
+        //MoveInput
+        _right = Input.GetAxis(StringConst.Horizontal);
+        _forward = Input.GetAxis(StringConst.Vertical);
+        _isRun = Input.GetButton(StringConst.Run);
     }
 
     void FixedUpdate()
@@ -94,32 +106,43 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            MoveDirection();
+            Walk();
         }
     }
 
     private void Move()
     {
-        _right = Input.GetAxis(StringConst.Horizontal);
-        _forward = Input.GetAxis(StringConst.Vertical);
-
-        _lenght = new Vector3(_right, 0f, _forward).sqrMagnitude;
-        if (_lenght > 1f)
+        if (_right != 0f || _forward != 0f)
         {
-            _lenght = Mathf.Sqrt(_lenght);
-            _right /= _lenght;
-            _forward /= _lenght;
-        }
-        _direction = new Vector3(_right, 0f, _forward);
+            _lenght = new Vector3(_right, 0f, _forward).sqrMagnitude;
+            if (_lenght > 1f)
+            {
+                _lenght = Mathf.Sqrt(_lenght);
+                _right /= _lenght;
+                _forward /= _lenght;
+            }
+            _direction = new Vector3(_right, 0f, _forward);
 
-        MoveDirection();
+            if (_isRun)
+            {
+                _runTimeToProcess += Time.fixedDeltaTime;
+                Run();
+            }
+            else
+            {
+                _walkTimeToProcess += Time.fixedDeltaTime;
+                Walk();
+            }
+        }
     }
 
-    private void MoveDirection() => _rb.MovePosition(_rb.position + transform.rotation * _direction * (_speed * Time.fixedDeltaTime));
+    private void Walk() => _rb.MovePosition(_rb.position + transform.rotation * _direction * (_walkSpeed * Time.fixedDeltaTime));
+    private void Run() => _rb.MovePosition(_rb.position + transform.rotation * _direction * (_runSpeed * Time.fixedDeltaTime));
 
     private void Jump()
     {
         _keyJumpPress = false;
+        ++_jumpToProcess;
         _rb.AddForce(Vector3.up * Mathf.Sqrt(2f * _gravityMagnitude * _heightJump), ForceMode.VelocityChange);
         onJump?.Invoke();
     }

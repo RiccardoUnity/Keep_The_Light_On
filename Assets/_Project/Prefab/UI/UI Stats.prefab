@@ -578,8 +578,9 @@ GameObject:
   - component: {fileID: 2956391827361485450}
   - component: {fileID: 3077748487752263670}
   - component: {fileID: 8708289165516712136}
+  - component: {fileID: 861841611713153650}
   m_Layer: 5
-  m_Name: CanvasBar
+  m_Name: UI Stats
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -659,7 +660,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3984068551759396448}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
@@ -669,6 +670,24 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &861841611713153650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3984068551759396448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d90074a2443ba4aacf63b1bb3b62f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debug: 1
+  _uiLife: {fileID: 8843607712653611580}
+  _uiEndurance: {fileID: 3270412017925408277}
+  _uiRest: {fileID: 8330586033107598969}
+  _uiHunger: {fileID: 7052349118644913532}
+  _uiThirst: {fileID: 7357339839489773875}
 --- !u!1 &4248476121942646936
 GameObject:
   m_ObjectHideFlags: 0
