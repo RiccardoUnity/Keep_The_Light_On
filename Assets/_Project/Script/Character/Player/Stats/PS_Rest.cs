@@ -32,14 +32,16 @@ public class PS_Rest : PlayerStat
 
     protected override void CheckValue()
     {
-        
+        _walkMoltiplier = _playerController.ToProcess(true) * _decrease;
+        _runMoltiplier = _playerController.ToProcess(false) * _decrease * 2;
+        _jumpMoltiplier = _playerController.ToProcess() * _decrease * 4;
     }
     
     protected override void SetValue()
     {
         if (_playerManager.IsWakeUp)
         {
-            Value -= _decrease * _moltiplierDecrease;
+            Value -= _decrease * _moltiplierDecrease - _walkMoltiplier - _runMoltiplier - _jumpMoltiplier;
         }
         else
         {

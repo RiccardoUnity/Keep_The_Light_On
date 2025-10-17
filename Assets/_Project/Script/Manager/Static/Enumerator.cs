@@ -1,3 +1,10 @@
+public enum GameTimeType
+{
+    Pause,
+    Normal,
+    Accelerate
+}
+
 public enum DayTime
 {
     Dawn,

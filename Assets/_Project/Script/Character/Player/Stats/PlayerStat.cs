@@ -19,7 +19,7 @@ public abstract class PlayerStat
             IsIncrease = isIncrease;
             _duration = duration;
             _onDestroy = onDestroy;
-            GWM.Instance.TimeManager.onSecondDayChange += UpdateDuration;
+            GWM.Instance.TimeManager.onNormalPriority += UpdateDuration;
         }
 
         private void UpdateDuration()
@@ -61,7 +61,7 @@ public abstract class PlayerStat
         {
             _isMyStart = true;
             _timeManager = GWM.Instance.TimeManager;
-            _timeManager.onSecondDayChange += UpdateValue;
+            _timeManager.onNormalPriority += UpdateValue;
             _playerManager = GWM.Instance.PlayerManager;
             OnStart();
             return true;

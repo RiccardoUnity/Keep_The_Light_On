@@ -32,12 +32,13 @@ public class TimeManager
     public int CurrentSecondDay { get; private set; }
     public int CurrentDay { get; private set; }
     public int SecondDelay { get => _secondDelay; }
-    private const int _secondDelay = 2;
+    private const int _secondDelay = 1;
 
     private bool _isStartTimeSetted;
     private bool _isStarted;
     private bool _isTimeGameOn = true;
-    private bool _isGamePause;
+    private GameTimeType _gameTimeType = GameTimeType.Normal;
+    private bool _gameplayNotPriority;
     private IEnumerator _gameTime;
     private WaitForSeconds _delay;
 
@@ -47,7 +48,9 @@ public class TimeManager
     public DayTime DayTime { get; private set; }
     private int[] _daylyBand = new int[4];
 
-    public event Action onSecondDayChange;
+    public event Action onNormalPriority;
+    public event Action onNormalNotPriority1;
+    public event Action onNormalNotPriority2;
     public event Action onDayChange;
     public event Action onDawn;
     public event Action onDay;
@@ -145,34 +148,41 @@ public class TimeManager
     }
 
     private void SetIsGameTimeOn(bool value) => _isTimeGameOn = value;
-    private void SetIsGamePause(bool value) => _isGamePause = value;
 
     private IEnumerator GameTime()
     {
         while (_isTimeGameOn)
         {
-            //Game in Pause
-            if (_isGamePause)
+            switch (_gameTimeType)
             {
-
+                case GameTimeType.Pause:
+                    yield return null;
+                    break;
+                case GameTimeType.Normal:
+                    GamePlayNormalPriority();
+                    if (_gameplayNotPriority)
+                    {
+                        GamePlayNotPriority1();
+                    }
+                    else
+                    {
+                        GamePlayNotPriority2();
+                    }
+                    yield return _delay;
+                    break;
+                case GameTimeType.Accelerate:
+                    yield return null;
+                    break;
             }
-            //Game in Play
-            else
-            {
-                GameInPlay();
-            }
-            yield return _delay;
         }
     }
 
-    private void GameInPlay()
+    private void GamePlayNormalPriority()
     {
-        //Main Light change direction
-        _mainLight.eulerAngles += _angleSecondLightV3 * _secondDelay;
+        _gameplayNotPriority = !_gameplayNotPriority;
 
         CurrentSecondDay += _secondDelay;
-        SetDayTime();
-        onSecondDayChange?.Invoke();
+        onNormalPriority?.Invoke();
         //A day is passed
         if (CurrentSecondDay >= _gameDayInRealSeconds)
         {
@@ -180,6 +190,20 @@ public class TimeManager
             CurrentSecondDay -= _gameDayInRealSeconds;
             onDayChange?.Invoke();
         }
+    }
+
+    private void GamePlayNotPriority1()
+    {
+        onNormalNotPriority1?.Invoke();
+    }
+
+    private void GamePlayNotPriority2()
+    {
+        //Main Light change direction
+        _mainLight.eulerAngles += _angleSecondLightV3 * _secondDelay;
+        SetDayTime();
+
+        onNormalNotPriority2?.Invoke();
     }
 
     private void SetDayTime()

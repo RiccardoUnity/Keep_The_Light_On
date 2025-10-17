@@ -33,10 +33,12 @@ public class PlayerController : MonoBehaviour
     private const float _sensitivityY = 400f;
     [SerializeField] private float _pitchLimit = 80f;
 
-    //To PS_Rest
-    private float _walkTimeToProcess;
-    private float _runTimeToProcess;
-    private int _jumpToProcess;
+    public float WalkTime { get; private set; }
+    private float _walkTimeProcessed;
+    public float RunTime { get; private set; }
+    private float _runTimeProcessed;
+    public int JumpNumber { get; private set; }
+    private int _jumpNumberProcessed;
     
     private bool _isMyAwake;
 
@@ -125,12 +127,12 @@ public class PlayerController : MonoBehaviour
 
             if (_isRun)
             {
-                _runTimeToProcess += Time.fixedDeltaTime;
+                RunTime += Time.fixedDeltaTime;
                 Run();
             }
             else
             {
-                _walkTimeToProcess += Time.fixedDeltaTime;
+                WalkTime += Time.fixedDeltaTime;
                 Walk();
             }
         }
@@ -142,8 +144,31 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         _keyJumpPress = false;
-        ++_jumpToProcess;
+        ++JumpNumber;
         _rb.AddForce(Vector3.up * Mathf.Sqrt(2f * _gravityMagnitude * _heightJump), ForceMode.VelocityChange);
         onJump?.Invoke();
+    }
+
+    public float ToProcess(bool isWalk)
+    {
+        float toProcess;
+        if (isWalk)
+        {
+            toProcess = WalkTime - _walkTimeProcessed;
+            _walkTimeProcessed = WalkTime;
+        }
+        else
+        {
+            toProcess = RunTime - _runTimeProcessed;
+            _runTimeProcessed = RunTime;
+        }
+        return toProcess;
+    }
+
+    public int ToProcess()
+    {
+        int toProcess = JumpNumber - _jumpNumberProcessed;
+        _jumpNumberProcessed = JumpNumber;
+        return toProcess;
     }
 }

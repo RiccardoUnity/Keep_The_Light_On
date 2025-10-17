@@ -26,7 +26,7 @@ public class UI_Stats : MonoBehaviour
         {
             _isMyAwake = true;
 
-            GameWorldManager.Instance.TimeManager.onSecondDayChange += MyUpdate;
+            GameWorldManager.Instance.TimeManager.onNormalPriority += MyUpdate;
             _endurance = GameWorldManager.Instance.PlayerManager.Endurance;
         }
     }
