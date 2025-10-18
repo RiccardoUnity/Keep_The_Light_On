@@ -1,22 +1,26 @@
-﻿using GWM = GameWorldManager;
+﻿using System;
+using GWM = GameWorldManager;
 
 public class PS_HeartStroke : PlayerStat
 {
     #region LikeSingleton
     private PS_HeartStroke() : base() { }
-    public static PS_HeartStroke Instance(int key)
+    public static Func<bool> Instance(int key, out PS_HeartStroke heartStroke, bool debug = false)
     {
         if (key == Key.GetKey())
         {
-            return new PS_HeartStroke();
+            heartStroke = new PS_HeartStroke();
+            _debug = debug;
+            return heartStroke.MyAwake;
         }
+        heartStroke = null;
         return null;
     }
     #endregion
 
 
 
-    protected override void OnStart()
+    protected override void OnAwake()
     {
 
     }
@@ -26,7 +30,7 @@ public class PS_HeartStroke : PlayerStat
 
     }
 
-    protected override void SetValue()
+    protected override void SetValue(int secondsDelay)
     {
 
     }

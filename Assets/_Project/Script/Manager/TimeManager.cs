@@ -31,13 +31,14 @@ public class TimeManager
     public float RealSecondToGameSecond {  get; private set; }
     public int CurrentSecondDay { get; private set; }
     public int CurrentDay { get; private set; }
-    public int SecondDelay { get => _secondDelay; }
     private const int _secondDelay = 1;
-
+    private bool _isPauseCalled;
+    private int _accelerationInGameSecond;
+    private int _accelerationMoltiplier;
     private bool _isStartTimeSetted;
     private bool _isStarted;
     private bool _isTimeGameOn = true;
-    private GameTimeType _gameTimeType = GameTimeType.Normal;
+    public GameTimeType GameTimeType { get; private set; }
     private bool _gameplayNotPriority;
     private IEnumerator _gameTime;
     private WaitForSeconds _delay;
@@ -48,9 +49,10 @@ public class TimeManager
     public DayTime DayTime { get; private set; }
     private int[] _daylyBand = new int[4];
 
-    public event Action onNormalPriority;
-    public event Action onNormalNotPriority1;
-    public event Action onNormalNotPriority2;
+    public event Action onPause;
+    public event Action<int> onNormalPriority;
+    public event Action<int> onNormalNotPriority1;
+    public event Action<int> onNormalNotPriority2;
     public event Action onDayChange;
     public event Action onDawn;
     public event Action onDay;
@@ -100,6 +102,7 @@ public class TimeManager
             _mainLight = mainLight.transform;
             SetRotationMainLight();
 
+            GameTimeType = GameTimeType.Normal;
             SetDailyBand();
             _delay = new WaitForSeconds(_secondDelay);
             time = GameTime();
@@ -153,36 +156,60 @@ public class TimeManager
     {
         while (_isTimeGameOn)
         {
-            switch (_gameTimeType)
+            if (GWM.Instance.IsGamePause)
+            {
+                GameTimeType = GameTimeType.Pause;
+            }
+            else
+            {
+                GameTimeType = GameTimeType.Normal;
+                _isPauseCalled = false;
+            }
+
+            switch (GameTimeType)
             {
                 case GameTimeType.Pause:
+                    if (!_isPauseCalled)
+                    {
+                        _isPauseCalled = true;
+                        onPause?.Invoke();
+                    }
                     yield return null;
                     break;
                 case GameTimeType.Normal:
-                    GamePlayNormalPriority();
-                    if (_gameplayNotPriority)
-                    {
-                        GamePlayNotPriority1();
-                    }
-                    else
-                    {
-                        GamePlayNotPriority2();
-                    }
+                    GamePlay(1);
                     yield return _delay;
                     break;
                 case GameTimeType.Accelerate:
+                    if (_accelerationInGameSecond > 0)
+                    {
+                        GamePlay(_accelerationMoltiplier);
+                        _accelerationInGameSecond -= _accelerationMoltiplier;
+                    }
+                    else
+                    {
+                        GameTimeType = GameTimeType.Normal;
+                    }
                     yield return null;
                     break;
             }
         }
     }
 
-    private void GamePlayNormalPriority()
+    private void GamePlay(int moltiplier)
     {
         _gameplayNotPriority = !_gameplayNotPriority;
+        if (_gameplayNotPriority)
+        {
+            onNormalNotPriority1?.Invoke(_secondDelay * moltiplier);
+        }
+        else
+        {
+            onNormalNotPriority2?.Invoke(_secondDelay * moltiplier);
+        }
 
-        CurrentSecondDay += _secondDelay;
-        onNormalPriority?.Invoke();
+        CurrentSecondDay += _secondDelay * moltiplier;
+        onNormalPriority?.Invoke(_secondDelay * moltiplier);
         //A day is passed
         if (CurrentSecondDay >= _gameDayInRealSeconds)
         {
@@ -190,20 +217,10 @@ public class TimeManager
             CurrentSecondDay -= _gameDayInRealSeconds;
             onDayChange?.Invoke();
         }
-    }
 
-    private void GamePlayNotPriority1()
-    {
-        onNormalNotPriority1?.Invoke();
-    }
-
-    private void GamePlayNotPriority2()
-    {
         //Main Light change direction
-        _mainLight.eulerAngles += _angleSecondLightV3 * _secondDelay;
+        _mainLight.eulerAngles += _angleSecondLightV3 * _secondDelay * moltiplier;
         SetDayTime();
-
-        onNormalNotPriority2?.Invoke();
     }
 
     private void SetDayTime()
@@ -230,4 +247,12 @@ public class TimeManager
         }
     }
 
+    public void SetGamePlayAccelerate(int realSecondAccelerate)
+    {
+        GameTimeType = GameTimeType.Accelerate;
+        _accelerationInGameSecond = (int)(realSecondAccelerate / RealSecondToGameSecond);
+        _accelerationMoltiplier = _accelerationInGameSecond / 300 + 1;
+
+        //UI con animazione
+    }
 }

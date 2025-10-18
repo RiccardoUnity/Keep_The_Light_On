@@ -46,6 +46,7 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
     [Header("UI")]
     [SerializeField] private UI_Pause _uiPause;
+    public bool IsGamePause { get; private set; }
     [SerializeField] private UI_Stats _uiStats;
     public UI_Pause UIPause { get => _uiPause; }
 
@@ -139,9 +140,27 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
     void Update()
     {
-        if (Input.GetButtonDown(StringConst.Escape))
+        if (Input.GetButtonDown(StringConst.Escape) && TimeManager.GameTimeType != GameTimeType.Accelerate)
         {
             _uiPause.gameObject.SetActive(!_uiPause.gameObject.activeSelf);
+            IsGamePause = _uiPause.gameObject.activeSelf;
+            if (!IsGamePause)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
     }
+
+    public bool SetGameInPauseTrue(int key)
+    {
+        if (key == Key.GetKey())
+        {
+            IsGamePause = true;
+            return true;
+        }
+        return false;
+    }
+
+    public void SetGameInPauseFalse() => IsGamePause = false;
 }

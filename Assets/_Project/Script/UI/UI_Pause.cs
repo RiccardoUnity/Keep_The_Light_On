@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using static StaticData.S_GameManager;
+using GWM = GameWorldManager;
 
 public class UI_Pause : MonoBehaviour
 {
@@ -31,17 +32,17 @@ public class UI_Pause : MonoBehaviour
 
     void OnEnable()
     {
-        //Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        Physics.simulationMode = SimulationMode.Script;
     }
 
     void OnDisable()
     {
         DeactiveAllPanels();
-        //Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        Physics.simulationMode = SimulationMode.FixedUpdate;
     }
 
     public void DeactiveAllPanels()
@@ -55,6 +56,7 @@ public class UI_Pause : MonoBehaviour
     public void Resume()
     {
         gameObject.SetActive(false);
+        GWM.Instance.SetGameInPauseFalse();
     }
 
     public void Option()

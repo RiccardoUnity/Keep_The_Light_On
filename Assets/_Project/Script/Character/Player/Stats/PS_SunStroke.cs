@@ -1,22 +1,26 @@
-﻿using GWM = GameWorldManager;
+﻿using System;
+using GWM = GameWorldManager;
 
 public class PS_SunStroke : PlayerStat
 {
     #region LikeSingleton
     private PS_SunStroke() : base() { }
-    public static PS_SunStroke Instance(int key)
+    public static Func<bool> Instance(int key, out PS_SunStroke sunStroke, bool debug = false)
     {
         if (key == Key.GetKey())
         {
-            return new PS_SunStroke();
+            sunStroke = new PS_SunStroke();
+            _debug = debug;
+            return sunStroke.MyAwake;
         }
+        sunStroke = null;
         return null;
     }
     #endregion
 
 
 
-    protected override void OnStart()
+    protected override void OnAwake()
     {
 
     }
@@ -26,7 +30,7 @@ public class PS_SunStroke : PlayerStat
 
     }
 
-    protected override void SetValue()
+    protected override void SetValue(int secondsDelay)
     {
 
     }

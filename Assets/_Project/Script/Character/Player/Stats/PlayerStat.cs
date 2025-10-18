@@ -19,12 +19,12 @@ public abstract class PlayerStat
             IsIncrease = isIncrease;
             _duration = duration;
             _onDestroy = onDestroy;
-            GWM.Instance.TimeManager.onNormalPriority += UpdateDuration;
+            GWM.Instance.TimeManager.onNormalPriority += UpdateNormalPriority;
         }
 
-        private void UpdateDuration()
+        private void UpdateNormalPriority(int secondsDelay)
         {
-            _duration -= GWM.Instance.TimeManager.SecondDelay;
+            _duration -= secondsDelay;
             if (_duration <= 0)
             {
                 _onDestroy?.Invoke(this);
@@ -33,65 +33,69 @@ public abstract class PlayerStat
     }
 
     public static Key Key = new Key();
-    
+
+    protected static bool _debug;
+
     public float Value { get => _value; protected set => _value = Mathf.Clamp01(value); }
     protected float _value = 1f;
+    private bool _isValueZero;
 
     protected float _increase;
     protected float _decrease;
 
-    private bool _isMyStart;
+    private bool _isMyAwake;
     protected List<Modifier> _modifiers = new List<Modifier>(2);
     protected float _moltiplierIncrease;
     protected float _moltiplierDecrease;
 
-    public event Action onValueZero;
-    public event Action onValueOne;
+    public event Action onValueBecomesZero;
+    public event Action onValueIncreasesFromZero;
 
     protected TimeManager _timeManager;
     protected PlayerManager _playerManager;
 
-    public virtual bool MyStart()
+    protected virtual bool MyAwake()
     {
-        if (_isMyStart)
+        if (_isMyAwake)
         {
             return false;
         }
         else
         {
-            _isMyStart = true;
+            _isMyAwake = true;
             _timeManager = GWM.Instance.TimeManager;
-            _timeManager.onNormalPriority += UpdateValue;
+            _timeManager.onNormalPriority += UpdateNormalPriority;
             _playerManager = GWM.Instance.PlayerManager;
-            OnStart();
+            OnAwake();
             return true;
         }
     }
 
-    protected abstract void OnStart();
+    protected abstract void OnAwake();
 
-    public void UpdateValue()
+    private void UpdateNormalPriority(int secondsDelay)
     {
         SetMoltiplier();
         CheckValue();
-        SetValue();
+        SetValue(secondsDelay);
         CallEvent();
     }
 
     protected abstract void CheckValue();
-    protected abstract void SetValue();
+    protected abstract void SetValue(int secondsDelay);
 
     protected virtual void CallEvent()
     {
-        if (Value <= 0f)
+        if (Value <= 0f && !_isValueZero)
         {
             Value = 0f;
-            onValueZero?.Invoke();
+            _isValueZero = true;
+            onValueBecomesZero?.Invoke();
         }
-        else if (Value >= 1f)
+        else if (Value >= 0f && _isValueZero)
         {
-            Value = 1f;
-            onValueOne?.Invoke();
+            _isValueZero = false;
+            onValueIncreasesFromZero?.Invoke();
         }
     }
 

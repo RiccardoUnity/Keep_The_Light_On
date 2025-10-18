@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using StringConst = StaticData.S_GameManager.StringConst;
+using GWM = GameWorldManager;
 
 public class PlayerController : MonoBehaviour
 {
@@ -66,53 +67,67 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (_canJump && !_keyJumpPress)
+        if (GWM.Instance.IsGamePause)
         {
-            _keyJumpPress = Input.GetButton(StringConst.Jump);
+
         }
-
-        //Rotation Input
-        _mouseX = Input.GetAxis(StringConst.MouseX) * _sensitivityX * _option.MouseSensitivity * (_option.InvertMouseX ? -1 : 1);
-        _mouseY = Input.GetAxis(StringConst.MouseY) * _sensitivityY * _option.MouseSensitivity * (_option.InvertMouseY ? -1 : 1);
-
-        if (_mouseX != 0f || _mouseY != 0f)
+        else
         {
-            //Camera
-            _pitch += _mouseY * Time.deltaTime;
-            _pitch = Mathf.Clamp(_pitch, -_pitchLimit, _pitchLimit);
-            _playerManager.Camera.transform.eulerAngles = new Vector3(_pitch, _yaw, 0f);
+            if (_canJump && !_keyJumpPress)
+            {
+                _keyJumpPress = Input.GetButton(StringConst.Jump);
+            }
 
-            //Player
-            _yaw += _mouseX * Time.deltaTime;
-            transform.eulerAngles = new Vector3(0f, _yaw, 0f);
+            //Rotation Input
+            _mouseX = Input.GetAxis(StringConst.MouseX) * _sensitivityX * _option.MouseSensitivity * (_option.InvertMouseX ? -1 : 1);
+            _mouseY = Input.GetAxis(StringConst.MouseY) * _sensitivityY * _option.MouseSensitivity * (_option.InvertMouseY ? -1 : 1);
+
+            if (_mouseX != 0f || _mouseY != 0f)
+            {
+                //Camera
+                _pitch += _mouseY * Time.deltaTime;
+                _pitch = Mathf.Clamp(_pitch, -_pitchLimit, _pitchLimit);
+                _playerManager.Camera.transform.eulerAngles = new Vector3(_pitch, _yaw, 0f);
+
+                //Player
+                _yaw += _mouseX * Time.deltaTime;
+                transform.eulerAngles = new Vector3(0f, _yaw, 0f);
+            }
+
+            //MoveInput
+            _right = Input.GetAxis(StringConst.Horizontal);
+            _forward = Input.GetAxis(StringConst.Vertical);
+            _isRun = Input.GetButton(StringConst.Run);
         }
-
-        //MoveInput
-        _right = Input.GetAxis(StringConst.Horizontal);
-        _forward = Input.GetAxis(StringConst.Vertical);
-        _isRun = Input.GetButton(StringConst.Run);
     }
 
     void FixedUpdate()
     {
-        if (_playerManager.PlayerGroundCheck.isGrounded)
+        if (GWM.Instance.IsGamePause)
         {
-            if (_keyJumpPress)
+
+        }
+        else
+        {
+            if (_playerManager.PlayerGroundCheck.isGrounded)
             {
-                Jump();
+                if (_keyJumpPress)
+                {
+                    Jump();
+                }
+                else if (_isMoveOn)
+                {
+                    DirectionMove();
+                }
             }
-            else if (_isMoveOn)
+            else
             {
                 Move();
             }
         }
-        else
-        {
-            Walk();
-        }
     }
 
-    private void Move()
+    private void DirectionMove()
     {
         if (_right != 0f || _forward != 0f)
         {
@@ -125,16 +140,21 @@ public class PlayerController : MonoBehaviour
             }
             _direction = new Vector3(_right, 0f, _forward);
 
-            if (_isRun)
-            {
-                RunTime += Time.fixedDeltaTime;
-                Run();
-            }
-            else
-            {
-                WalkTime += Time.fixedDeltaTime;
-                Walk();
-            }
+            Move();
+        }
+    }
+
+    private void Move()
+    {
+        if (_isRun)
+        {
+            RunTime += Time.fixedDeltaTime;
+            Run();
+        }
+        else
+        {
+            WalkTime += Time.fixedDeltaTime;
+            Walk();
         }
     }
 

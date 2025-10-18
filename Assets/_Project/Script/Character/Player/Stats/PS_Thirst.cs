@@ -1,22 +1,26 @@
-﻿using GWM = GameWorldManager;
+﻿using System;
+using GWM = GameWorldManager;
 
 public class PS_Thirst : PlayerStat
 {
     #region LikeSingleton
     private PS_Thirst() : base() { }
-    public static PS_Thirst Instance(int key)
+    public static Func<bool> Instance(int key, out PS_Thirst thirst, bool debug = false)
     {
         if (key == Key.GetKey())
         {
-            return new PS_Thirst();
+            thirst = new PS_Thirst();
+            _debug = debug;
+            return thirst.MyAwake;
         }
+        thirst = null;
         return null;
     }
     #endregion
 
 
 
-    protected override void OnStart()
+    protected override void OnAwake()
     {
 
     }
@@ -26,7 +30,7 @@ public class PS_Thirst : PlayerStat
 
     }
 
-    protected override void SetValue()
+    protected override void SetValue(int secondsDelay)
     {
 
     }

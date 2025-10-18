@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GWM = GameWorldManager;
 
 public class PlayerGroundCheck : MonoBehaviour
 {
@@ -45,33 +46,40 @@ public class PlayerGroundCheck : MonoBehaviour
 
     void Update()
     {
-        if (_isFrameCheck)
+        if (GWM.Instance.IsGamePause)
         {
-            if (Physics.CheckSphere(transform.position + _offset, _radius, _groundLayerMask, _qti))
+
+        }
+        else
+        {
+            if (_isFrameCheck)
             {
-                if (!isGrounded && !_isJumpStart)
+                if (Physics.CheckSphere(transform.position + _offset, _radius, _groundLayerMask, _qti))
                 {
-                    isGrounded = true;
-                    onGroundedChange?.Invoke(isGrounded);
+                    if (!isGrounded && !_isJumpStart)
+                    {
+                        isGrounded = true;
+                        onGroundedChange?.Invoke(isGrounded);
+                    }
+                }
+                else
+                {
+                    if (_isJumpStart)
+                    {
+                        _isJumpStart = false;
+                    }
+                    if (isGrounded)
+                    {
+                        isGrounded = false;
+                        onGroundedChange?.Invoke(isGrounded);
+                    }
                 }
             }
             else
             {
-                if (_isJumpStart)
-                {
-                    _isJumpStart = false;
-                }
-                if (isGrounded)
-                {
-                    isGrounded = false;
-                    onGroundedChange?.Invoke(isGrounded);
-                }
+                //In this frame, the ground doesn't check
             }
+            _isFrameCheck = !_isFrameCheck;
         }
-        else
-        {
-            //In this frame, the ground doesn't check
-        }
-        _isFrameCheck = !_isFrameCheck;
     }
 }

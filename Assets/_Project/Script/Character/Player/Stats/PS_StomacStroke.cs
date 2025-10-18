@@ -1,22 +1,26 @@
-﻿using GWM = GameWorldManager;
+﻿using System;
+using GWM = GameWorldManager;
 
 public class PS_StomacStroke : PlayerStat
 {
     #region LikeSingleton
     private PS_StomacStroke() : base() { }
-    public static PS_StomacStroke Instance(int key)
+    public static Func<bool> Instance(int key, out PS_StomacStroke stomacStroke, bool debug = false)
     {
         if (key == Key.GetKey())
         {
-            return new PS_StomacStroke();
+            stomacStroke = new PS_StomacStroke();
+            _debug = debug;
+            return stomacStroke.MyAwake;
         }
+        stomacStroke = null;
         return null;
     }
     #endregion
 
 
 
-    protected override void OnStart()
+    protected override void OnAwake()
     {
 
     }
@@ -26,7 +30,7 @@ public class PS_StomacStroke : PlayerStat
 
     }
 
-    protected override void SetValue()
+    protected override void SetValue(int secondsDelay)
     {
 
     }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using GWM = GameWorldManager;
 
@@ -5,62 +6,46 @@ public class PS_Endurance : PlayerStat
 {
     #region LikeSingleton
     private PS_Endurance() : base() { }
-    public static PS_Endurance Instance(int key)
+    public static Func<bool> Instance(int key, out PS_Endurance endurance, bool debug = false)
     {
         if (key == Key.GetKey())
         {
-            return new PS_Endurance();
+            endurance = new PS_Endurance();
+            _debug = debug;
+            return endurance.MyAwake;
         }
+        endurance = null;
         return null;
     }
     #endregion
-
-    private float _distanceRay = 15f;
-    public bool HasOnSun { get => _hasOnSun; }
-    private bool _hasOnSun;
 
     private int  _minutesGameTimeOnSun = 120;
     private int _secondsRealTimeOnSun;
     private int _minutesGameTimeOffSun = 360;
     private int _secondsRealTimeOffSun;
 
-    protected override void OnStart()
+    protected override void OnAwake()
     {
         _secondsRealTimeOnSun = (int)((_minutesGameTimeOnSun * 60) / _timeManager.RealSecondToGameSecond);
-        _decrease = (float)_timeManager.SecondDelay / _secondsRealTimeOnSun;
+        _decrease = 1f / _secondsRealTimeOnSun;
         _secondsRealTimeOffSun = (int)((_minutesGameTimeOffSun * 60) / _timeManager.RealSecondToGameSecond);
-        _increase = (float)_timeManager.SecondDelay / _secondsRealTimeOffSun;
+        _increase = 1f / _secondsRealTimeOffSun;
     }
 
     protected override void CheckValue()
     {
-        if (_timeManager.DayTime == DayTime.Day)
-        {
-            Ray ray = new Ray(_playerManager.Head.position, GWM.Instance.mainLight.rotation * Vector3.forward);
-            if(Physics.Raycast(ray, _distanceRay, GWM.Instance.blockMainLight, GWM.Instance.qti))
-            {
-                _hasOnSun = true;
-            }
-            else
-            {
-                _hasOnSun = false;
-            }
-        }
-        else
-        {
-            _hasOnSun = false;
-        }
+        
     }
 
-    protected override void SetValue()
+    protected override void SetValue(int secondsDelay)
     {
-        if (_hasOnSun)
+        if (_playerManager.IsUnderTheSun)
         {
-            Value -= _decrease * _moltiplierDecrease;
+            Value -= _decrease * _moltiplierDecrease * secondsDelay;
         }
         else
         {
-            Value += _increase * _moltiplierIncrease;
+            Value += _increase * _moltiplierIncrease * secondsDelay;
         }
     }
 }

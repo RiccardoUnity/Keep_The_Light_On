@@ -1,22 +1,26 @@
-﻿using GWM = GameWorldManager;
+﻿using System;
+using GWM = GameWorldManager;
 
 public class PS_Stamina : PlayerStat
 {
     #region LikeSingleton
     private PS_Stamina() : base() { }
-    public static PS_Stamina Instance(int key)
+    public static Func<bool> Instance(int key, out PS_Stamina stamina, bool debug = false)
     {
         if (key == Key.GetKey())
         {
-            return new PS_Stamina();
+            stamina = new PS_Stamina();
+            _debug = debug;
+            return stamina.MyAwake;
         }
+        stamina = null;
         return null;
     }
     #endregion
 
 
 
-    protected override void OnStart()
+    protected override void OnAwake()
     {
 
     }
@@ -26,7 +30,7 @@ public class PS_Stamina : PlayerStat
 
     }
 
-    protected override void SetValue()
+    protected override void SetValue(int secondsDelay)
     {
 
     }
