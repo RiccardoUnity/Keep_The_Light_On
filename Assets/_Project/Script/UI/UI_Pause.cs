@@ -35,6 +35,7 @@ public class UI_Pause : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         Physics.simulationMode = SimulationMode.Script;
+        GWM.Instance.UIStats.gameObject.SetActive(false);
     }
 
     void OnDisable()
@@ -43,6 +44,7 @@ public class UI_Pause : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         Physics.simulationMode = SimulationMode.FixedUpdate;
+        GWM.Instance.UIStats.gameObject.SetActive(true);
     }
 
     public void DeactiveAllPanels()
@@ -50,8 +52,6 @@ public class UI_Pause : MonoBehaviour
         _uiOption.gameObject.SetActive(false);
         _navigationButton.SetActive(true);
     }
-
-    public void ActiveOption() => _uiOption.gameObject.SetActive(true);
 
     public void Resume()
     {

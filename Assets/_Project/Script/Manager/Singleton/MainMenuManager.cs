@@ -34,11 +34,11 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
         SceneIndex = SceneManager.GetActiveScene().buildIndex;
 
         int key = 0;
-        List<Action<int>> actions = new List<Action<int>>();
-        actions.Add(SetKeyGameWorldManager);
-        actions.Add(SetKeyPlayerManager);
+        Action<int> actions = null;
+        actions += SetKeyGameWorldManager;
+        actions += SetKeyPlayerManager;
 
-        foreach (Action<int> action in actions)
+        foreach (Action<int> action in actions.GetInvocationList())
         {
             do
             {
@@ -64,15 +64,7 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
     private void SetKeyPlayerManager(int key)
     {
         PlayerManager.Key.SetKey(key);
-        PS_Life.Key.SetKey(key);
-        PS_Endurance.Key.SetKey(key);
-        PS_Rest.Key.SetKey(key);
-        PS_Hunger.Key.SetKey(key);
-        PS_Thirst.Key.SetKey(key);
-        PS_Stamina.Key.SetKey(key);
-        PS_SunStroke.Key.SetKey(key);
-        PS_StomacStroke.Key.SetKey(key);
-        PS_HeartStroke.Key.SetKey(key);
+        PlayerStat.Key.SetKey(key);
     }
 
 

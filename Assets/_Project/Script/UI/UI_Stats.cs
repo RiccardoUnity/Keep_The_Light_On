@@ -43,7 +43,7 @@ public class UI_Stats : MonoBehaviour
         {
             _isMyAwake = true;
 
-            GameWorldManager.Instance.TimeManager.onNormalPriority += MyUpdate;
+            GameWorldManager.Instance.TimeManager.onPriority += MyUpdate;
 
             _playerManager = GameWorldManager.Instance.PlayerManager;
             _life = _playerManager.Life;
@@ -66,10 +66,12 @@ public class UI_Stats : MonoBehaviour
             _uiStats[3] = _uiHunger;
             _uiStats[4] = _uiThirst;
             _uiStats[5] = _uiStamina;
+
+            gameObject.SetActive(true);
         }
     }
 
-    public void MyUpdate(int secondsDelay)
+    public void MyUpdate(float timeDelay)
     {
         //Update All Stats
         for (int i = 0; i < _playerStats.Length; ++i)

@@ -1,36 +1,43 @@
 ﻿using System;
+using UnityEngine;
+using GWM = GameWorldManager;
 
 public class PS_Hunger : PlayerStat
 {
     #region LikeSingleton
     private PS_Hunger() : base() { }
-    public static Func<bool> Instance(int key, out PS_Hunger hunger, bool debug = false)
+    public static PS_Hunger Instance(int key, out Func<bool, float, bool> myAwake, out Func<bool> myStart)
     {
         if (key == Key.GetKey())
         {
-            hunger = new PS_Hunger();
-            _debug = debug;
-            return hunger.MyAwake;
+            PS_Hunger hunger = new PS_Hunger();
+            myAwake = hunger.MyAwake;
+            myStart = hunger.MyStart;
+            return hunger;
         }
-        hunger = null;
+        myAwake = null;
+        myStart = null;
         return null;
     }
     #endregion
 
-
-
     protected override void OnAwake()
     {
+        Name = "Hunger";
 
+        _minutesRealTimeToCompleteIncrease = 10;
+        _minutesRealTimeToCompleteDecrease = 960;
     }
 
-    protected override void CheckValue()
+    protected override void OnStart() { }
+
+    protected override void CheckValue(float timeDelay)
     {
+        if (_moltiplier != 0)
+        {
+            _isIncrease = _moltiplier > 0 ? true : false;
+        }
 
-    }
-
-    protected override void SetValue(int secondsDelay)
-    {
-
+        _extra = _decrease * timeDelay * _playerController.EnergyToProcess * -1;
     }
 }

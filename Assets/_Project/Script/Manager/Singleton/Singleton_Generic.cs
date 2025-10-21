@@ -36,6 +36,7 @@ public abstract class Singleton_Generic<T> : MonoBehaviour where T : MonoBehavio
     protected static bool _useResources;
     protected static string _resourcesPath;
     private static bool _correctInstantiate;
+    [Tooltip("Awake into Singleton ...")]
     [SerializeField] private bool _bypass;
 
     protected virtual void Awake()

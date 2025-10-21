@@ -13,6 +13,13 @@ public enum DayTime
     Night
 }
 
+public enum StatsRange
+{
+    Zero,
+    Zero_One,
+    One,
+}
+
 public enum ItemState
 {
     New,

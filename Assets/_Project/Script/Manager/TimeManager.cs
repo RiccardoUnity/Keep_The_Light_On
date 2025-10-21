@@ -15,44 +15,51 @@ public class TimeManager
         }
     }
 
-    public static TimeManager Instance(int key)
+    public static TimeManager Instance(int key, bool debug = false)
     {
         if (key == Key.GetKey())
         {
+            _debug = debug;
             return new TimeManager();
         }
         return null;
     }
     
     public static Key Key = new Key();
+    private static bool _debug;
     #endregion
 
-    private int _gameDayInRealSeconds = -1;
+    private float _gameDayInRealSeconds = -1;
     public float RealSecondToGameSecond {  get; private set; }
-    public int CurrentSecondDay { get; private set; }
+    public float CurrentSecondDay { get; private set; }
     public int CurrentDay { get; private set; }
-    private const int _secondDelay = 1;
+    public float DelayTimePriority { get; private set; }
+    public float DelayTimeNotPriority1 { get; private set; }
+    public float DelayTimeNotPriority2 { get; private set; }
     private bool _isPauseCalled;
-    private int _accelerationInGameSecond;
+    private float _accelerationInGameSecond;
     private int _accelerationMoltiplier;
     private bool _isStartTimeSetted;
-    private bool _isStarted;
+    private bool _isMyAwake;
     private bool _isTimeGameOn = true;
     public GameTimeType GameTimeType { get; private set; }
-    private bool _gameplayNotPriority;
-    private IEnumerator _gameTime;
-    private WaitForSeconds _delay;
+    private int _delayFramePriority = 20;   //Need multiple of 4
+    private int _delayFrameNotPriority1;
+    private int _delayFrameNotPriority2;
+    private int _delayFrameCount;
+    private int _delayFrameCountRestart;
 
     private Transform _mainLight;
     private Vector3 _angleSecondLightV3;
 
     public DayTime DayTime { get; private set; }
-    private int[] _daylyBand = new int[4];
+    private float[] _daylyBand = new float[4];
 
     public event Action onPause;
-    public event Action<int> onNormalPriority;
-    public event Action<int> onNormalNotPriority1;
-    public event Action<int> onNormalNotPriority2;
+    public event Action onResume;
+    public event Action<float> onPriority;
+    public event Action<float> onNotPriority1;
+    public event Action<float> onNotPriority2;
     public event Action onDayChange;
     public event Action onDawn;
     public event Action onDay;
@@ -60,7 +67,7 @@ public class TimeManager
     public event Action onNight;
 
     //In Loading
-    public bool StartTime(int currentSecondDay, int currentDay)
+    public bool StartTime(float currentSecondDay, int currentDay)
     {
         if (_isStartTimeSetted)
         {
@@ -76,10 +83,10 @@ public class TimeManager
         }
     }
 
-    //In Start of GameSceneManager
-    public bool MyStart(Light mainLight, out IEnumerator time)
+    //In Awake of GameSceneManager
+    public bool MyAwake(Light mainLight, out IEnumerator time)
     {
-        if (_isStarted)
+        if (_isMyAwake)
         {
             Debug.LogError("Time has already started");
             time = null;
@@ -87,7 +94,7 @@ public class TimeManager
         }
         else
         {
-            _isStarted = true;
+            _isMyAwake = true;
 
             _gameDayInRealSeconds = GWM.Instance.GameDayInRealMinutes * 60;
             RealSecondToGameSecond = (24 * 60 * 60) / _gameDayInRealSeconds;
@@ -101,10 +108,14 @@ public class TimeManager
 
             _mainLight = mainLight.transform;
             SetRotationMainLight();
+            SetDailyBand();
+            onNotPriority2 += SetMainLightDay;
 
             GameTimeType = GameTimeType.Normal;
-            SetDailyBand();
-            _delay = new WaitForSeconds(_secondDelay);
+            _delayFrameNotPriority1 = _delayFramePriority / 2;
+            _delayFrameNotPriority2 = _delayFramePriority + _delayFrameNotPriority1;
+            _delayFrameCountRestart = _delayFramePriority * 2;
+
             time = GameTime();
             
             return true;
@@ -122,7 +133,7 @@ public class TimeManager
 
     private void SetDailyBand()
     {
-        int secondHour = _gameDayInRealSeconds / 24;
+        float secondHour = _gameDayInRealSeconds / 24;
         _daylyBand[0] = secondHour * 5;
         _daylyBand[1] = secondHour * 7;
         _daylyBand[2] = secondHour * 17;
@@ -156,75 +167,109 @@ public class TimeManager
     {
         while (_isTimeGameOn)
         {
-            if (GWM.Instance.IsGamePause)
+            if (GWM.Instance.IsGamePause && !_isPauseCalled)
             {
                 GameTimeType = GameTimeType.Pause;
+                _isPauseCalled = true;
+                onPause?.Invoke();
             }
-            else
+            else if (!GWM.Instance.IsGamePause && _isPauseCalled)
             {
                 GameTimeType = GameTimeType.Normal;
                 _isPauseCalled = false;
+                onResume?.Invoke();
             }
 
-            switch (GameTimeType)
+            if (GameTimeType == GameTimeType.Pause)
             {
-                case GameTimeType.Pause:
-                    if (!_isPauseCalled)
+                
+            }
+            else
+            {
+                //Time Count
+                CurrentSecondDay += Time.deltaTime;
+                if (CurrentSecondDay >= _gameDayInRealSeconds)
+                {
+                    ++CurrentDay;
+                    CurrentSecondDay -= _gameDayInRealSeconds;
+                    onDayChange?.Invoke();
+                }
+                DelayTimePriority += Time.deltaTime;
+                DelayTimeNotPriority1 += Time.deltaTime;
+                DelayTimeNotPriority2 += Time.deltaTime;
+                ++_delayFrameCount;
+
+                if (GameTimeType == GameTimeType.Normal)
+                {
+                    if (_delayFrameCount >= _delayFrameCountRestart)
                     {
-                        _isPauseCalled = true;
-                        onPause?.Invoke();
+                        _delayFrameCount = 0;
                     }
-                    yield return null;
-                    break;
-                case GameTimeType.Normal:
-                    GamePlay(1);
-                    yield return _delay;
-                    break;
-                case GameTimeType.Accelerate:
+
+                    if (_delayFrameCount == 0 || _delayFrameCount == _delayFramePriority)
+                    {
+                        onPriority?.Invoke(DelayTimePriority);
+                        DelayTimePriority = 0f;
+                    }
+                    else if (_delayFrameCount == _delayFrameNotPriority1)
+                    {
+                        onNotPriority1?.Invoke(DelayTimeNotPriority1);
+                        DelayTimeNotPriority1 = 0f;
+                    }
+                    else if (_delayFrameCount == _delayFrameNotPriority2)
+                    {
+                        onNotPriority2?.Invoke(DelayTimeNotPriority2);
+                        DelayTimeNotPriority2 = 0f;
+                    }
+                }
+                else if(GameTimeType == GameTimeType.Accelerate)
+                {
+                    _accelerationInGameSecond -= Time.deltaTime * _accelerationMoltiplier;
                     if (_accelerationInGameSecond > 0)
                     {
-                        GamePlay(_accelerationMoltiplier);
-                        _accelerationInGameSecond -= _accelerationMoltiplier;
+                        if (_delayFrameCount >= 4)
+                        {
+                            _delayFrameCount = 0;
+                        }
+
+                        if (_delayFrameCount == 0 || _delayFrameCount == 2)
+                        {
+                            onPriority?.Invoke(DelayTimePriority * _accelerationMoltiplier);
+                            DelayTimePriority = 0f;
+                        }
+                        else if (_delayFrameCount == 1)
+                        {
+                            onNotPriority1?.Invoke(DelayTimeNotPriority1 * _accelerationMoltiplier);
+                            DelayTimeNotPriority1 = 0;
+                        }
+                        else if (_delayFrameCount == 3)
+                        {
+                            onNotPriority2?.Invoke(DelayTimeNotPriority2 * _accelerationMoltiplier);
+                            DelayTimeNotPriority2 = 0;
+                        }
                     }
                     else
                     {
                         GameTimeType = GameTimeType.Normal;
                     }
-                    yield return null;
-                    break;
+
+
+                    
+                }
+            }
+            yield return null;
+
+            if (_debug)
+            {
+                Debug.Log($"SecondDay {CurrentSecondDay} - Day {CurrentDay} - DayTime {DayTime} - GameTimeType {GameTimeType}");
             }
         }
     }
 
-    private void GamePlay(int moltiplier)
+    //Main Light change direction
+    private void SetMainLightDay(float timeDelay)
     {
-        _gameplayNotPriority = !_gameplayNotPriority;
-        if (_gameplayNotPriority)
-        {
-            onNormalNotPriority1?.Invoke(_secondDelay * moltiplier);
-        }
-        else
-        {
-            onNormalNotPriority2?.Invoke(_secondDelay * moltiplier);
-        }
-
-        CurrentSecondDay += _secondDelay * moltiplier;
-        onNormalPriority?.Invoke(_secondDelay * moltiplier);
-        //A day is passed
-        if (CurrentSecondDay >= _gameDayInRealSeconds)
-        {
-            ++CurrentDay;
-            CurrentSecondDay -= _gameDayInRealSeconds;
-            onDayChange?.Invoke();
-        }
-
-        //Main Light change direction
-        _mainLight.eulerAngles += _angleSecondLightV3 * _secondDelay * moltiplier;
-        SetDayTime();
-    }
-
-    private void SetDayTime()
-    {
+        _mainLight.eulerAngles += _angleSecondLightV3 * timeDelay;
         if (DayTime == DayTime.Night && CurrentSecondDay > _daylyBand[0])
         {
             DayTime = DayTime.Dawn;
@@ -247,11 +292,11 @@ public class TimeManager
         }
     }
 
-    public void SetGamePlayAccelerate(int realSecondAccelerate)
+    public void SetGamePlayAccelerate(float realSecondAccelerate, int frameThatIHave = 300)
     {
         GameTimeType = GameTimeType.Accelerate;
-        _accelerationInGameSecond = (int)(realSecondAccelerate / RealSecondToGameSecond);
-        _accelerationMoltiplier = _accelerationInGameSecond / 300 + 1;
+        _accelerationInGameSecond = realSecondAccelerate / RealSecondToGameSecond;
+        _accelerationMoltiplier = (int)(_accelerationInGameSecond / frameThatIHave);
 
         //UI con animazione
     }

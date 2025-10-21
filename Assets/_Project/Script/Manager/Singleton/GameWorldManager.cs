@@ -21,7 +21,10 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     public bool MainDebug { get => _mainDebug; }
     [SerializeField] private bool _mainDebug;
 
+    public bool IsGamePause { get; private set; }
+
     [Header("Time Manager")]
+    [SerializeField] private bool _debugTime;
     private bool _hasTimeAlreadyStart;
     private IEnumerator _time;
     public TimeManager TimeManager { get; private set; }
@@ -34,21 +37,24 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
     [Header("Main GameObject")]
     [SerializeField] private Light _mainLight;
-    public Transform mainLight { get => _mainLight.transform; }
-    
-    public LayerMask blockMainLight { get => _blockMainLight; }
-    [SerializeField] private LayerMask _blockMainLight = (1 << 0);
-    public QueryTriggerInteraction qti { get => _qti; }
+    public Transform MainLight { get => _mainLight.transform; }
+
+    public QueryTriggerInteraction Qti { get => _qti; }
     private QueryTriggerInteraction _qti = QueryTriggerInteraction.Ignore;
 
     public PlayerManager PlayerManager { get => _playerManager; }
     [SerializeField] private PlayerManager _playerManager;
 
     [Header("UI")]
-    [SerializeField] private UI_Pause _uiPause;
-    public bool IsGamePause { get; private set; }
-    [SerializeField] private UI_Stats _uiStats;
+    private bool _null;
     public UI_Pause UIPause { get => _uiPause; }
+    [SerializeField] private UI_Pause _uiPause;
+    public UI_Stats UIStats { get => _uiStats; }
+    [SerializeField] private UI_Stats _uiStats;
+    public UI_Scope UIScope { get => _uiScope; }
+    [SerializeField] private UI_Scope _uiScope;
+    public UI_Inventory UIInventory { get => _uiInventory; }
+    [SerializeField] private UI_Inventory _uiInventory;
 
     [Header("Asset")]
     [SerializeField] private SO_ItemManager _soItemManager;
@@ -77,6 +83,11 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             _hasAnError = true;
             Debug.LogError("UI Pause missing", gameObject);
         }
+        if (_uiInventory == null)
+        {
+            _hasAnError = true;
+            Debug.LogError("UI Inventory missing", gameObject);
+        }
         if (_soItemManager == null)
         {
             _hasAnError = true;
@@ -87,7 +98,7 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
         if (!_hasAnError)
         {
             //Create Manager
-            TimeManager = TimeManager.Instance(Key.GetKey());
+            TimeManager = TimeManager.Instance(Key.GetKey(), _debugTime);
             PoolManager = PoolManager.Instance(Key.GetKey());
 
             //Load data
@@ -100,12 +111,17 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
             }
 
+            //Awake Manager
+            TimeManager.MyAwake(_mainLight, out _time);
+
             //Player (included Player Load in MyAwake)
             _playerManager.MyAwake();
 
             //UI
             _uiPause.MyAwake();
             _uiStats.MyAwake();
+            _uiScope.MyAwake();
+            _uiInventory.MyAwake();
         }
     }
 
@@ -132,7 +148,6 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             }
 
             //Time Start
-            TimeManager.MyStart(_mainLight, out _time);
             _hasTimeAlreadyStart = true;
             StartCoroutine(_time);
         }
@@ -140,15 +155,27 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
     void Update()
     {
-        if (Input.GetButtonDown(StringConst.Escape) && TimeManager.GameTimeType != GameTimeType.Accelerate)
+        if (Input.GetButtonDown(StringConst.Escape))
         {
-            _uiPause.gameObject.SetActive(!_uiPause.gameObject.activeSelf);
-            IsGamePause = _uiPause.gameObject.activeSelf;
-            if (!IsGamePause)
+            if (_uiInventory.gameObject.activeSelf)
             {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                _uiInventory.gameObject.SetActive(false);
+                _uiStats.gameObject.SetActive(true);
             }
+            else
+            {
+                if (TimeManager.GameTimeType != GameTimeType.Accelerate)
+                {
+                    _uiPause.gameObject.SetActive(!_uiPause.gameObject.activeSelf);
+                    IsGamePause = _uiPause.gameObject.activeSelf;
+                }
+            }  
+        }
+
+        if (Input.GetButtonDown(StringConst.Inventory))
+        {
+            _uiInventory.gameObject.SetActive(!_uiInventory.gameObject.activeSelf);
+            _uiStats.gameObject.SetActive(!_uiStats.gameObject.activeSelf);
         }
     }
 

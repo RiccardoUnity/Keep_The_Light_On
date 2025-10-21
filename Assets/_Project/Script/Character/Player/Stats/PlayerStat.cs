@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GWM = GameWorldManager;
@@ -10,21 +9,21 @@ public abstract class PlayerStat
     {
         public float Moltiplier { get; private set; }
         public bool IsIncrease { get; private set; }
-        private int _duration;
+        private float _duration;
         private Action<Modifier> _onDestroy;
 
-        public Modifier(float moltiplier, bool isIncrease, int duration, Action<Modifier> onDestroy)
+        public Modifier(float moltiplier, bool isIncrease, float duration, Action<Modifier> onDestroy)
         {
             Moltiplier = moltiplier;
             IsIncrease = isIncrease;
             _duration = duration;
             _onDestroy = onDestroy;
-            GWM.Instance.TimeManager.onNormalPriority += UpdateNormalPriority;
+            GWM.Instance.TimeManager.onPriority += UpdateNormalPriority;
         }
 
-        private void UpdateNormalPriority(int secondsDelay)
+        private void UpdateNormalPriority(float timeDelay)
         {
-            _duration -= secondsDelay;
+            _duration -= timeDelay;
             if (_duration <= 0)
             {
                 _onDestroy?.Invoke(this);
@@ -33,28 +32,38 @@ public abstract class PlayerStat
     }
 
     public static Key Key = new Key();
-
-    protected static bool _debug;
+    protected bool _debug;
+    public string Name { get; protected set; }
 
     public float Value { get => _value; protected set => _value = Mathf.Clamp01(value); }
     protected float _value = 1f;
     private bool _isValueZero;
+    private bool _isValueOne;
 
     protected float _increase;
     protected float _decrease;
+    protected bool _isIncrease;
+    protected float _moltiplier;
+    protected List<Modifier> _modifiers = new List<Modifier>(2);
+    protected float _extra;
+
+    protected int _minutesRealTimeToCompleteIncrease;
+    protected float _minutesRealTimeToCompleteDecrease;
 
     private bool _isMyAwake;
-    protected List<Modifier> _modifiers = new List<Modifier>(2);
-    protected float _moltiplierIncrease;
-    protected float _moltiplierDecrease;
+    private bool _isMyStart;
 
     public event Action onValueBecomesZero;
     public event Action onValueIncreasesFromZero;
+    public event Action onValueBecomesOne;
+    public event Action onValueDecreaseFromOne;
+    protected bool _forceMiddleCall = true;
 
     protected TimeManager _timeManager;
     protected PlayerManager _playerManager;
+    protected PlayerController _playerController;
 
-    protected virtual bool MyAwake()
+    protected virtual bool MyAwake(bool debug, float startValue)
     {
         if (_isMyAwake)
         {
@@ -63,28 +72,93 @@ public abstract class PlayerStat
         else
         {
             _isMyAwake = true;
+            _debug = debug;
+            _value = Mathf.Clamp01(startValue);
+            if (_value == 0f)
+            {
+                _forceMiddleCall = false;
+            }
+            else if (_value == 1f)
+            {
+                _forceMiddleCall = false;
+            }
             _timeManager = GWM.Instance.TimeManager;
-            _timeManager.onNormalPriority += UpdateNormalPriority;
+            _timeManager.onPriority += UpdateNormalPriority;
             _playerManager = GWM.Instance.PlayerManager;
+            _playerController = _playerManager.PlayerController;
+
             OnAwake();
+
+            float secondsGameTime;
+            if (_minutesRealTimeToCompleteIncrease != 0)
+            {
+                secondsGameTime = ((_minutesRealTimeToCompleteIncrease * 60) / _timeManager.RealSecondToGameSecond);
+                _increase = 1f / secondsGameTime;
+            }
+            if (_minutesRealTimeToCompleteDecrease != 0)
+            {
+                secondsGameTime = ((_minutesRealTimeToCompleteDecrease * 60) / _timeManager.RealSecondToGameSecond);
+                _decrease = 1f / secondsGameTime;
+            }
+
+            if (_debug)
+            {
+                Debug.Log($"My Awake of {Name} is complete - Decrease: {_decrease} - Increase: {_increase}");
+            }
             return true;
         }
     }
 
     protected abstract void OnAwake();
 
-    private void UpdateNormalPriority(int secondsDelay)
+    protected virtual bool MyStart()
+    {
+        if (_isMyStart)
+        {
+            return false;
+        }
+        else
+        {
+            _isMyStart = true;
+            OnStart();
+            return true;
+        }
+    }
+    protected abstract void OnStart();
+
+    private void UpdateNormalPriority(float timeDelay)
     {
         SetMoltiplier();
-        CheckValue();
-        SetValue(secondsDelay);
+        CheckValue(timeDelay);
+        SetValue(timeDelay);
         CallEvent();
+
+        if (_debug)
+        {
+            Debug.Log($"{Name} value: {_value} - IsIncrease: {_isIncrease} - Extra: {_extra}");
+        }
     }
 
-    protected abstract void CheckValue();
-    protected abstract void SetValue(int secondsDelay);
+    protected abstract void CheckValue(float timeDelay);
 
-    protected virtual void CallEvent()
+    protected void SetValue(float timeDelay)
+    {
+        if (_moltiplier == 0)
+        {
+            _moltiplier = _isIncrease ? 1 : -1;
+        }
+
+        if (_isIncrease)
+        {
+            Value += _increase * _moltiplier * timeDelay + _extra;
+        }
+        else
+        {
+            Value += _decrease * _moltiplier * timeDelay + _extra;
+        }
+    }
+
+    public void CallEvent()
     {
         if (Value <= 0f && !_isValueZero)
         {
@@ -92,10 +166,22 @@ public abstract class PlayerStat
             _isValueZero = true;
             onValueBecomesZero?.Invoke();
         }
-        else if (Value >= 0f && _isValueZero)
+        else if (Value > 0f && _isValueZero || _forceMiddleCall)
         {
             _isValueZero = false;
+            _forceMiddleCall = false;
             onValueIncreasesFromZero?.Invoke();
+        }
+        else if (Value >= 1f && !_isValueOne)
+        {
+            Value = 1f;
+            _isValueOne = true;
+            onValueBecomesOne?.Invoke();
+        }
+        else if (Value < 1f && _isValueOne)
+        {
+            _isValueOne = false;
+            onValueDecreaseFromOne?.Invoke();
         }
     }
 
@@ -112,18 +198,14 @@ public abstract class PlayerStat
 
     private void SetMoltiplier()
     {
-        _moltiplierIncrease = 1f;
-        _moltiplierDecrease = 1f;
-        foreach (Modifier modifier in _modifiers)
+        _moltiplier = 0f;
+        if (_modifiers.Count > 0)
         {
-            if (modifier.IsIncrease)
+            foreach (Modifier modifier in _modifiers)
             {
-                _moltiplierIncrease *= modifier.Moltiplier;
-            }
-            else
-            {
-                _moltiplierDecrease *= modifier.Moltiplier;
+                _moltiplier += modifier.Moltiplier * (modifier.IsIncrease ? 1 : -1);
             }
         }
     }
+
 }

@@ -101,7 +101,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c5c9a1643fbcb42846fc7b6f8108f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _mainDebug: 0
   _head: {fileID: 6382909463091307287}
+  _camera: {fileID: 0}
+  _debugLife: 0
+  startValueLife: 1
+  _debugEndurance: 0
+  startValueEndurance: 1
+  _debugRest: 0
+  startValueRest: 1
+  _debugHunger: 0
+  startValueHunger: 1
+  _debugThirst: 0
+  startValueThirst: 1
+  _debugStamina: 0
+  startValueStamina: 1
+  _debugSunStroke: 0
+  startValueSunStroke: 0
+  _debugStomacStroke: 0
+  startValueStomacStroke: 0
+  _debugHeartStroke: 0
+  startValueHeartStroke: 0
+  _distanceRay: 15
 --- !u!114 &3321151218641942399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,8 +150,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030679c7a8951be459a38c994533dbbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 4
+  _walkSpeed: 4
+  _runSpeed: 6
   _heightJump: 1
+  _pitchLimit: 80
 --- !u!1 &4316947211435060381
 GameObject:
   m_ObjectHideFlags: 0

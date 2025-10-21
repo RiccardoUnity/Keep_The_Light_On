@@ -6,16 +6,20 @@ using GWM = GameWorldManager;
 
 public class PlayerGroundCheck : MonoBehaviour
 {
+    [SerializeField] private bool _debug;
+
     private PlayerManager _playerManager;
     private bool _isFrameCheck;
     private float _radius = 0.1f;
-    private Vector3 _offset = new Vector3(0f, 0.075f, 0f);
+    private Vector3 _offset = new Vector3(0f, 0.025f, 0f);
     [SerializeField] private LayerMask _groundLayerMask = (1 << 0);
     private QueryTriggerInteraction _qti = QueryTriggerInteraction.Ignore;
 
     private bool _isJumpStart;
     public bool isGrounded { get; private set; }
     public event Action<bool> onGroundedChange;
+
+    private int _badCount;
 
     private bool _isMyAwake;
 
@@ -39,6 +43,7 @@ public class PlayerGroundCheck : MonoBehaviour
         if (!_isJumpStart)
         {
             _isJumpStart = true;
+            _badCount = 0;
             isGrounded = false;
             onGroundedChange?.Invoke(isGrounded);
         }
@@ -61,6 +66,14 @@ public class PlayerGroundCheck : MonoBehaviour
                         isGrounded = true;
                         onGroundedChange?.Invoke(isGrounded);
                     }
+                    if (_isJumpStart)
+                    {
+                        if (_badCount > 5)
+                        {
+                            _isJumpStart = false;
+                        }
+                        ++_badCount;
+                    }
                 }
                 else
                 {
@@ -80,6 +93,15 @@ public class PlayerGroundCheck : MonoBehaviour
                 //In this frame, the ground doesn't check
             }
             _isFrameCheck = !_isFrameCheck;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_debug)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position + _offset, _radius);
         }
     }
 }

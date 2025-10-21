@@ -15,7 +15,7 @@ public class Data_Item
     public Prefab_Item PrefabItem { get =>  _prefabItem; }
     private Prefab_Item _prefabItem;
 
-    public SO_Item SOItem { get; }
+    public SO_Item SOItem { get => _soItem; }
     private SO_Item _soItem;
 
     public float Condition { get => _condition; }
@@ -24,9 +24,9 @@ public class Data_Item
     public ItemState State { get => _state; }
     private ItemState _state = ItemState.New;
 
-    public Data_Item(SO_Item soItem, float condition, ItemState state)
+    public Data_Item(SO_Item soItem, float condition, ItemState state, Prefab_Item prefabItem = null)
     {
-        OutPool(soItem, condition, state);
+        OutPool(soItem, condition, state, prefabItem);
     }
 
     public bool SetSaveItem(int key, int id)
@@ -43,14 +43,21 @@ public class Data_Item
         }
     }
 
-    public bool SetUp(int key, float condition, ItemState state)
+    public bool SetUp(int key, float condition, ItemState state, Prefab_Item prefabItem = null)
     {
         if (key == _key)
         {
             _condition = condition;
             _state = state;
-            if (_prefabItem != null)
+            if (prefabItem == null)
             {
+                _prefabItem = GWM.Instance.PoolManager.RemovePrefabItemFromPool(_soItem);
+            }
+            else
+            {
+                //New Game
+                _prefabItem = prefabItem;
+                S_SaveSystem.LockSaveItem(this);
                 _prefabItem.MyAwake(this, _key);
             }
             return true;
@@ -86,21 +93,19 @@ public class Data_Item
     }
 
     //Also after Instantiate (like a Start)
-    public void OutPool(SO_Item soItem, float condition, ItemState state)
+    public void OutPool(SO_Item soItem, float condition, ItemState state, Prefab_Item prefabItem = null)
     {
         if (_key == 0)
         {
             _soItem = soItem;
-            SetUp(0, condition, state);
-            _prefabItem = GWM.Instance.PoolManager.RemovePrefabItemFromPool(_soItem);
+            SetUp(0, condition, state, prefabItem);
             if (S_SaveSystem.HasALoading)
             {
 
             }
             else
             {
-                S_SaveSystem.LockSaveItem(this);
-                _prefabItem.MyAwake(this, _key);
+
             }
         }
     }

@@ -6,46 +6,33 @@ public class PS_Endurance : PlayerStat
 {
     #region LikeSingleton
     private PS_Endurance() : base() { }
-    public static Func<bool> Instance(int key, out PS_Endurance endurance, bool debug = false)
+    public static PS_Endurance Instance(int key, out Func<bool, float, bool> myAwake, out Func<bool> myStart)
     {
         if (key == Key.GetKey())
         {
-            endurance = new PS_Endurance();
-            _debug = debug;
-            return endurance.MyAwake;
+            PS_Endurance endurance = new PS_Endurance();
+            myAwake = endurance.MyAwake;
+            myStart = endurance.MyStart;
+            return endurance;
         }
-        endurance = null;
+        myAwake = null;
+        myStart = null;
         return null;
     }
     #endregion
 
-    private int  _minutesGameTimeOnSun = 120;
-    private int _secondsRealTimeOnSun;
-    private int _minutesGameTimeOffSun = 360;
-    private int _secondsRealTimeOffSun;
-
     protected override void OnAwake()
     {
-        _secondsRealTimeOnSun = (int)((_minutesGameTimeOnSun * 60) / _timeManager.RealSecondToGameSecond);
-        _decrease = 1f / _secondsRealTimeOnSun;
-        _secondsRealTimeOffSun = (int)((_minutesGameTimeOffSun * 60) / _timeManager.RealSecondToGameSecond);
-        _increase = 1f / _secondsRealTimeOffSun;
+        Name = "Endurance";
+
+        _minutesRealTimeToCompleteIncrease = 360;
+        _minutesRealTimeToCompleteDecrease = 120;
     }
 
-    protected override void CheckValue()
-    {
-        
-    }
+    protected override void OnStart() { }
 
-    protected override void SetValue(int secondsDelay)
+    protected override void CheckValue(float timeDelay)
     {
-        if (_playerManager.IsUnderTheSun)
-        {
-            Value -= _decrease * _moltiplierDecrease * secondsDelay;
-        }
-        else
-        {
-            Value += _increase * _moltiplierIncrease * secondsDelay;
-        }
+        _isIncrease = _playerManager.IsUnderTheSun ? false : true;
     }
 }

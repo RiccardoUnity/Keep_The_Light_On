@@ -44,6 +44,10 @@ public class Prefab_Item : Interactable
                 //New Game
                 if (_dataItem == null)
                 {
+                    if (_debug)
+                    {
+                        Debug.Log($"New Game - Start - {typeof(Prefab_Item)}", gameObject);
+                    }
                     if (_limitConditionZero < _limitConditionOne)
                     {
                         _condition = Random.Range(_limitConditionZero, _limitConditionOne);
@@ -53,8 +57,7 @@ public class Prefab_Item : Interactable
                         _condition = Random.Range(_limitConditionOne, _limitConditionZero);
                     }
 
-                    _dataItem = GWM.Instance.PoolManager.RemoveDataItemFromPool(SOItem, _condition, _state);
-                    _key = _dataItem.SetFromPrefabItem(this);
+                    _dataItem = GWM.Instance.PoolManager.RemoveDataItemFromPool(SOItem, _condition, _state, this);
                     if (_debug && _key == 0)
                     {
                         Debug.LogError("Key not assigned", gameObject);
@@ -66,6 +69,10 @@ public class Prefab_Item : Interactable
 
                 }
             }
+            if (_debug)
+            {
+                Debug.Log($"End Start - {typeof(Prefab_Item)}", gameObject);
+            }
         }
     }
 
@@ -76,7 +83,7 @@ public class Prefab_Item : Interactable
         {
             _dataItem = dataItem;
             _key = key;
-            //Ricordati che va spostato!!! 
+            //Ricordati che va spostato!!!
         }
         if (_debug)
         {

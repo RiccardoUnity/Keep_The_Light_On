@@ -6,7 +6,7 @@ public static partial class S_SaveSystem
     private class Save_GameWorldManager
     {
         //Time
-        public int currentSecondDay;
+        public float currentSecondDay;
         public int currentDay;
 
         public void Save()

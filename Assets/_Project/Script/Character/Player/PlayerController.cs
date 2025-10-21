@@ -11,10 +11,10 @@ public class PlayerController : MonoBehaviour
     private PlayerManager _playerManager;
     private UI_Option _option;
 
+    public bool IsRun { get; private set; }
     private bool _isMoveOn = true;
     private float _right;
     private float _forward;
-    private bool _isRun;
     private float _lenght;
     private Vector3 _direction;
     [SerializeField] private float _walkSpeed = 4f;
@@ -40,7 +40,9 @@ public class PlayerController : MonoBehaviour
     private float _runTimeProcessed;
     public int JumpNumber { get; private set; }
     private int _jumpNumberProcessed;
-    
+
+    public float EnergyToProcess { get; private set; }
+
     private bool _isMyAwake;
 
     public void MyAwake()
@@ -58,6 +60,7 @@ public class PlayerController : MonoBehaviour
             _option = GameWorldManager.Instance.UIPause.UIOption;
 
             _playerManager.PlayerGroundCheck.onGroundedChange += SetCanJump;
+            GWM.Instance.TimeManager.onPriority += EnergyToProcessInNormalPriority;
         }
     }
 
@@ -73,31 +76,42 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (_canJump && !_keyJumpPress)
+            if (!GWM.Instance.UIInventory.gameObject.activeSelf)
             {
-                _keyJumpPress = Input.GetButton(StringConst.Jump);
+                if (_canJump && !_keyJumpPress && _playerManager.Stamina.Value > _playerManager.Stamina.DecreaseJump)
+                {
+                    _keyJumpPress = Input.GetButton(StringConst.Jump);
+                }
+
+                //Rotation Input
+                _mouseX = Input.GetAxis(StringConst.MouseX) * _sensitivityX * _option.MouseSensitivity * (_option.InvertMouseX ? -1 : 1);
+                _mouseY = Input.GetAxis(StringConst.MouseY) * _sensitivityY * _option.MouseSensitivity * (_option.InvertMouseY ? -1 : 1);
+
+                if (_mouseX != 0f || _mouseY != 0f)
+                {
+                    //Camera
+                    _pitch += _mouseY * Time.deltaTime;
+                    _pitch = Mathf.Clamp(_pitch, -_pitchLimit, _pitchLimit);
+                    _playerManager.Camera.transform.eulerAngles = new Vector3(_pitch, _yaw, 0f);
+                    _playerManager.Head.rotation = _playerManager.Camera.transform.rotation;
+
+                    //Player
+                    _yaw += _mouseX * Time.deltaTime;
+                    transform.eulerAngles = new Vector3(0f, _yaw, 0f);
+                }
+
+                //MoveInput
+                _right = Input.GetAxis(StringConst.Horizontal);
+                _forward = Input.GetAxis(StringConst.Vertical);
+                if (Input.GetButton(StringConst.Run) && _playerManager.Stamina.Value > 0f)
+                {
+                    IsRun = true;
+                }
+                else
+                {
+                    IsRun = false;
+                }
             }
-
-            //Rotation Input
-            _mouseX = Input.GetAxis(StringConst.MouseX) * _sensitivityX * _option.MouseSensitivity * (_option.InvertMouseX ? -1 : 1);
-            _mouseY = Input.GetAxis(StringConst.MouseY) * _sensitivityY * _option.MouseSensitivity * (_option.InvertMouseY ? -1 : 1);
-
-            if (_mouseX != 0f || _mouseY != 0f)
-            {
-                //Camera
-                _pitch += _mouseY * Time.deltaTime;
-                _pitch = Mathf.Clamp(_pitch, -_pitchLimit, _pitchLimit);
-                _playerManager.Camera.transform.eulerAngles = new Vector3(_pitch, _yaw, 0f);
-
-                //Player
-                _yaw += _mouseX * Time.deltaTime;
-                transform.eulerAngles = new Vector3(0f, _yaw, 0f);
-            }
-
-            //MoveInput
-            _right = Input.GetAxis(StringConst.Horizontal);
-            _forward = Input.GetAxis(StringConst.Vertical);
-            _isRun = Input.GetButton(StringConst.Run);
         }
     }
 
@@ -142,11 +156,15 @@ public class PlayerController : MonoBehaviour
 
             Move();
         }
+        else
+        {
+            _direction = Vector3.zero;
+        }
     }
 
     private void Move()
     {
-        if (_isRun)
+        if (IsRun)
         {
             RunTime += Time.fixedDeltaTime;
             Run();
@@ -169,26 +187,16 @@ public class PlayerController : MonoBehaviour
         onJump?.Invoke();
     }
 
-    public float ToProcess(bool isWalk)
+    private void EnergyToProcessInNormalPriority(float timeDelay)
     {
-        float toProcess;
-        if (isWalk)
-        {
-            toProcess = WalkTime - _walkTimeProcessed;
-            _walkTimeProcessed = WalkTime;
-        }
-        else
-        {
-            toProcess = RunTime - _runTimeProcessed;
-            _runTimeProcessed = RunTime;
-        }
-        return toProcess;
-    }
-
-    public int ToProcess()
-    {
-        int toProcess = JumpNumber - _jumpNumberProcessed;
+        //Jump
+        EnergyToProcess = (JumpNumber - _jumpNumberProcessed) * 4;
         _jumpNumberProcessed = JumpNumber;
-        return toProcess;
+        //Walk
+        EnergyToProcess += WalkTime - _walkTimeProcessed;
+        _walkTimeProcessed = WalkTime;
+        //Run
+        EnergyToProcess += (RunTime - _runTimeProcessed) * 2f;
+        _runTimeProcessed = RunTime;
     }
 }

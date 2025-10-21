@@ -12,11 +12,14 @@ namespace StaticData
             //Input
             public static string Horizontal { get => "Horizontal"; }
             public static string Vertical { get => "Vertical"; }
-            public static string Run { get => "Fire3"; }
+            public static string Run { get => "Run"; }
             public static string Jump { get => "Jump"; }
             public static string MouseX { get => "Mouse X"; }
             public static string MouseY { get => "Mouse Y"; }
+            public static string MouseLeft { get => "MouseLeft"; }
+            public static string MouseRight { get => "MouseRight"; }
             public static string Escape { get => "Cancel"; }
+            public static string Inventory { get => "Inventory"; }
         }
 
         public static class InfoScene

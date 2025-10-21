@@ -28,6 +28,8 @@ public static partial class S_SaveSystem
         {
             ++_idCount;
             GenerateKey();
+            _position = new Vector3Save(Vector3.zero);
+            _rotation = new QuaternionSave(Quaternion.identity);
             if (loading)
             {
                 
@@ -35,10 +37,7 @@ public static partial class S_SaveSystem
             else
             {
                 _id = _idCount;
-                if (dataItem != null)
-                {
-                    OutPool(dataItem);
-                }
+                OutPool(dataItem);
             }
         }
 
@@ -48,7 +47,7 @@ public static partial class S_SaveSystem
             {
                 _key = Random.Range(int.MinValue, int.MaxValue);
             }
-            while (_key != 0);
+            while (_key == 0);
         }
 
         public void Save()

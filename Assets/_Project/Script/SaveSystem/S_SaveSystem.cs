@@ -22,7 +22,7 @@ public static partial class S_SaveSystem
     public static int NewSlot()
     {
         int index = Directory.GetDirectories(Application.persistentDataPath).Length;
-        Directory.CreateDirectory(Application.persistentDataPath + $"/{index.ToString()}");
+        //Directory.CreateDirectory(Application.persistentDataPath + $"/{index.ToString()}");
         _slot = index;
         return index;
     }

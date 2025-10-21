@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f2690a13ed63f554e9db25accefb118f
+guid: f1e78dcf6b3adaa409d025bb47a6891f
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 256
+  spritePixelsToUnits: 128
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -123,43 +123,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UI_Bar V2_LinearBar_0
+      name: UI_Bar V2_Angle_0
       rect:
         serializedVersion: 2
         x: 0
         y: 128
-        width: 256
+        width: 128
         height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 48, y: 48, z: 48, w: 48}
+      border: {x: 64, y: 64, z: 64, w: 64}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8f6cd1af7b052c0429a2efc7ed9d226e
-      internalID: 1306712803
+      spriteID: cf0ee5e75bb64de4e92db6f49735d8f7
+      internalID: -483800570
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Bar V2_LinearBar_1
+      name: UI_Bar V2_Angle_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 256
+        x: 128
+        y: 128
+        width: 128
         height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 48, y: 48, z: 48, w: 48}
+      border: {x: 64, y: 64, z: 64, w: 64}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c0ea27ed6b1519c4a8edef7d9ed255dc
-      internalID: 1282257249
+      spriteID: 4ec3c4c6b3da1bd428528142033bc61f
+      internalID: 796233181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Bar V2_Angle_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 64, y: 64, z: 64, w: 64}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77c7b1b84a5f4454d8fe79605915c532
+      internalID: -1430725373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Bar V2_Angle_3
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 64, y: 64, z: 64, w: 64}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19d5a573084678e4cad737a02e467e22
+      internalID: -1339584525
       vertices: []
       indices: 
       edges: []
@@ -175,8 +217,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      UI_Bar V2_LinearBar_0: 1306712803
-      UI_Bar V2_LinearBar_1: 1282257249
+      UI_Bar V2_Angle_0: -483800570
+      UI_Bar V2_Angle_1: 796233181
+      UI_Bar V2_Angle_2: -1430725373
+      UI_Bar V2_Angle_3: -1339584525
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

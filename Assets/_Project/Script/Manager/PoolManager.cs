@@ -93,17 +93,17 @@ public class PoolManager
         return false;
     }
 
-    public Data_Item RemoveDataItemFromPool(SO_Item soItem, float condition, ItemState state)
+    public Data_Item RemoveDataItemFromPool(SO_Item soItem, float condition, ItemState state, Prefab_Item prefabItem = null)
     {
         Data_Item dataItem;
         if (_dataItems.Count > 0)
         {
             dataItem = _dataItems.Dequeue();
-            dataItem.OutPool(soItem, condition, state);
+            dataItem.OutPool(soItem, condition, state, prefabItem);
         }
         else
         {
-            dataItem = new Data_Item(soItem, condition, state);
+            dataItem = new Data_Item(soItem, condition, state, prefabItem);
         }
         return dataItem;
     }

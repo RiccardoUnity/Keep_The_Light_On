@@ -17,4 +17,7 @@ public class SO_Item : ScriptableObject
 
     public Prefab_Item Prefab { get => _prefab; }
     [SerializeField] public Prefab_Item _prefab;
+
+    public float HarvestTime { get => _harvestTime; }
+    [SerializeField] private float _harvestTime = 0.5f;
 }

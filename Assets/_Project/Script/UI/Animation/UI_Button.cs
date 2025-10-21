@@ -7,6 +7,8 @@ public class UI_Button : MonoBehaviour
 {
     private TMP_Text _text;
     private Image _image;
+    [SerializeField] private UI_Button[] _uiButtons;
+    private UI_Button _button;
 
     [Header("Text")]
     [SerializeField] private TMP_FontAsset _normal;
@@ -19,6 +21,7 @@ public class UI_Button : MonoBehaviour
     [SerializeField] private Color _highLightColorImage = Color.red;
     private Color _normalColorImage;
 
+    public bool Active { get => _active; }
     private bool _active = true;
     public UnityEvent onClick;
 
@@ -65,14 +68,29 @@ public class UI_Button : MonoBehaviour
             _text.font = _normal;
             _image.color = _normalColorImage;
         }
+        else
+        {
+            if (_button != null)
+            {
+                _button.OnExit();
+                _button = null;
+            }
+        }
     }
 
     public void OnHover(float value)
     {
         if (_active)
         {
-            transform.localScale = Vector3.one * _scaleText.Evaluate(value);
+            _text.transform.localScale = Vector3.one * _scaleText.Evaluate(value);
             _image.color = Color.Lerp(_normalColorImage, _highLightColorImage, value);
+        }
+        else
+        {
+            if (_button != null)
+            {
+                _button.OnHover(value);
+            }
         }
     }
 
@@ -81,6 +99,18 @@ public class UI_Button : MonoBehaviour
         if (_active)
         {
             onClick?.Invoke();
+            if (_uiButtons.Length > 0)
+            {
+                _active = false;
+                foreach (UI_Button button in _uiButtons)
+                {
+                    if (!button.Active)
+                    {
+                        _button = button;
+                    }
+                    button.SetActive(true);
+                }
+            }
         }
     }
 }
