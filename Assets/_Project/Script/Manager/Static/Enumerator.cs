@@ -29,3 +29,31 @@ public enum ItemState
     TurnedOn,
     TurnedOff
 }
+
+public enum ItemType
+{
+    Nature,
+    Food,
+    Drink,
+    Medicine,
+    Dress,
+    Tool,
+    Campfire
+}
+
+public enum ItemTool
+{
+    None,
+    Cutter,
+    Crowbar,
+    SleepingBag,
+    Can
+}
+
+public enum ItemCampfire
+{
+    None,
+    Fire,
+    Tinder,
+    Fuel
+}

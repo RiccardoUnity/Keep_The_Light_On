@@ -24,6 +24,8 @@ public class Data_Item
     public ItemState State { get => _state; }
     private ItemState _state = ItemState.New;
 
+    private PlayerInventory _playerInventory;
+
     public Data_Item(SO_Item soItem, float condition, ItemState state, Prefab_Item prefabItem = null)
     {
         OutPool(soItem, condition, state, prefabItem);
@@ -45,6 +47,11 @@ public class Data_Item
 
     public bool SetUp(int key, float condition, ItemState state, Prefab_Item prefabItem = null)
     {
+        if (_playerInventory == null)
+        {
+            _playerInventory = GWM.Instance.PlayerManager.PlayerInventory;
+        }
+
         if (key == _key)
         {
             _condition = condition;
@@ -108,6 +115,31 @@ public class Data_Item
 
             }
         }
+    }
+    #endregion
+
+    #region Inventory
+    public bool InInventory(int playerKey)
+    {
+        if (playerKey == _playerInventory.TempKey)
+        {
+            GWM.Instance.PoolManager.AddPrefabItemToPool(_prefabItem, _key);
+            _prefabItem = null;
+            _isInInventory = true;
+            return true;
+        }
+        return false;
+    }
+
+    public bool OutInventory(int playerKey)
+    {
+        if (playerKey == _playerInventory.TempKey)
+        {
+            _isInInventory = false;
+            _prefabItem = GWM.Instance.PoolManager.RemovePrefabItemFromPool(_soItem);
+            return true;
+        }
+        return false;
     }
     #endregion
 }

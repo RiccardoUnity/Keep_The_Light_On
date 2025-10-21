@@ -12,6 +12,7 @@ public class PlayerManager : MonoBehaviour
 {
     private bool _isMyAwake;
     [SerializeField] private bool _mainDebug;
+    [SerializeField] private bool _inventoryDebug;
     [SerializeField] private bool _gizmosDebug;
 
     //Component
@@ -21,46 +22,38 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera _camera;
     public PlayerGroundCheck PlayerGroundCheck { get; private set; }
     public PlayerController PlayerController { get; private set; }
+    public PlayerInventory PlayerInventory { get; private set; }
     private TimeManager _timeManager;
 
     //Stats
     public static Key Key = new Key();
     private PlayerStat[] _playerStat = new PlayerStat[9];
 
-    public PS_Life Life { get => _life; }
-    private PS_Life _life;
+    public PS_Life Life { get; private set; }
     [SerializeField] private bool _debugLife;
     [Range(0f, 1f)] public float startValueLife = 1f;
-    public PS_Endurance Endurance { get => _endurance; }
-    private PS_Endurance _endurance;
+    public PS_Endurance Endurance { get; private set; }
     [SerializeField] private bool _debugEndurance;
     [Range(0f, 1f)] public float startValueEndurance = 1f;
-    public PS_Rest Rest { get => _rest; }
-    private PS_Rest _rest;
+    public PS_Rest Rest { get; private set; }
     [SerializeField] private bool _debugRest;
     [Range(0f, 1f)] public float startValueRest = 1f;
-    public PS_Hunger Hunger { get => _hunger; }
-    private PS_Hunger _hunger;
+    public PS_Hunger Hunger { get; private set; }
     [SerializeField] private bool _debugHunger;
     [Range(0f, 1f)] public float startValueHunger = 1f;
-    public PS_Thirst Thirst { get => _thirst; }
-    private PS_Thirst _thirst;
+    public PS_Thirst Thirst { get; private set; }
     [SerializeField] private bool _debugThirst;
     [Range(0f, 1f)] public float startValueThirst = 1f;
-    public PS_Stamina Stamina { get => _stamina; }
-    private PS_Stamina _stamina;
+    public PS_Stamina Stamina { get; private set; }
     [SerializeField] private bool _debugStamina;
     [Range(0f, 1f)] public float startValueStamina = 1f;
-    public PS_SunStroke SunStroke { get => _sunStroke; }
-    private PS_SunStroke _sunStroke;
+    public PS_SunStroke SunStroke { get; private set; }
     [SerializeField] private bool _debugSunStroke;
     [Range(0f, 1f)] public float startValueSunStroke = 0f;
-    public PS_StomachAche  StomachAche { get => _stomachAche; }
-    private PS_StomachAche _stomachAche;
+    public PS_StomachAche  StomachAche { get; private set; }
     [SerializeField] private bool _debugStomachAche;
     [Range(0f, 1f)] public float startValueStomachAche = 0f;
-    public PS_HeartAche HeartAche { get => _heartAche; }
-    private PS_HeartAche _heartAche;
+    public PS_HeartAche HeartAche { get; private set; }
     [SerializeField] private bool _debugHeartAche;
     [Range(0f, 1f)] public float startValueHeartAche = 0f;
 
@@ -74,8 +67,7 @@ public class PlayerManager : MonoBehaviour
 
     //Other
     public bool IsUnderTheSun { get; private set; }
-    public bool IsWakeUp { get => _isWakeUp; }
-    private bool _isWakeUp = true;
+    public bool IsWakeUp { get; private set; }
 
     public bool TrySelectInteractable { get => _trySelectInteractable; }
     private bool _trySelectInteractable;
@@ -97,32 +89,36 @@ public class PlayerManager : MonoBehaviour
             PlayerGroundCheck = GetComponent<PlayerGroundCheck>();
             PlayerController = GetComponent<PlayerController>();
 
+            Func<bool, bool> myAwakePlayerInventory;
+            PlayerInventory = PlayerInventory.Instance(Key.GetKey(), out myAwakePlayerInventory);
+
             PlayerGroundCheck.MyAwake();
             PlayerController.MyAwake();
+            myAwakePlayerInventory?.Invoke(_inventoryDebug);
 
             //Stats
             Func<bool, float, bool>[] myAwake = new Func<bool, float, bool>[9];
             Func<bool>[] myStart = new Func<bool>[9];
 
-            _life = PS_Life.Instance(Key.GetKey(), out myAwake[0], out myStart[0]);
-            _endurance = PS_Endurance.Instance(Key.GetKey(), out myAwake[1], out myStart[1]);
-            _rest = PS_Rest.Instance(Key.GetKey(), out myAwake[2], out myStart[2]);
-            _hunger = PS_Hunger.Instance(Key.GetKey(), out myAwake[3], out myStart[3]);
-            _thirst = PS_Thirst.Instance(Key.GetKey(), out myAwake[4], out myStart[4]);
-            _stamina = PS_Stamina.Instance(Key.GetKey(), out myAwake[5], out myStart[5]);
-            _sunStroke = PS_SunStroke.Instance(Key.GetKey(), out myAwake[6], out myStart[6]);
-            _stomachAche = PS_StomachAche.Instance(Key.GetKey(), out myAwake[7], out myStart[7]);
-            _heartAche = PS_HeartAche.Instance(Key.GetKey(), out myAwake[8], out myStart[8]);
+            Life = PS_Life.Instance(Key.GetKey(), out myAwake[0], out myStart[0]);
+            Endurance = PS_Endurance.Instance(Key.GetKey(), out myAwake[1], out myStart[1]);
+            Rest = PS_Rest.Instance(Key.GetKey(), out myAwake[2], out myStart[2]);
+            Hunger = PS_Hunger.Instance(Key.GetKey(), out myAwake[3], out myStart[3]);
+            Thirst = PS_Thirst.Instance(Key.GetKey(), out myAwake[4], out myStart[4]);
+            Stamina = PS_Stamina.Instance(Key.GetKey(), out myAwake[5], out myStart[5]);
+            SunStroke = PS_SunStroke.Instance(Key.GetKey(), out myAwake[6], out myStart[6]);
+            StomachAche = PS_StomachAche.Instance(Key.GetKey(), out myAwake[7], out myStart[7]);
+            HeartAche = PS_HeartAche.Instance(Key.GetKey(), out myAwake[8], out myStart[8]);
 
-            _playerStat[0] = _life;
-            _playerStat[1] = _endurance;
-            _playerStat[2] = _rest;
-            _playerStat[3] = _hunger;
-            _playerStat[4] = _thirst;
-            _playerStat[5] = _stamina;
-            _playerStat[6] = _sunStroke;
-            _playerStat[7] = _stomachAche;
-            _playerStat[8] = _heartAche;
+            _playerStat[0] = Life;
+            _playerStat[1] = Endurance;
+            _playerStat[2] = Rest;
+            _playerStat[3] = Hunger;
+            _playerStat[4] = Thirst;
+            _playerStat[5] = Stamina;
+            _playerStat[6] = SunStroke;
+            _playerStat[7] = StomachAche;
+            _playerStat[8] = HeartAche;
 
             //Load internal data
             if (S_SaveSystem.HasALoading)
@@ -277,6 +273,7 @@ public class PlayerManager : MonoBehaviour
             //The selected item remained the same for the duration of the animation
             if (_trySelectInteractable && dataItem == _dataItem)
             {
+                PlayerInventory.AddItemInventory(_dataItem);
 
                 if (_mainDebug)
                 {
@@ -285,6 +282,8 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
+
+    
 
     private void OnDrawGizmos()
     {

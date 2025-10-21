@@ -65,6 +65,7 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
     {
         PlayerManager.Key.SetKey(key);
         PlayerStat.Key.SetKey(key);
+        PlayerInventory.Key.SetKey(key);
     }
 
 
