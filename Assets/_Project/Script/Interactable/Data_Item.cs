@@ -92,7 +92,10 @@ public class Data_Item
     public bool InPool()
     {
         S_SaveSystem.UnlockSaveItem(_key, _idSaveItem);
-        GWM.Instance.PoolManager.AddPrefabItemToPool(_prefabItem, _key);
+        if (_prefabItem != null)
+        {
+            GWM.Instance.PoolManager.AddPrefabItemToPool(_prefabItem, _key);
+        }
         _key = 0;
         _idSaveItem = 0;
         _prefabItem = null;
@@ -123,20 +126,31 @@ public class Data_Item
     {
         if (playerKey == _playerInventory.TempKey)
         {
-            GWM.Instance.PoolManager.AddPrefabItemToPool(_prefabItem, _key);
-            _prefabItem = null;
+            if (_prefabItem !=  null)
+            {
+                GWM.Instance.PoolManager.AddPrefabItemToPool(_prefabItem, _key);
+                _prefabItem = null;
+            }
             _isInInventory = true;
             return true;
         }
         return false;
     }
 
-    public bool OutInventory(int playerKey)
+    public bool OutInventory(int playerKey, bool isDestroy)
     {
         if (playerKey == _playerInventory.TempKey)
         {
-            _isInInventory = false;
-            _prefabItem = GWM.Instance.PoolManager.RemovePrefabItemFromPool(_soItem);
+            if (isDestroy)
+            {
+                GWM.Instance.PoolManager.AddDataItemToPool(this);
+            }
+            else
+            {
+                _isInInventory = false;
+                _prefabItem = GWM.Instance.PoolManager.RemovePrefabItemFromPool(_soItem);
+                _prefabItem.MyAwake(this, _key);
+            }
             return true;
         }
         return false;

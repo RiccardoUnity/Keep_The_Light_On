@@ -35,9 +35,9 @@ public class PS_StomachAche : PlayerStat
 
     protected override void CheckValue(float timeDelay)
     {
-        if (_moltiplier != 0)
+        if (_modifier != 0)
         {
-            _isIncrease = _moltiplier > 0 ? true : false;
+            _isIncrease = _modifier > 0 ? true : false;
         }
         else
         {

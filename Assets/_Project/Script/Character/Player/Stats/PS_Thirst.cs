@@ -25,7 +25,7 @@ public class PS_Thirst : PlayerStat
     {
         Name = "Thirst";
 
-        _minutesRealTimeToCompleteIncrease = 5;
+        _minutesRealTimeToCompleteIncrease = 0;
         _minutesRealTimeToCompleteDecrease = 480;
     }
 
@@ -33,9 +33,9 @@ public class PS_Thirst : PlayerStat
 
     protected override void CheckValue(float timeDelay)
     {
-        if (_moltiplier != 0)
+        if (_modifier != 0)
         {
-            _isIncrease = _moltiplier > 0 ? true : false;
+            _isIncrease = _modifier > 0 ? true : false;
         }
 
         _extra = _decrease * timeDelay * _playerController.EnergyToProcess * -1;

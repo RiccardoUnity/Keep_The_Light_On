@@ -83,11 +83,11 @@ public class PS_Life : PlayerStat
         {
             if (_illnesses[i] == StatsRange.Zero_One)
             {
-                _extra -= _decrease * timeDelay / 2f;
+                _extra -= _decrease * timeDelay * 2f;
             }
             if (_illnesses[i] == StatsRange.One)
             {
-                _extra -= _decrease * timeDelay;
+                _extra -= _decrease * timeDelay * 4f;
             }
         }
 

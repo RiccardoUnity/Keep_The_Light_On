@@ -20,6 +20,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private Transform _head;
     public CinemachineVirtualCamera Camera { get => _camera; }
     [SerializeField] private CinemachineVirtualCamera _camera;
+    public CapsuleCollider CapsuleCollider { get; private set; }
     public PlayerGroundCheck PlayerGroundCheck { get; private set; }
     public PlayerController PlayerController { get; private set; }
     public PlayerInventory PlayerInventory { get; private set; }
@@ -62,7 +63,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private LayerMask _blockMainLight = (1 << 0);
 
     [SerializeField] private float _distanceRayInteractable = 3f;
-    [SerializeField] private LayerMask _interactableLayerMask = (1 << 6);
+    [SerializeField] private LayerMask _interactableLayerMask = (1 << 6) | (1 << 7);
     private RaycastHit _hit;
 
     //Other
@@ -85,7 +86,9 @@ public class PlayerManager : MonoBehaviour
         else
         {
             _isMyAwake = true;
+            IsWakeUp = true;
 
+            CapsuleCollider = GetComponent<CapsuleCollider>();
             PlayerGroundCheck = GetComponent<PlayerGroundCheck>();
             PlayerController = GetComponent<PlayerController>();
 
@@ -166,13 +169,20 @@ public class PlayerManager : MonoBehaviour
     //Input
     void Update()
     {
-        if (Input.GetButtonDown(StringConst.MouseLeft))
-        {
-            _trySelectInteractable = true;
-        }
-        else if (Input.GetButtonUp(StringConst.MouseLeft))
+        if (GWM.Instance.UIInventory.gameObject.activeSelf)
         {
             _trySelectInteractable = false;
+        }
+        else
+        {
+            if (Input.GetButtonDown(StringConst.MouseLeft))
+            {
+                _trySelectInteractable = true;
+            }
+            else if (Input.GetButtonUp(StringConst.MouseLeft))
+            {
+                _trySelectInteractable = false;
+            }
         }
     }
 

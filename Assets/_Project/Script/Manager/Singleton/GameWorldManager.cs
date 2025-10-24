@@ -57,6 +57,8 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     [SerializeField] private UI_Inventory _uiInventory;
 
     [Header("Asset")]
+    private bool _null2;
+    public SO_ItemManager SOItemManager { get => _soItemManager; }
     [SerializeField] private SO_ItemManager _soItemManager;
 
     //Other

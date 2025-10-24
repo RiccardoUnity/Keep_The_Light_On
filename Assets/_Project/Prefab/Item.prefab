@@ -13,6 +13,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Item
       objectReference: {fileID: 0}
+    - target: {fileID: 5875314728312008146, guid: 257f961049ff8544eaeacc655d51208a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5875314728312008146, guid: 257f961049ff8544eaeacc655d51208a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Item
+      objectReference: {fileID: 0}
     - target: {fileID: 7612301778205139638, guid: 257f961049ff8544eaeacc655d51208a,
         type: 3}
       propertyPath: m_LocalPosition.x

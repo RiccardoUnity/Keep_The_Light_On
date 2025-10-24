@@ -36,7 +36,7 @@ public class TimeManager
     public float DelayTimePriority { get; private set; }
     public float DelayTimeNotPriority1 { get; private set; }
     public float DelayTimeNotPriority2 { get; private set; }
-    private bool _isPauseCalled;
+    private bool _isPauseCalled = true;
     private float _accelerationInGameSecond;
     private int _accelerationMoltiplier;
     private bool _isStartTimeSetted;

@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_ImageStroke : MonoBehaviour
+public class UI_ImageIllnesses : MonoBehaviour
 {
     private Image _image;
     [SerializeField] private Image _fillImage;

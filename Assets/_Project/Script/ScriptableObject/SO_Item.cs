@@ -6,6 +6,64 @@ using UnityEngine;
 
 public class SO_Item : ScriptableObject
 {
+    [System.Serializable]
+    public class Modifier
+    {
+        [Range(0f, 1f)][SerializeField] private float _lessOrEqualToCondition = 1f;
+        [SerializeField] private PlayerStats _stat = PlayerStats.Life;
+        [SerializeField] private bool _isIncrease;
+        [SerializeField] private int _minutesRealTimeActive = 6;
+        [Range(0f, 1f)][SerializeField] private float _value = 0.1f;
+        private PlayerStat _playerStat;
+
+        private void SetPlayerStat(PlayerManager playerManager)
+        {
+            switch (_stat)
+            {
+                case PlayerStats.Life:
+                    _playerStat = playerManager.Life;
+                    break;
+                case PlayerStats.Enduro:
+                    _playerStat = playerManager.Endurance;
+                    break;
+                case PlayerStats.Rest:
+                    _playerStat = playerManager.Rest;
+                    break;
+                case PlayerStats.Hunger:
+                    _playerStat = playerManager.Hunger;
+                    break;
+                case PlayerStats.Thirst:
+                    _playerStat = playerManager.Thirst;
+                    break;
+                case PlayerStats.Stamina:
+                    _playerStat = playerManager.Stamina;
+                    break;
+                case PlayerStats.SunStroke:
+                    _playerStat = playerManager.SunStroke;
+                    break;
+                case PlayerStats.StomachAche:
+                    _playerStat = playerManager.StomachAche;
+                    break;
+                case PlayerStats.HeartAche:
+                    _playerStat = playerManager.HeartAche;
+                    break;
+            }
+        }
+
+        public void Apply(PlayerManager playerManager, float realSecondToGameSecond, float condition)
+        {
+            if (condition <= _lessOrEqualToCondition)
+            {
+                SetPlayerStat(playerManager);
+                float secondsGameTime = ((_minutesRealTimeActive * 60) / realSecondToGameSecond);
+                float value = _value / secondsGameTime;
+
+                _playerStat.AddModifier(value, _isIncrease, secondsGameTime);
+            }
+        }
+
+    }
+
     public string Name { get => _name; }
     [SerializeField] private string _name;
 
@@ -21,8 +79,8 @@ public class SO_Item : ScriptableObject
     public float HarvestTime { get => _harvestTime; }
     [SerializeField] private float _harvestTime = 0.5f;
 
-    public float Height { get => _height; }
-    [SerializeField] private float _height = 0.1f;
+    public float Weight { get => _weight; }
+    [SerializeField] private float _weight = 0.1f;
 
     public ItemType ItemType { get => _itemType; }
     [SerializeField] private ItemType _itemType;
@@ -32,4 +90,47 @@ public class SO_Item : ScriptableObject
 
     public ItemCampfire ItemCampfire { get => _itemCampfire; }
     [SerializeField] private ItemCampfire _itemCampfire;
+
+    public bool CanUse { get => _canUse; }
+    [SerializeField] private bool _canUse;
+    public bool ItemCanUse { get => _itemCanUse; }
+    [SerializeField] private bool _itemCanUse;
+    public ItemTool ItemToolCanUse { get => _itemToolCanUse; }
+    [SerializeField] private ItemTool _itemToolCanUse;
+    public Modifier[] _modifiers;
+    public SO_Item[] SOItemUse { get => _soItemUse; }
+    [SerializeField] private SO_Item[] _soItemUse;
+
+    public SO_Item[] SOItemCraft { get => _soItemCraft; }
+    [SerializeField] private SO_Item[] _soItemCraft;
+
+    public bool Use(PlayerManager playerManager, float realSecondToGameSecond, float condition, PoolManager pool)
+    {
+        if (_canUse)
+        {
+            if (ItemToolCanUse == ItemTool.None || (ItemToolCanUse != ItemTool.None && playerManager.PlayerInventory.HasToolInInventory(ItemToolCanUse)))
+            {
+                foreach (Modifier mod in _modifiers)
+                {
+                    mod.Apply(playerManager, realSecondToGameSecond, condition);
+                }
+
+                Data_Item dataItem;
+                foreach (SO_Item item in _soItemUse)
+                {
+                    dataItem = pool.RemoveDataItemFromPool(item, condition, ItemState.New);
+                    playerManager.PlayerInventory.AddItemInventory(dataItem);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void Craft()
+    {
+        
+
+    }
+    
 }

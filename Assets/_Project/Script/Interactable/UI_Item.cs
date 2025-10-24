@@ -1,27 +1,51 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_Item : MonoBehaviour
+public class UI_Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
-    private int _index;
+    private int _keyItem;
+    private bool _isSelect;
 
     [SerializeField] private TMP_Text _name;
     [SerializeField] private TMP_Text _condition;
     [SerializeField] private TMP_Text _state;
-    [SerializeField] private TMP_Text _height;
+    [SerializeField] private TMP_Text _weight;
     [SerializeField] private Image _image;
+    [SerializeField] private Sprite _iconLost;
 
-    
+    private Image _background;
+    private Color _colorNormal;
+    [SerializeField] private Color _colorHover = Color.white;
+    [SerializeField] private Color _colorSelect = Color.green;
 
-    public void SetUp(int index, SO_Item soItem, float condition, ItemState state)
+    private UI_InventoryView _uiInventoryView;
+
+    void Awake()
     {
-        _index = index;
-        _name.text = soItem.name;
+        _background = GetComponent<Image>();
+        _colorNormal = _background.color;
+    }
+
+    public void SetUI_InventoryView(UI_InventoryView inventoryView) => _uiInventoryView = inventoryView;
+
+    public void SetUp(int keyItem, SO_Item soItem, float condition, ItemState state)
+    {
+        _keyItem = keyItem;
+        _name.text = soItem.Name;
         _condition.text = condition.ToString("F1");
         _state.text = state.ToString();
-        _height.text = soItem.Height.ToString();
-        _image.sprite = soItem.Icon;
+        _weight.text = soItem.Weight.ToString();
+
+        if (soItem.Icon == null)
+        {
+            _image.sprite = _iconLost;
+        }
+        else
+        {
+            _image.sprite = soItem.Icon;
+        }
     }
 
     #region Pooling
@@ -35,4 +59,46 @@ public class UI_Item : MonoBehaviour
         gameObject.SetActive(true);
     }
     #endregion
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (_isSelect)
+        {
+
+        }
+        else
+        {
+            _background.color = _colorHover;
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (_isSelect)
+        {
+
+        }
+        else
+        {
+            _background.color = _colorNormal;
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        ForceSelect();
+    }
+
+    public void ForceSelect()
+    {
+        _isSelect = true;
+        _background.color = _colorSelect;
+        _uiInventoryView.SelectItem(_keyItem, this);
+    }
+
+    public void Deselect()
+    {
+        _isSelect = false;
+        _background.color = _colorNormal;
+    }
 }

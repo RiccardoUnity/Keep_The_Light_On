@@ -6,10 +6,11 @@ public class UI_Inventory : MonoBehaviour
 
     [Header("NavigationButton")]
     [SerializeField] private GameObject _navigationButton;
-    [SerializeField] private UI_Button _buttonStroke;
+    [SerializeField] private UI_Button _buttonIllnesses;
     [SerializeField] private UI_Button _buttonInventory;
     [SerializeField] private UI_Button _buttonCraft;
     [SerializeField] private UI_Button _buttonStatistics;
+    private UI_Button[] _navigationUIButton;
 
     [Header("Panels")]
     [SerializeField] private UI_Illnesses _illnesses;
@@ -27,8 +28,9 @@ public class UI_Inventory : MonoBehaviour
         {
             _isMyAwake = true;
 
+            _navigationUIButton = new UI_Button[] { _buttonIllnesses, _buttonInventory, _buttonCraft, _buttonStatistics };
             DeactiveAllPanels();
-            Stats();
+            ResetNavigationButton();
 
             _illnesses.MyAwake();
             _inventory.MyAwake();
@@ -48,6 +50,7 @@ public class UI_Inventory : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         Stats();
+        ResetNavigationButton();
     }
 
     public void DeactiveAllPanels()
@@ -82,4 +85,14 @@ public class UI_Inventory : MonoBehaviour
         _statistics.gameObject.SetActive(true);
     }
 
+    private void ResetNavigationButton()
+    {
+        foreach (UI_Button button in _navigationUIButton)
+        {
+            button.SetActive(true);
+            button.OnExit();
+        }
+        _buttonIllnesses.OnEnter();
+        _buttonIllnesses.OnHover(1f);
+    }
 }

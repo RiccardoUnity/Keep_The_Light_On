@@ -10,21 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76a27bac2d84f8447b071531d45587d4, type: 3}
-  m_Name: SO_BarattoloFagioli
+  m_Name: SO_BarattoloFagioliAperto
   m_EditorClassIdentifier: 
-  _name: Jar of Beans (Close)
+  _name: Jar of Beans (Open)
   _description: 
   _icon: {fileID: 0}
-  _prefab: {fileID: 9029911566738318677, guid: 4901a7d9c4a140843a0e7808700737a6, type: 3}
+  _prefab: {fileID: 6315803067888142948, guid: 1af4df0f5c995bf429ea0c1e1c767120, type: 3}
   _harvestTime: 0.5
   _weight: 0.5
   _itemType: 1
   _itemTool: 0
   _itemCampfire: 0
   _canUse: 1
-  _itemCanUse: 1
-  _itemToolCanUse: 1
-  _modifiers: []
+  _itemCanUse: 0
+  _itemToolCanUse: 0
+  _modifiers:
+  - _lessOrEqualToCondition: 100
+    _stat: 3
+    _isIncrease: 1
+    _minutesRealTimeActive: 5
+    _value: 0.25
+  - _lessOrEqualToCondition: 0.5
+    _stat: 7
+    _isIncrease: 1
+    _minutesRealTimeActive: 5
+    _value: 0.1
   _soItemUse:
-  - {fileID: 11400000, guid: d7cc9c0c874f33e4c8e1c08156249772, type: 2}
+  - {fileID: 11400000, guid: ab44440f0a753c64cb0d497f9da81bc8, type: 2}
   _soItemCraft: []

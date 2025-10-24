@@ -15,10 +15,10 @@ public class UI_Illnesses : MonoBehaviour
 
     //UI
     [Header("UI")]
-    [SerializeField] private UI_ImageStroke _uiSunStroke;
-    [SerializeField] private UI_ImageStroke _uiStomachAche;
-    [SerializeField] private UI_ImageStroke _uiHeartAche;
-    private UI_ImageStroke[] _uiIllnesses;
+    [SerializeField] private UI_ImageIllnesses _uiSunStroke;
+    [SerializeField] private UI_ImageIllnesses _uiStomachAche;
+    [SerializeField] private UI_ImageIllnesses _uiHeartAche;
+    private UI_ImageIllnesses[] _uiIllnesses;
 
     [Header("Settings")]
     [SerializeField] private Color _goodColor = Color.white;
@@ -44,7 +44,7 @@ public class UI_Illnesses : MonoBehaviour
             _stomachAche = _playerManager.StomachAche;
             _heartAche = _playerManager.HeartAche;
             _playerIllnesses = new PlayerStat[] { _sunStroke, _stomachAche, _heartAche };
-            _uiIllnesses = new UI_ImageStroke[] { _uiSunStroke, _uiStomachAche, _uiHeartAche };
+            _uiIllnesses = new UI_ImageIllnesses[] { _uiSunStroke, _uiStomachAche, _uiHeartAche };
         }
     }
 

@@ -76,7 +76,12 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (!GWM.Instance.UIInventory.gameObject.activeSelf)
+            if (GWM.Instance.UIInventory.gameObject.activeSelf)
+            {
+                _right = 0f;
+                _forward = 0f;
+            }
+            else
             {
                 if (_canJump && !_keyJumpPress && _playerManager.Stamina.Value > _playerManager.Stamina.DecreaseJump)
                 {

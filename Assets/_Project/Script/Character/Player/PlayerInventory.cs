@@ -32,9 +32,12 @@ public class PlayerInventory
     private PlayerManager _playerManager;
     public int TempKey { get; private set; }
 
-    private List<Data_Item> _items = new List<Data_Item>();
+    private int _countKeyItems;
+    private Dictionary<int, Data_Item> _items = new Dictionary<int, Data_Item>();
 
-    public event Action onInventoryChange;
+    private float _playerRadius;
+
+    public event Action<int> onInventoryChange;
 
     private bool MyAwake(bool debug)
     {
@@ -48,6 +51,7 @@ public class PlayerInventory
             _debug = debug;
 
             _playerManager = GWM.Instance.PlayerManager;
+            _playerRadius = _playerManager.CapsuleCollider.radius;
 
             return true;
         }
@@ -69,45 +73,36 @@ public class PlayerInventory
     {
         if (datatItem.InInventory(GenerateTempKey()))
         {
-            for (int i = 0; i < _items.Count; ++i)
+            ++_countKeyItems;
+            _items.Add(_countKeyItems, datatItem);
+
+            onInventoryChange?.Invoke(_countKeyItems);
+            TempKey = 0;
+            if (_debug)
             {
-                if (_items[i].SOItem.ItemType >= datatItem.SOItem.ItemType)
-                {
-                    if (datatItem.SOItem.ItemTool == ItemTool.None || datatItem.SOItem.ItemCampfire == ItemCampfire.None)
-                    {
-                        _items.Add(datatItem);
-                        break;
-                    }
-                    else
-                    {
-                        if (_items[i].SOItem.ItemTool >= datatItem.SOItem.ItemTool)
-                        {
-                            _items.Add(datatItem);
-                            break;
-                        }
-                        else if (_items[i].SOItem.ItemCampfire >= datatItem.SOItem.ItemCampfire)
-                        {
-                            _items.Add(datatItem);
-                            break;
-                        }
-                    }
-                }
+                Debug.Log("Item add");
             }
-
-            onInventoryChange?.Invoke();
-            TempKey = 0;
             return true;
         }
         TempKey = 0;
         return false;
     }
 
-    public bool RemoveItemInventory(int index)
+    public bool RemoveItemInventory(int index, bool isDestroy)
     {
-        if (_items[index].OutInventory(GenerateTempKey()))
+        if (_items[index].OutInventory(GenerateTempKey(), isDestroy))
         {
-            _items.RemoveAt(index);
-            onInventoryChange?.Invoke();
+            if (isDestroy)
+            {
+
+            }
+            else
+            {
+                Vector2 random = Random.insideUnitCircle * _playerRadius;
+                _items[index].PrefabItem.transform.position = _playerManager.transform.position + new Vector3 (random.x, 0f, random.y);
+            }
+            _items.Remove(index);
+            onInventoryChange?.Invoke(-1);
             TempKey = 0;
             return true;
         }
@@ -115,12 +110,32 @@ public class PlayerInventory
         return false;
     }
 
-    public int GetInventoryCount() => _items.Count;
+    public List<int> GetKeyItems()
+    {
+        List<int> keys = new List<int>(_items.Count);
+        foreach (int key in _items.Keys)
+        {
+            keys.Add(key);
+        }
+        return keys;
+    }
 
     public SO_Item ViewInventoryItem(int index, out float condition, out ItemState state)
     {
         condition = _items[index].Condition;
         state = _items[index].State;
         return _items[index].SOItem;
+    }
+
+    public bool HasToolInInventory(ItemTool tool)
+    {
+        foreach (Data_Item dataItem in _items.Values)
+        {
+            if (dataItem.SOItem.ItemTool == tool)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

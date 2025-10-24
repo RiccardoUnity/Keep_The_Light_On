@@ -98,6 +98,7 @@ public class Prefab_Item : Interactable
         {
             gameObject.SetActive(false);
             _dataItem = null;
+            _key = 0;
             return true;
         }
         return false;

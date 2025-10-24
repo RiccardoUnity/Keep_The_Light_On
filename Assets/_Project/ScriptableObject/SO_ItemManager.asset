@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5728774a2deb4754d9273c09c6e89a58, type: 3}
   m_Name: SO_ItemManager
   m_EditorClassIdentifier: 
-  _SOitems: []
+  _soItems:
+  - {fileID: 11400000, guid: ab44440f0a753c64cb0d497f9da81bc8, type: 2}
+  - {fileID: 11400000, guid: 63edcc020e06ab74f8ce2f2cffcb52f5, type: 2}
+  - {fileID: 11400000, guid: d7cc9c0c874f33e4c8e1c08156249772, type: 2}

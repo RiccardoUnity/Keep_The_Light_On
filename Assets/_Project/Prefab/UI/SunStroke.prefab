@@ -116,12 +116,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3856155308471461836}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0644de3c8d46d241b2772097e978ad2, type: 3}
+  m_Script: {fileID: 11500000, guid: d5820b915cf74f140bc6ce4395d2fe9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _fillImage: {fileID: 1088887272836178021}
   _text: {fileID: 1013865033330213460}
-  _highLightColorImage: {r: 1, g: 1, b: 1, a: 0.39215687}
+  _highLightColorImage: {r: 0, g: 0, b: 0, a: 0.5882353}
 --- !u!114 &1256645519654361882
 MonoBehaviour:
   m_ObjectHideFlags: 0

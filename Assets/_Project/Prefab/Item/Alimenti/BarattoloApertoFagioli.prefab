@@ -96,6 +96,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: BarattoloApertoFagioli
       objectReference: {fileID: 0}
+    - target: {fileID: 285689222228447214, guid: 7f47bb62c22e1eb4ba4a683877b5eae8,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: d7cc9c0c874f33e4c8e1c08156249772,
+        type: 2}
     - target: {fileID: 2928943328193124988, guid: 7f47bb62c22e1eb4ba4a683877b5eae8,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

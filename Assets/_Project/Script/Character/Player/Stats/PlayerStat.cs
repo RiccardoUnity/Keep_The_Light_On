@@ -7,14 +7,14 @@ public abstract class PlayerStat
 {
     protected class Modifier
     {
-        public float Moltiplier { get; private set; }
+        public float Value { get; private set; }
         public bool IsIncrease { get; private set; }
         private float _duration;
         private Action<Modifier> _onDestroy;
 
-        public Modifier(float moltiplier, bool isIncrease, float duration, Action<Modifier> onDestroy)
+        public Modifier(float value, bool isIncrease, float duration, Action<Modifier> onDestroy)
         {
-            Moltiplier = moltiplier;
+            Value = value;
             IsIncrease = isIncrease;
             _duration = duration;
             _onDestroy = onDestroy;
@@ -43,7 +43,7 @@ public abstract class PlayerStat
     protected float _increase;
     protected float _decrease;
     protected bool _isIncrease;
-    protected float _moltiplier;
+    protected float _modifier;
     protected List<Modifier> _modifiers = new List<Modifier>(2);
     protected float _extra;
 
@@ -128,7 +128,7 @@ public abstract class PlayerStat
 
     private void UpdateNormalPriority(float timeDelay)
     {
-        SetMoltiplier();
+        SetModifier(timeDelay);
         CheckValue(timeDelay);
         SetValue(timeDelay);
         CallEvent();
@@ -143,18 +143,13 @@ public abstract class PlayerStat
 
     protected void SetValue(float timeDelay)
     {
-        if (_moltiplier == 0)
-        {
-            _moltiplier = _isIncrease ? 1 : -1;
-        }
-
         if (_isIncrease)
         {
-            Value += _increase * _moltiplier * timeDelay + _extra;
+            Value += _increase * timeDelay + _modifier + _extra;
         }
         else
         {
-            Value += _decrease * _moltiplier * timeDelay + _extra;
+            Value += -_decrease * timeDelay + _modifier + _extra;
         }
     }
 
@@ -185,7 +180,7 @@ public abstract class PlayerStat
         }
     }
 
-    public void AddModifier(float moltiplier, bool isIncrease, int duration)
+    public void AddModifier(float moltiplier, bool isIncrease, float duration)
     {
         Modifier modifier = new Modifier(moltiplier, isIncrease, duration, RemoveModifier);
         _modifiers.Add(modifier);
@@ -196,14 +191,14 @@ public abstract class PlayerStat
         _modifiers.Remove(modifier);
     }
 
-    private void SetMoltiplier()
+    private void SetModifier(float timeDelay)
     {
-        _moltiplier = 0f;
+        _modifier = 0f;
         if (_modifiers.Count > 0)
         {
             foreach (Modifier modifier in _modifiers)
             {
-                _moltiplier += modifier.Moltiplier * (modifier.IsIncrease ? 1 : -1);
+                _modifier += modifier.Value * timeDelay * (modifier.IsIncrease ? 1 : -1);
             }
         }
     }

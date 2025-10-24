@@ -102,6 +102,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mainDebug: 0
+  _inventoryDebug: 0
+  _gizmosDebug: 0
   _head: {fileID: 6382909463091307287}
   _camera: {fileID: 0}
   _debugLife: 0
@@ -118,11 +120,18 @@ MonoBehaviour:
   startValueStamina: 1
   _debugSunStroke: 0
   startValueSunStroke: 0
-  _debugStomacStroke: 0
-  startValueStomacStroke: 0
-  _debugHeartStroke: 0
-  startValueHeartStroke: 0
-  _distanceRay: 15
+  _debugStomachAche: 0
+  startValueStomachAche: 0
+  _debugHeartAche: 0
+  startValueHeartAche: 0
+  _distanceMainLight: 15
+  _blockMainLight:
+    serializedVersion: 2
+    m_Bits: 1
+  _distanceRayInteractable: 3
+  _interactableLayerMask:
+    serializedVersion: 2
+    m_Bits: 192
 --- !u!114 &3321151218641942399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e4b687209b869148a19ce5783f4eb6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _debug: 0
   _groundLayerMask:
     serializedVersion: 2
     m_Bits: 1

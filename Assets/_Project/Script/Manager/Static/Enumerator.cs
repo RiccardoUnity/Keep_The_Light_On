@@ -57,3 +57,16 @@ public enum ItemCampfire
     Tinder,
     Fuel
 }
+
+public enum PlayerStats
+{
+    Life,
+    Enduro,
+    Rest,
+    Hunger,
+    Thirst,
+    Stamina,
+    SunStroke,
+    StomachAche,
+    HeartAche
+}

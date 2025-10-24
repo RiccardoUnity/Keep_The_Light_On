@@ -76,8 +76,8 @@ public class UI_Scope : MonoBehaviour
         _animationVerse = _showScopeVerse;
         _currentTime = _showScopeVerse ? 0f : 1f;
         _icon.gameObject.SetActive(true);
-        _onAnimation += AnimationShowScope;
-        _onLateAnimation += IconOff;
+        _onAnimation = AnimationShowScope;
+        _onLateAnimation = IconOff;
         _animation = Animation(_timeShowScope);
         StartCoroutine(_animation);
     }
@@ -114,8 +114,8 @@ public class UI_Scope : MonoBehaviour
         _fill.fillAmount = 0f;
         _animationVerse = true;
         _currentTime = 0f;
-        _onAnimation += SetFill;
-        _onLateAnimation += CallbackReference;
+        _onAnimation = SetFill;
+        _onLateAnimation = CallbackReference;
         _onLateAnimation += EndSelect;
         _animation = Animation(_dataItem.SOItem.HarvestTime);
         StartCoroutine(_animation);
@@ -184,6 +184,6 @@ public class UI_Scope : MonoBehaviour
         _animation = null;
 
         _onLateAnimation?.Invoke();
-        _onLateAnimation = null;
+        //_onLateAnimation = null;
     }
 }

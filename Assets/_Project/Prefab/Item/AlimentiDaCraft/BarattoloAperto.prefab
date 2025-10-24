@@ -74,6 +74,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: BarattoloAperto
       objectReference: {fileID: 0}
+    - target: {fileID: 9029911566738318677, guid: 4901a7d9c4a140843a0e7808700737a6,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: ab44440f0a753c64cb0d497f9da81bc8,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
