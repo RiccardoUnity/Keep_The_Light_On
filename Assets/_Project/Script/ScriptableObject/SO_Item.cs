@@ -7,7 +7,7 @@ using UnityEngine;
 public class SO_Item : ScriptableObject
 {
     [System.Serializable]
-    public class Modifier
+    private class Modifier
     {
         [Range(0f, 1f)][SerializeField] private float _lessOrEqualToCondition = 1f;
         [SerializeField] private PlayerStats _stat = PlayerStats.Life;
@@ -97,12 +97,9 @@ public class SO_Item : ScriptableObject
     [SerializeField] private bool _itemCanUse;
     public ItemTool ItemToolCanUse { get => _itemToolCanUse; }
     [SerializeField] private ItemTool _itemToolCanUse;
-    public Modifier[] _modifiers;
+    [SerializeField] private Modifier[] _modifiers;
     public SO_Item[] SOItemUse { get => _soItemUse; }
     [SerializeField] private SO_Item[] _soItemUse;
-
-    public SO_Item[] SOItemCraft { get => _soItemCraft; }
-    [SerializeField] private SO_Item[] _soItemCraft;
 
     public bool Use(PlayerManager playerManager, float realSecondToGameSecond, float condition, PoolManager pool)
     {

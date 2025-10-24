@@ -37,6 +37,9 @@ public class PlayerInventory
 
     private float _playerRadius;
 
+    public SO_Item[] SOItemInInventory { get => _soItemInInventory.ToArray(); }
+    private List<SO_Item> _soItemInInventory = new List<SO_Item>();
+
     public event Action<int> onInventoryChange;
 
     private bool MyAwake(bool debug)
@@ -76,6 +79,20 @@ public class PlayerInventory
             ++_countKeyItems;
             _items.Add(_countKeyItems, datatItem);
 
+            bool hasItem = false;
+            foreach (SO_Item soItem in _soItemInInventory)
+            {
+                if (soItem == datatItem.SOItem)
+                {
+                    hasItem = true;
+                    break;
+                }
+            }
+            if (!hasItem)
+            {
+                _soItemInInventory.Add(datatItem.SOItem);
+            }
+
             onInventoryChange?.Invoke(_countKeyItems);
             TempKey = 0;
             if (_debug)
@@ -101,6 +118,21 @@ public class PlayerInventory
                 Vector2 random = Random.insideUnitCircle * _playerRadius;
                 _items[index].PrefabItem.transform.position = _playerManager.transform.position + new Vector3 (random.x, 0f, random.y);
             }
+
+            bool hasItem = false;
+            foreach (Data_Item dataItem in _items.Values)
+            {
+                if (dataItem.SOItem == _items[index].SOItem && dataItem != _items[index])
+                {
+                    hasItem = true;
+                    break;
+                }
+            }
+            if (!hasItem)
+            {
+                _soItemInInventory.Remove(_items[index].SOItem);
+            }
+
             _items.Remove(index);
             onInventoryChange?.Invoke(-1);
             TempKey = 0;
@@ -137,5 +169,30 @@ public class PlayerInventory
             }
         }
         return false;
+    }
+
+    public void CraftItemInInventory(SO_Item craft, SO_Item[] removes)
+    {
+        int i;
+        bool[] removesSOItem = new bool[removes.Length];
+        int[] dataItemsKeyToRemove = new int[removes.Length];
+        foreach (int dataItemKey in _items.Keys)
+        {
+            for(i = 0; i < removes.Length; ++i)
+            {
+                if (!removesSOItem[i] && _items[dataItemKey].SOItem == removes[i])
+                {
+                    dataItemsKeyToRemove[i] = dataItemKey;
+                    removesSOItem[i] = true;
+                }
+            }
+        }
+        foreach(int key in dataItemsKeyToRemove)
+        {
+            RemoveItemInventory(key, true);
+        }
+
+        Data_Item dataItem = GWM.Instance.PoolManager.RemoveDataItemFromPool(craft, 1f, ItemState.New);
+        AddItemInventory(dataItem);
     }
 }
