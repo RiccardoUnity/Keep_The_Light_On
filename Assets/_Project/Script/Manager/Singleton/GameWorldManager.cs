@@ -55,6 +55,8 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     [SerializeField] private UI_Scope _uiScope;
     public UI_Inventory UIInventory { get => _uiInventory; }
     [SerializeField] private UI_Inventory _uiInventory;
+    public UI_AcceleratedTime UIAcceleratedTime { get => _uiAcceleratedTime; }
+    [SerializeField] private UI_AcceleratedTime _uiAcceleratedTime;
 
     [Header("Asset")]
     private bool _null2;
@@ -90,6 +92,11 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             _hasAnError = true;
             Debug.LogError("UI Inventory missing", gameObject);
         }
+        if (_uiAcceleratedTime == null)
+        {
+            _hasAnError = true;
+            Debug.LogError("UI Accelerated Time missing", gameObject);
+        }
         if (_soItemManager == null)
         {
             _hasAnError = true;
@@ -124,6 +131,7 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             _uiStats.MyAwake();
             _uiScope.MyAwake();
             _uiInventory.MyAwake();
+            _uiAcceleratedTime.MyAwake();
         }
     }
 
