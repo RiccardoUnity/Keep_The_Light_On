@@ -158,6 +158,9 @@ public class PlayerInventory
         state = _items[index].State;
         return _items[index].SOItem;
     }
+    public SO_Item ViewInventoryItem(int index) => _items[index].SOItem;
+
+    public string GetNameInventoryItem(int index) => _items[index].SOItem.Name;
 
     public bool HasToolInInventory(ItemTool tool)
     {
@@ -194,5 +197,18 @@ public class PlayerInventory
 
         Data_Item dataItem = GWM.Instance.PoolManager.RemoveDataItemFromPool(craft, 1f, ItemState.New);
         AddItemInventory(dataItem);
+    }
+
+    public int[] GetItemCampfire(ItemCampfire itemCampfire)
+    {
+        List<int> keys = new List<int>();
+        foreach (int dataItemKey in _items.Keys)
+        {
+            if (_items[dataItemKey].SOItem.ItemCampfire  == itemCampfire)
+            {
+                keys.Add(dataItemKey);
+            }
+        }
+        return keys.ToArray();
     }
 }

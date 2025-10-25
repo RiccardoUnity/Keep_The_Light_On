@@ -6,13 +6,16 @@ using GWM = GameWorldManager;
 public class UI_Craft : MonoBehaviour
 {
     private bool _isMyAwake;
-    private PlayerInventory _playerInventory;
+    private PlayerManager _playerManager;
+    
 
     [SerializeField] private UI_ItemCraft _uiItemCraftPrefab;
     [SerializeField] private Transform _contenct;
 
     private SO_Item[] _itemsToCraft;
     private UI_ItemCraft[] _uiItemsCraft;
+
+    [SerializeField] private UI_Campfire _uiCampfire;
 
     public void MyAwake()
     {
@@ -24,7 +27,7 @@ public class UI_Craft : MonoBehaviour
         {
             _isMyAwake = true;
 
-            _playerInventory = GWM.Instance.PlayerManager.PlayerInventory;
+            _playerManager = GWM.Instance.PlayerManager;
 
             int i;
             if (_contenct.childCount > 0)
@@ -43,6 +46,8 @@ public class UI_Craft : MonoBehaviour
                 _uiItemsCraft[i] = Instantiate(_uiItemCraftPrefab, _contenct);
                 _uiItemsCraft[i].MyAwake(i);
             }
+
+            _uiCampfire.MyAwake();
         }
     }
 }

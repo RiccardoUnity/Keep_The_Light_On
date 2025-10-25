@@ -109,6 +109,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: BottigliaAcquaPotabile
       objectReference: {fileID: 0}
+    - target: {fileID: 9075673806782986113, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: d10bac2b8296d774fa2e77d12ee7832c,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

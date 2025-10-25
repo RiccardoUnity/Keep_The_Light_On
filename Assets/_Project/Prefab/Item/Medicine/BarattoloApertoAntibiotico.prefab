@@ -13,6 +13,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: BarattoloApertoAntibiotico
       objectReference: {fileID: 0}
+    - target: {fileID: 6315803067888142948, guid: 1af4df0f5c995bf429ea0c1e1c767120,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: 9f694072636a41d439d73290714fd51c,
+        type: 2}
     - target: {fileID: 6657104346169862082, guid: 1af4df0f5c995bf429ea0c1e1c767120,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

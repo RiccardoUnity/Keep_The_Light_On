@@ -99,6 +99,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tonno
       objectReference: {fileID: 0}
+    - target: {fileID: 9075673806782986113, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: bdcedb5fd0ddab14093d0a3ede7d1587,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

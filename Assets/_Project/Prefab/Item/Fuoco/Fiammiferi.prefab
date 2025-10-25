@@ -99,6 +99,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fiammiferi
       objectReference: {fileID: 0}
+    - target: {fileID: 9075673806782986113, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: 66c7a2369dc03d741aa541affb4dad3b,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -104,6 +104,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: SaccoAPelo
       objectReference: {fileID: 0}
+    - target: {fileID: 9075673806782986113, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: fd46f1c20468a8c4ba110e7dc6d6b365,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

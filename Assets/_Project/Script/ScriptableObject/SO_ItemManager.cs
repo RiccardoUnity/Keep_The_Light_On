@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = (nameof(SO_ItemManager)), menuName = "Data/" + (nameof(SO_ItemManager)))]
 public class SO_ItemManager : ScriptableObject
 {
+    [System.Serializable]
     private class CraftItem
     {
         public SO_Item SOItemToCraft { get => _soItemToCraft; }

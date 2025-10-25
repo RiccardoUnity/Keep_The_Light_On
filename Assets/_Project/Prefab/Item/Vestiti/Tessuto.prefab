@@ -99,6 +99,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tessuto
       objectReference: {fileID: 0}
+    - target: {fileID: 9075673806782986113, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: 8c2bb89bcb75ac54d8ae10e3ec9a2fd2,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

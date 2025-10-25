@@ -69,6 +69,7 @@ public class PlayerManager : MonoBehaviour
     //Other
     public bool IsUnderTheSun { get; private set; }
     public bool IsWakeUp { get; private set; }
+    public Campfire Campfire { get; private set; }
 
     public bool TrySelectInteractable { get => _trySelectInteractable; }
     private bool _trySelectInteractable;
@@ -293,7 +294,23 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    
+    void OnTriggerEnter(Collider other)
+    {
+        Campfire newCampfire = other.GetComponent<Campfire>();
+        if (newCampfire != null && Campfire == null)
+        {
+            Campfire = newCampfire;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Campfire newCampfire = other.GetComponent<Campfire>();
+        if (newCampfire != null && Campfire == newCampfire)
+        {
+            Campfire = null;
+        }
+    }
 
     private void OnDrawGizmos()
     {

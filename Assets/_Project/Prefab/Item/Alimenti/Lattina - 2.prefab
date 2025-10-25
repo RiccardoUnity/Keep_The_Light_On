@@ -68,6 +68,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lattina - 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2587250605640179783, guid: b92c59bef7a2cba47a2240e8ee69ad84,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: 497785094ad44374b8ba76bef13e8a27,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

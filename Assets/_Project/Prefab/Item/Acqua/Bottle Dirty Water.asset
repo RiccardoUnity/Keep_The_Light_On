@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76a27bac2d84f8447b071531d45587d4, type: 3}
+  m_Name: Bottle Dirty Water
+  m_EditorClassIdentifier: 
+  _name: Bottle Dirty Water
+  _description: 
+  _icon: {fileID: 0}
+  _prefab: {fileID: 346782236049839836, guid: 0e9bd32e137c2aa4cb577ee877453f53, type: 3}
+  _harvestTime: 0.5
+  _weight: 0.6
+  _itemType: 2
+  _itemTool: 0
+  _itemCampfire: 0
+  _minutesFuel: 0
+  _canUse: 1
+  _itemCanUse: 0
+  _itemToolCanUse: 0
+  _modifiers:
+  - _lessOrEqualToCondition: 1
+    _stat: 4
+    _isIncrease: 1
+    _minutesRealTimeActive: 5
+    _value: 0.5
+  - _lessOrEqualToCondition: 1
+    _stat: 7
+    _isIncrease: 1
+    _minutesRealTimeActive: 60
+    _value: 0.35
+  _soItemUse:
+  - {fileID: 11400000, guid: c2feee2d84260e14d91e702eaf13593d, type: 2}

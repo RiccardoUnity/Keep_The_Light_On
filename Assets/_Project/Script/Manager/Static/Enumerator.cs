@@ -47,14 +47,15 @@ public enum ItemTool
     Cutter,
     Crowbar,
     SleepingBag,
-    Can
+    Jar,
+    Bottle
 }
 
 public enum ItemCampfire
 {
     None,
-    Fire,
-    Tinder,
+    Trigger,
+    Fuse,
     Fuel
 }
 

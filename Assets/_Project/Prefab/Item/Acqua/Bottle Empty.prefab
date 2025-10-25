@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &6306686328341198581
+--- !u!1001 &601045718124370778
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -11,8 +11,14 @@ PrefabInstance:
     - target: {fileID: 5911845183657701964, guid: dc213efd3b3e8f24c9a6141fc76b7c49,
         type: 3}
       propertyPath: m_Name
-      value: BottigliaAcquaContaminata
+      value: Bottle Empty
       objectReference: {fileID: 0}
+    - target: {fileID: 6004949040087457833, guid: dc213efd3b3e8f24c9a6141fc76b7c49,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: c2feee2d84260e14d91e702eaf13593d,
+        type: 2}
     - target: {fileID: 7648814624184270120, guid: dc213efd3b3e8f24c9a6141fc76b7c49,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -67,7 +73,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: aa82b0187f4626a45ab621495cbaf30b, type: 2}
+      objectReference: {fileID: 2100000, guid: 0e3363ca753823f40954854260a8f341, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

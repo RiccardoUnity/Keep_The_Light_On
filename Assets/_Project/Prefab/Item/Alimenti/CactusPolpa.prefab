@@ -104,6 +104,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: CactusPolpa
       objectReference: {fileID: 0}
+    - target: {fileID: 8352387077689359792, guid: 84fce67d1089237439be0fb84d888968,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: 200e2ecab00421b45bc2373cdac561bf,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

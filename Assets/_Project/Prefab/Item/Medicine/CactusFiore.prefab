@@ -347,6 +347,12 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Item
       objectReference: {fileID: 0}
+    - target: {fileID: 9075673806782986113, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
+        type: 3}
+      propertyPath: _soItem
+      value: 
+      objectReference: {fileID: 11400000, guid: abe509155603db54ab0cfe1493cb2748,
+        type: 2}
     m_RemovedComponents:
     - {fileID: 6242006242697142803, guid: 0bbabeb5fbd87364891feaf84b2d0ddd, type: 3}
     - {fileID: 159708709977981160, guid: 0bbabeb5fbd87364891feaf84b2d0ddd, type: 3}

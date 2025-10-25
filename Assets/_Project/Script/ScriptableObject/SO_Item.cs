@@ -91,6 +91,9 @@ public class SO_Item : ScriptableObject
     public ItemCampfire ItemCampfire { get => _itemCampfire; }
     [SerializeField] private ItemCampfire _itemCampfire;
 
+    public float MinutesFuel { get => _minutesFuel; }
+    [SerializeField] private float _minutesFuel;
+
     public bool CanUse { get => _canUse; }
     [SerializeField] private bool _canUse;
     public bool ItemCanUse { get => _itemCanUse; }
@@ -123,11 +126,4 @@ public class SO_Item : ScriptableObject
         }
         return false;
     }
-
-    public void Craft()
-    {
-        
-
-    }
-    
 }
