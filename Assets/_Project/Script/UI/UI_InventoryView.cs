@@ -206,10 +206,12 @@ public class UI_InventoryView : MonoBehaviour
             if (soItem.Icon == null)
             {
                 _detailIcon.sprite = _iconLost;
+                _detailIcon.color = Color.red;
             }
             else
             {
                 _detailIcon.sprite = soItem.Icon;
+                _detailIcon.color = soItem.Color;
             }
             if (soItem.CanUse)
             {

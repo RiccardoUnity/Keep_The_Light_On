@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Crowbar
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 1434767838, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 324842511411949073, guid: 2907ed21a2d076f48adf65bfd9d47103, type: 3}
   _harvestTime: 0.5
   _weight: 1

@@ -98,7 +98,7 @@ MonoBehaviour:
   _state: {fileID: 3385163485928720241}
   _weight: {fileID: 5377024283079154266}
   _image: {fileID: 1592006945502961608}
-  _iconLost: {fileID: 21300000, guid: 6c85a57e0a36fa04ca9067d27b9638e8, type: 3}
+  _iconLost: {fileID: -2095395756, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _colorHover: {r: 1, g: 1, b: 1, a: 0.19607843}
   _colorSelect: {r: 1, g: 1, b: 1, a: 0.39215687}
 --- !u!1 &3498343046909149690
@@ -167,8 +167,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 212853711, guid: 65ad6cb7a7f545a47b7834e4d28d2846, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: -911587335, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6c85a57e0a36fa04ca9067d27b9638e8, type: 3}
+  m_Sprite: {fileID: -2095395756, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

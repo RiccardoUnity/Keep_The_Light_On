@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Lifesaver
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 565297983, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 5366966452411260614, guid: 6deb4a7c4dd73254aa78a85d562e0c79, type: 3}
   _harvestTime: 0.5
   _weight: 0.2

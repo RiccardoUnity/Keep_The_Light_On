@@ -41,10 +41,12 @@ public class UI_Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         if (soItem.Icon == null)
         {
             _image.sprite = _iconLost;
+            _image.color = Color.red;
         }
         else
         {
             _image.sprite = soItem.Icon;
+            _image.color = soItem.Color;
         }
     }
 

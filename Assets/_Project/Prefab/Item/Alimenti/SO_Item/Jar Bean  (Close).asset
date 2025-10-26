@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Jar Bean (Close)
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 2029938903, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 9029911566738318677, guid: 4901a7d9c4a140843a0e7808700737a6, type: 3}
   _harvestTime: 0.5
   _weight: 0.6

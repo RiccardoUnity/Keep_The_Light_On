@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: SleepingBag
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: -1961717979, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 1858710128886933954, guid: 4454a9eafdb4b6247add1943bb52f3db, type: 3}
   _harvestTime: 0.5
   _weight: 1

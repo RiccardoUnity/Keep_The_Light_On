@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Bottle Dirty Water
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 278074483, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _color: {r: 0.85490197, g: 0.654902, b: 0, a: 1}
   _prefab: {fileID: 346782236049839836, guid: 0e9bd32e137c2aa4cb577ee877453f53, type: 3}
   _harvestTime: 0.5
   _weight: 0.6

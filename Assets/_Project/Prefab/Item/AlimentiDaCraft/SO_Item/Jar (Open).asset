@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Jar (Open)
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 946693012, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 285689222228447214, guid: 7f47bb62c22e1eb4ba4a683877b5eae8, type: 3}
   _harvestTime: 0.5
   _weight: 0.1
@@ -23,7 +23,7 @@ MonoBehaviour:
   _itemCampfire: 0
   _minutesFuel: 0
   _canUse: 0
-  _itemCanUse: 0
+  _removeAfterUse: 0
   _itemToolCanUse: 0
   _modifiers: []
   _soItemUse: []

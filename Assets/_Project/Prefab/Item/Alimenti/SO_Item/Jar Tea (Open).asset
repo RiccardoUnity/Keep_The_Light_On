@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Jar Tea (Open)
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: -706239883, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 6671128074574755840, guid: de0abf8900be5b6458ae993985ff2595, type: 3}
   _harvestTime: 0.5
   _weight: 0.3

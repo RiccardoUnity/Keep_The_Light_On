@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Coffee
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 164896113, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 6004949040087457833, guid: b02c80708d774a040b567761fefa703f, type: 3}
   _harvestTime: 0.5
   _weight: 0.1

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Antibiotic
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 565297983, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 5547091163637993925, guid: 3872c8eb89025a54c91e29e618d88566, type: 3}
   _harvestTime: 0.5
   _weight: 0.2

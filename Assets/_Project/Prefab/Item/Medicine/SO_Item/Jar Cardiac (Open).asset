@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Jar Cardiac (Open)
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 565297983, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 3078931212826002432, guid: 3ce08fbd101c0184a80956b6ad1cfdd7, type: 3}
   _harvestTime: 0.5
   _weight: 0.6

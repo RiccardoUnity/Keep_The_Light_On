@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Jar Antibiotic (Open)
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 565297983, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 2181951507646113458, guid: 1ee95a94f71ada74985c1cf6e058e95b, type: 3}
   _harvestTime: 0.5
   _weight: 0.6

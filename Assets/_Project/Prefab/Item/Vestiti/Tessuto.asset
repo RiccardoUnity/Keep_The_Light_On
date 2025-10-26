@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: 
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: -301627100, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 2719657768167921237, guid: a5aae94b11cd36044bcaa83b1c9358bd, type: 3}
   _harvestTime: 0.5
   _weight: 0.1
@@ -23,7 +23,7 @@ MonoBehaviour:
   _itemCampfire: 0
   _minutesFuel: 0
   _canUse: 0
-  _itemCanUse: 0
+  _removeAfterUse: 0
   _itemToolCanUse: 0
   _modifiers: []
   _soItemUse: []

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Cactus Flower
   _description: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 476768924, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
   _prefab: {fileID: 2866601788643787821, guid: bd8679406dbf3ea49bd434560f7f5da0, type: 3}
   _harvestTime: 0.5
   _weight: 0.1
