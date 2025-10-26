@@ -110,6 +110,15 @@ public class UI_Campfire : MonoBehaviour
         SetIndexSelect(ref _triggerIndexSelect, ref _triggerKeys, ref _trigger);
         SetIndexSelect(ref _fuseIndexSelect, ref _fuseKeys, ref _fuse);
         SetIndexSelect(ref _fuelIndexSelect, ref _fuelKeys, ref _fuel);
+
+        if (_triggerKeys.Length == 0 || _fuseKeys.Length == 0 || _fuelKeys.Length == 0)
+        {
+            _start.gameObject.SetActive(false);
+        }
+        else
+        {
+            _start.gameObject.SetActive(true);
+        }
     }
 
     private void SetIndexSelect(ref int indexSelect, ref int[] keys, ref UI_OtherButton button)

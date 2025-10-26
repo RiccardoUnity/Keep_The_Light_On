@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using StringConst = StaticData.S_GameManager.StringConst;
 using GWM = GameWorldManager;
+using StringConst = StaticData.S_GameManager.StringConst;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private PlayerManager _playerManager;
     private UI_Option _option;
 
+    public bool IsCrouch { get; private set; }
     public bool IsRun { get; private set; }
     private bool _isMoveOn = true;
     private float _right;
@@ -19,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _direction;
     [SerializeField] private float _walkSpeed = 4f;
     [SerializeField] private float _runSpeed = 6f;
+    [SerializeField] private float _crouchHeightMoltiplier = 0.5f;
 
     [SerializeField] private float _heightJump = 1f;
     private float _gravityMagnitude;
@@ -56,8 +56,8 @@ public class PlayerController : MonoBehaviour
             _isMyAwake = true;
             _gravityMagnitude = Physics.gravity.magnitude;
             _rb = GetComponent<Rigidbody>();
-            _playerManager = GameWorldManager.Instance.PlayerManager;
-            _option = GameWorldManager.Instance.UIPause.UIOption;
+            _playerManager = GWM.Instance.PlayerManager;
+            _option = GWM.Instance.UIPause.UIOption;
 
             _playerManager.PlayerGroundCheck.onGroundedChange += SetCanJump;
             GWM.Instance.TimeManager.onPriority += EnergyToProcessInNormalPriority;
@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                if (_canJump && !_keyJumpPress && _playerManager.Stamina.Value > _playerManager.Stamina.DecreaseJump)
+                if (_canJump && !_keyJumpPress && _playerManager.Stamina.Value > _playerManager.Stamina.DecreaseJump && !IsCrouch)
                 {
                     _keyJumpPress = Input.GetButton(StringConst.Jump);
                 }
@@ -105,12 +105,24 @@ public class PlayerController : MonoBehaviour
                     transform.eulerAngles = new Vector3(0f, _yaw, 0f);
                 }
 
+                //Crouch
+                if (Input.GetButtonDown(StringConst.Crouch))
+                {
+                    IsCrouch = !IsCrouch;
+                    SetCrouch();
+                }
+
                 //MoveInput
                 _right = Input.GetAxis(StringConst.Horizontal);
                 _forward = Input.GetAxis(StringConst.Vertical);
                 if (Input.GetButton(StringConst.Run) && _playerManager.Stamina.Value > 0f)
                 {
                     IsRun = true;
+                    if (IsCrouch)
+                    {
+                        IsCrouch = false;
+                        SetCrouch();
+                    }
                 }
                 else
                 {
@@ -190,6 +202,25 @@ public class PlayerController : MonoBehaviour
         ++JumpNumber;
         _rb.AddForce(Vector3.up * Mathf.Sqrt(2f * _gravityMagnitude * _heightJump), ForceMode.VelocityChange);
         onJump?.Invoke();
+    }
+
+    private void SetCrouch()
+    {
+        if (IsCrouch)
+        {
+            _playerManager.CapsuleCollider.height *= _crouchHeightMoltiplier;
+            _playerManager.CapsuleCollider.center *= _crouchHeightMoltiplier;
+            _playerManager.Head.transform.localPosition *= _crouchHeightMoltiplier;
+            _playerManager.RightHand.transform.localPosition *= _crouchHeightMoltiplier;
+        }
+        else
+        {
+            _playerManager.CapsuleCollider.height /= _crouchHeightMoltiplier;
+            _playerManager.CapsuleCollider.center /= _crouchHeightMoltiplier;
+            _playerManager.Head.transform.localPosition /= _crouchHeightMoltiplier;
+            _playerManager.RightHand.transform.localPosition /= _crouchHeightMoltiplier;
+        }
+        
     }
 
     private void EnergyToProcessInNormalPriority(float timeDelay)

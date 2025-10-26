@@ -174,14 +174,14 @@ public class PlayerInventory
         return false;
     }
 
-    public void CraftItemInInventory(SO_Item craft, SO_Item[] removes)
+    public void CraftItemInInventory(SO_Item[] craft, SO_Item[] removes)
     {
         int i;
         bool[] removesSOItem = new bool[removes.Length];
         int[] dataItemsKeyToRemove = new int[removes.Length];
         foreach (int dataItemKey in _items.Keys)
         {
-            for(i = 0; i < removes.Length; ++i)
+            for (i = 0; i < removes.Length; ++i)
             {
                 if (!removesSOItem[i] && _items[dataItemKey].SOItem == removes[i])
                 {
@@ -190,13 +190,17 @@ public class PlayerInventory
                 }
             }
         }
-        foreach(int key in dataItemsKeyToRemove)
+        foreach (int key in dataItemsKeyToRemove)
         {
             RemoveItemInventory(key, true);
         }
 
-        Data_Item dataItem = GWM.Instance.PoolManager.RemoveDataItemFromPool(craft, 1f, ItemState.New);
-        AddItemInventory(dataItem);
+        Data_Item dataItem;
+        foreach (SO_Item item in craft)
+        {
+            dataItem = GWM.Instance.PoolManager.RemoveDataItemFromPool(item, 1f, ItemState.New);
+            AddItemInventory(dataItem);
+        }
     }
 
     public int[] GetItemCampfire(ItemCampfire itemCampfire)

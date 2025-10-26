@@ -12,6 +12,9 @@ public class Campfire : Interactable
 
     private PlayerInventory _playerInventory;
 
+    [SerializeField] private GameObject[] _wood;
+    [SerializeField] private ParticleSystem _fire;
+
     public void MyAwake()
     {
         if (_isMyAwake)
@@ -34,13 +37,19 @@ public class Campfire : Interactable
 
         _playerInventory.RemoveItemInventory(keyTrigger, true);
         _playerInventory.RemoveItemInventory(keyFuse, true);
-        _playerInventory.RemoveItemInventory(keyFuel, true);
+
+        _fire.gameObject.SetActive(true);
+        foreach (GameObject gameObject in _wood)
+        {
+            gameObject.SetActive(true);
+        }
     }
 
     public void AddFuel(int keyFuel)
     {
         SO_Item soItem = _playerInventory.ViewInventoryItem(keyFuel);
         TotalMinutes += soItem.MinutesFuel;
+        _playerInventory.RemoveItemInventory(keyFuel, true);
     }
 
     private void UpdateNotPriority(float timeDelay)
@@ -48,7 +57,19 @@ public class Campfire : Interactable
         TotalMinutes -= timeDelay;
         if (TotalMinutes <= 0)
         {
-            IsOn = false;
+            SetOff();
+        }
+    }
+
+    private void SetOff()
+    {
+        IsOn = false;
+        GWM.Instance.TimeManager.onNotPriority1 -= UpdateNotPriority;
+
+        _fire.gameObject.SetActive(false);
+        foreach (GameObject gameObject in _wood)
+        {
+            gameObject.SetActive(false);
         }
     }
 }

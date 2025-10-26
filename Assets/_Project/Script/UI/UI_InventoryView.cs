@@ -231,13 +231,16 @@ public class UI_InventoryView : MonoBehaviour
         soItem = _playerInventory.ViewInventoryItem(_keyItemSelect, out condition, out state);
         if (soItem.Use(_playerManager, GWM.Instance.TimeManager.RealSecondToGameSecond, condition, _poolManager))
         {
-            _playerInventory.RemoveItemInventory(_keyItemSelect, true);
+            if (soItem.RemoveAfterUse)
+            {
+                _playerInventory.RemoveItemInventory(_keyItemSelect, true);
+            }
         }
         else
         {
             if (_debug)
             {
-                Debug.Log("Can't use it without tool");
+                Debug.Log("Can't use it");
             }
         }
     }

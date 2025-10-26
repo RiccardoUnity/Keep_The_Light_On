@@ -9,25 +9,29 @@ public class UI_ItemCraft : MonoBehaviour
 {
     private bool _isMyAwake;
     private int _index;
+    private PlayerManager _playerManager;
     private PlayerInventory _playerInventory;
+    private UI_Craft _uiCraft;
 
+    [SerializeField] private Image _background;
     [SerializeField] private TMP_Text _name;
     [SerializeField] private TMP_Text _element0;
     [SerializeField] private TMP_Text _element1;
     [SerializeField] private TMP_Text _element2;
     [SerializeField] private TMP_Text _element3;
     [SerializeField] private UI_Button _button;
+    private TMP_Text[] _arrayElement;
 
     [SerializeField] private Image _image;
     [SerializeField] private Sprite _iconLost;
 
-    private Image _background;
     private Color _colorNormal;
     [SerializeField] private Color _colorHover = Color.white;
 
     private SO_Item[] _resources;
+    private bool _useCampfire;
 
-    public void MyAwake(int index)
+    public void MyAwake(int index, UI_Craft uiCraft)
     {
         if (_isMyAwake)
         {
@@ -37,56 +41,89 @@ public class UI_ItemCraft : MonoBehaviour
         {
             _isMyAwake = true;
             _index = index;
+            _uiCraft = uiCraft;
 
-            _playerInventory = GWM.Instance.PlayerManager.PlayerInventory;
-            _background = GetComponent<Image>();
+            _playerManager = GWM.Instance.PlayerManager;
+            _playerInventory = _playerManager.PlayerInventory;
             _colorNormal = _background.color;
 
-            _resources = GWM.Instance.SOItemManager.ArrayCraftItemElement(index);
-            _element0.text = _resources[0].name;
-            _element1.text = _resources[1].name;
-            _element2.text = _resources[2].name;
-            _element3.text = _resources[3].name;
+            _name.text = GWM.Instance.SOItemManager.SOItemCraft[index].SOItemToCraft[0].name;
 
-            _button.gameObject.SetActive(false);
-        }
-    }
-
-    void OnEnable()
-    {
-        if (_isMyAwake)
-        {
-            CheckSOItemInInventory();
-        }
-    }
-
-    private void CheckSOItemInInventory()
-    {
-        bool[] check = new bool[_resources.Length];
-        for (int i = 0; i < _resources.Length; ++i)
-        {
-            foreach (SO_Item soItemInInventory in _playerInventory.SOItemInInventory)
+            _arrayElement = new TMP_Text[] { _element0, _element1, _element2, _element3 };
+            _resources = GWM.Instance.SOItemManager.SOItemCraft[index].SOItemResources;
+            for (int i = 0; i < _arrayElement.Length; ++i)
             {
-                if (_resources[i] == soItemInInventory)
+                if (i < _resources.Length)
                 {
-                    check[i] = true;
-                    break;
+                    _arrayElement[i].text = _resources[i].name;
+                }
+                else
+                {
+                    _arrayElement[i].gameObject.SetActive(false);
                 }
             }
+            _useCampfire = GWM.Instance.SOItemManager.SOItemCraft[index].UseCampfire;
+
+            gameObject.SetActive(false);
         }
-        _button.gameObject.SetActive(true);
-        foreach (bool value in check)
+    }
+
+    public void CheckSOItemInInventory()
+    {
+        bool canCraft;
+        if (_useCampfire)
         {
-            if (!value)
+            if (_playerManager.Campfire != null)
             {
-                _button.gameObject.SetActive(false);
+                if (_playerManager.Campfire.IsOn)
+                {
+                    canCraft = true;
+                }
+                else
+                {
+                    canCraft = false;
+                }
             }
+            else
+            {
+                canCraft = false;
+            }
+        }
+        else
+        {
+            canCraft = true;
+        }
+
+        if (canCraft)
+        {
+            bool[] check = new bool[_resources.Length];
+            for (int i = 0; i < _resources.Length; ++i)
+            {
+                foreach (SO_Item soItemInInventory in _playerInventory.SOItemInInventory)
+                {
+                    if (_resources[i] == soItemInInventory)
+                    {
+                        check[i] = true;
+                        break;
+                    }
+                }
+            }
+
+            bool active = true;
+            foreach (bool value in check)
+            {
+                if (!value)
+                {
+                    active = false;
+                }
+            }
+            gameObject.SetActive(active);
         }
     }
 
     public void Craft()
     {
-        GWM.Instance.SOItemManager.CraftItemInInventory(_index, _playerInventory);
-        CheckSOItemInInventory();
+        _playerInventory.CraftItemInInventory(GWM.Instance.SOItemManager.SOItemCraft[_index].SOItemToCraft, _resources);
+        _uiCraft.ReCheckAll();
     }
 }

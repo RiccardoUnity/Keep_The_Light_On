@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76a27bac2d84f8447b071531d45587d4, type: 3}
+  m_Name: Jerky Meat
+  m_EditorClassIdentifier: 
+  _name: Jerky Meat
+  _description: 
+  _icon: {fileID: 0}
+  _prefab: {fileID: 21748959433054404, guid: 77dd96fd7fc032c4eac84f6f38575903, type: 3}
+  _harvestTime: 0.5
+  _weight: 0.2
+  _itemType: 1
+  _itemTool: 0
+  _itemCampfire: 3
+  _minutesFuel: 15
+  _canUse: 1
+  _removeAfterUse: 1
+  _itemToolCanUse: 0
+  _modifiers:
+  - _lessOrEqualToCondition: 100
+    _stat: 3
+    _isIncrease: 1
+    _minutesRealTimeActive: 5
+    _value: 0.25
+  - _lessOrEqualToCondition: 0.5
+    _stat: 7
+    _isIncrease: 1
+    _minutesRealTimeActive: 5
+    _value: 0.1
+  _soItemUse: []

@@ -96,8 +96,8 @@ public class SO_Item : ScriptableObject
 
     public bool CanUse { get => _canUse; }
     [SerializeField] private bool _canUse;
-    public bool ItemCanUse { get => _itemCanUse; }
-    [SerializeField] private bool _itemCanUse;
+    public bool RemoveAfterUse { get => _removeAfterUse; }
+    [SerializeField] private bool _removeAfterUse;
     public ItemTool ItemToolCanUse { get => _itemToolCanUse; }
     [SerializeField] private ItemTool _itemToolCanUse;
     [SerializeField] private Modifier[] _modifiers;
@@ -108,22 +108,45 @@ public class SO_Item : ScriptableObject
     {
         if (_canUse)
         {
-            if (ItemToolCanUse == ItemTool.None || (ItemToolCanUse != ItemTool.None && playerManager.PlayerInventory.HasToolInInventory(ItemToolCanUse)))
+            if (ItemType == ItemType.Dress)
             {
-                foreach (Modifier mod in _modifiers)
-                {
-                    mod.Apply(playerManager, realSecondToGameSecond, condition);
-                }
-
-                Data_Item dataItem;
-                foreach (SO_Item item in _soItemUse)
-                {
-                    dataItem = pool.RemoveDataItemFromPool(item, condition, ItemState.New);
-                    playerManager.PlayerInventory.AddItemInventory(dataItem);
-                }
+                Dress();
                 return true;
+            }
+            else if (ItemType == ItemType.Tool && ItemTool == ItemTool.SleepingBag)
+            {
+                Sleep();
+                return true;
+            }
+            else
+            {
+                if (ItemToolCanUse == ItemTool.None || (ItemToolCanUse != ItemTool.None && playerManager.PlayerInventory.HasToolInInventory(ItemToolCanUse)))
+                {
+                    foreach (Modifier mod in _modifiers)
+                    {
+                        mod.Apply(playerManager, realSecondToGameSecond, condition);
+                    }
+
+                    Data_Item dataItem;
+                    foreach (SO_Item item in _soItemUse)
+                    {
+                        dataItem = pool.RemoveDataItemFromPool(item, condition, ItemState.New);
+                        playerManager.PlayerInventory.AddItemInventory(dataItem);
+                    }
+                    return true;
+                }
             }
         }
         return false;
+    }
+
+    private void Dress()
+    {
+
+    }
+
+    private void Sleep()
+    {
+
     }
 }

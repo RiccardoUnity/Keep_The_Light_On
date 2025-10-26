@@ -18,6 +18,8 @@ public class PlayerManager : MonoBehaviour
     //Component
     public Transform Head { get => _head; }
     [SerializeField] private Transform _head;
+    public Transform RightHand { get => _rightHand; }
+    [SerializeField] private Transform _rightHand;
     public CinemachineVirtualCamera Camera { get => _camera; }
     [SerializeField] private CinemachineVirtualCamera _camera;
     public CapsuleCollider CapsuleCollider { get; private set; }

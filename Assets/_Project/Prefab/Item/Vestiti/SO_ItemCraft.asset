@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b953ef829e07f64791bc5744a40a6ec, type: 3}
+  m_Name: SO_ItemCraft
+  m_EditorClassIdentifier: 
+  _soItemToCraft:
+  - {fileID: 11400000, guid: 0250a5a724744674b90ab10349cef033, type: 2}
+  _soItemResources:
+  - {fileID: 11400000, guid: 8c2bb89bcb75ac54d8ae10e3ec9a2fd2, type: 2}
+  _useCampfire: 0

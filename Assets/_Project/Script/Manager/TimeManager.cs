@@ -51,6 +51,7 @@ public class TimeManager
 
     private Transform _mainLight;
     private Vector3 _angleSecondLightV3;
+    private Vector3 _angleMainLight;
 
     public DayTime DayTime { get; private set; }
     private float[] _daylyBand = new float[4];
@@ -127,7 +128,8 @@ public class TimeManager
     {
         float angleSecondLight = 360f / _gameDayInRealSeconds;
         float angleXLight = (angleSecondLight * _gameDayInRealSeconds * 0.75f) - (angleSecondLight * CurrentSecondDay);
-        _mainLight.eulerAngles = new Vector3(angleXLight, _mainLight.eulerAngles.y, _mainLight.eulerAngles.z);
+        _angleMainLight = new Vector3(angleXLight, _mainLight.eulerAngles.y, _mainLight.eulerAngles.z);
+        _mainLight.eulerAngles = _angleMainLight;
         _angleSecondLightV3 = new Vector3(angleSecondLight, 0f, 0f);
     }
 
@@ -269,7 +271,8 @@ public class TimeManager
     //Main Light change direction
     private void SetMainLightDay(float timeDelay)
     {
-        _mainLight.eulerAngles += _angleSecondLightV3 * timeDelay;
+         _angleMainLight += _angleSecondLightV3 * timeDelay;
+        _mainLight.eulerAngles = _angleMainLight;
         if (DayTime == DayTime.Night && CurrentSecondDay > _daylyBand[0])
         {
             DayTime = DayTime.Dawn;

@@ -6,13 +6,10 @@ using GWM = GameWorldManager;
 public class UI_Craft : MonoBehaviour
 {
     private bool _isMyAwake;
-    private PlayerManager _playerManager;
-    
 
     [SerializeField] private UI_ItemCraft _uiItemCraftPrefab;
     [SerializeField] private Transform _contenct;
 
-    private SO_Item[] _itemsToCraft;
     private UI_ItemCraft[] _uiItemsCraft;
 
     [SerializeField] private UI_Campfire _uiCampfire;
@@ -27,8 +24,6 @@ public class UI_Craft : MonoBehaviour
         {
             _isMyAwake = true;
 
-            _playerManager = GWM.Instance.PlayerManager;
-
             int i;
             if (_contenct.childCount > 0)
             {
@@ -36,18 +31,33 @@ public class UI_Craft : MonoBehaviour
                 for (i = 0; i < _contenct.childCount; ++i)
                 {
                     child = _contenct.GetChild(i);
-                    Destroy(child);
+                    Destroy(child.gameObject);
                 }
             }
-            _itemsToCraft = GWM.Instance.SOItemManager.ArrayCraftItem();
-            _uiItemsCraft = new UI_ItemCraft[_itemsToCraft.Length];
+            _uiItemsCraft = new UI_ItemCraft[GWM.Instance.SOItemManager.SOItemCraft.Length];
             for (i = 0; i < _uiItemsCraft.Length; ++i)
             {
                 _uiItemsCraft[i] = Instantiate(_uiItemCraftPrefab, _contenct);
-                _uiItemsCraft[i].MyAwake(i);
+                _uiItemsCraft[i].MyAwake(i, this);
             }
 
             _uiCampfire.MyAwake();
+        }
+    }
+
+    void OnEnable()
+    {
+        if (_isMyAwake)
+        {
+            ReCheckAll();
+        }
+    }
+
+    public void ReCheckAll()
+    {
+        foreach (UI_ItemCraft uiCraft in _uiItemsCraft)
+        {
+            uiCraft.CheckSOItemInInventory();
         }
     }
 }

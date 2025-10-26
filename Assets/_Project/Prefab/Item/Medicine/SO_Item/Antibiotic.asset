@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76a27bac2d84f8447b071531d45587d4, type: 3}
+  m_Name: Antibiotic
+  m_EditorClassIdentifier: 
+  _name: Antibiotic
+  _description: 
+  _icon: {fileID: 0}
+  _prefab: {fileID: 5547091163637993925, guid: 3872c8eb89025a54c91e29e618d88566, type: 3}
+  _harvestTime: 0.5
+  _weight: 0.2
+  _itemType: 3
+  _itemTool: 0
+  _itemCampfire: 0
+  _minutesFuel: 0
+  _canUse: 1
+  _removeAfterUse: 1
+  _itemToolCanUse: 0
+  _modifiers:
+  - _lessOrEqualToCondition: 1
+    _stat: 0
+    _isIncrease: 1
+    _minutesRealTimeActive: 60
+    _value: 0.2
+  - _lessOrEqualToCondition: 1
+    _stat: 2
+    _isIncrease: 0
+    _minutesRealTimeActive: 300
+    _value: 0.5
+  - _lessOrEqualToCondition: 1
+    _stat: 7
+    _isIncrease: 0
+    _minutesRealTimeActive: 60
+    _value: 1
+  _soItemUse: []
