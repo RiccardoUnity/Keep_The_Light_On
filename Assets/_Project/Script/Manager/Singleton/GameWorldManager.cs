@@ -167,10 +167,9 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     {
         if (Input.GetButtonDown(StringConst.Escape))
         {
-            if (_uiInventory.gameObject.activeSelf)
+            if (_uiInventory.gameObject.activeSelf && TimeManager.GameTimeType == GameTimeType.Normal)
             {
                 _uiInventory.gameObject.SetActive(false);
-                _uiStats.gameObject.SetActive(true);
             }
             else
             {
@@ -182,10 +181,9 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             }  
         }
 
-        if (Input.GetButtonDown(StringConst.Inventory))
+        if (Input.GetButtonDown(StringConst.Inventory) && TimeManager.GameTimeType == GameTimeType.Normal)
         {
             _uiInventory.gameObject.SetActive(!_uiInventory.gameObject.activeSelf);
-            _uiStats.gameObject.SetActive(!_uiStats.gameObject.activeSelf);
         }
     }
 
@@ -200,4 +198,5 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     }
 
     public void SetGameInPauseFalse() => IsGamePause = false;
+
 }

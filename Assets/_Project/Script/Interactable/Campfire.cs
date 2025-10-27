@@ -5,8 +5,6 @@ using GWM = GameWorldManager;
 
 public class Campfire : Interactable
 {
-    private bool _isMyAwake;
-
     public bool IsOn {  get; private set; }
     public float TotalMinutes { get; private set; }
 
@@ -15,18 +13,16 @@ public class Campfire : Interactable
     [SerializeField] private GameObject[] _wood;
     [SerializeField] private ParticleSystem _fire;
 
-    public void MyAwake()
+    void Start()
     {
-        if (_isMyAwake)
-        {
-            Debug.Log("MyAwake has already setted", gameObject);
-        }
-        else
-        {
-            _isMyAwake = true;
+        _playerInventory = GWM.Instance.PlayerManager.PlayerInventory;
+    }
 
-            _playerInventory = GWM.Instance.PlayerManager.PlayerInventory;
-        }
+    public void OpenUI()
+    {
+        GWM.Instance.UIInventory.gameObject.SetActive(true);
+        GWM.Instance.UIInventory.Craft();
+        GWM.Instance.UIStats.gameObject.SetActive(false);
     }
 
     public void SetOn(int keyTrigger, int keyFuse, int keyFuel)

@@ -38,7 +38,8 @@ public class TimeManager
     public float DelayTimeNotPriority2 { get; private set; }
     private bool _isPauseCalled = true;
     private float _accelerationInGameSecond;
-    private int _accelerationMoltiplier;
+    private float _accelerationMoltiplier = 1f;
+    private float _realSecondAwait;
     private bool _isStartTimeSetted;
     private bool _isMyAwake;
     private bool _isTimeGameOn = true;
@@ -61,6 +62,7 @@ public class TimeManager
     public event Action<float> onPriority;
     public event Action<float> onNotPriority1;
     public event Action<float> onNotPriority2;
+    public event Action onEndAceleration;
     public event Action onDayChange;
     public event Action onDawn;
     public event Action onDay;
@@ -189,16 +191,16 @@ public class TimeManager
             else
             {
                 //Time Count
-                CurrentSecondDay += Time.deltaTime;
+                CurrentSecondDay += Time.deltaTime * _accelerationMoltiplier;
                 if (CurrentSecondDay >= _gameDayInRealSeconds)
                 {
                     ++CurrentDay;
                     CurrentSecondDay -= _gameDayInRealSeconds;
                     onDayChange?.Invoke();
                 }
-                DelayTimePriority += Time.deltaTime;
-                DelayTimeNotPriority1 += Time.deltaTime;
-                DelayTimeNotPriority2 += Time.deltaTime;
+                DelayTimePriority += Time.deltaTime * _accelerationMoltiplier;
+                DelayTimeNotPriority1 += Time.deltaTime * _accelerationMoltiplier;
+                DelayTimeNotPriority2 += Time.deltaTime * _accelerationMoltiplier;
                 ++_delayFrameCount;
 
                 if (GameTimeType == GameTimeType.Normal)
@@ -226,8 +228,8 @@ public class TimeManager
                 }
                 else if(GameTimeType == GameTimeType.Accelerate)
                 {
-                    _accelerationInGameSecond -= Time.deltaTime * _accelerationMoltiplier;
-                    if (_accelerationInGameSecond > 0)
+                    _realSecondAwait -= Time.deltaTime;
+                    if (_realSecondAwait > 0)
                     {
                         if (_delayFrameCount >= 4)
                         {
@@ -236,23 +238,25 @@ public class TimeManager
 
                         if (_delayFrameCount == 0 || _delayFrameCount == 2)
                         {
-                            onPriority?.Invoke(DelayTimePriority * _accelerationMoltiplier);
+                            onPriority?.Invoke(DelayTimePriority);
                             DelayTimePriority = 0f;
                         }
                         else if (_delayFrameCount == 1)
                         {
-                            onNotPriority1?.Invoke(DelayTimeNotPriority1 * _accelerationMoltiplier);
+                            onNotPriority1?.Invoke(DelayTimeNotPriority1);
                             DelayTimeNotPriority1 = 0;
                         }
                         else if (_delayFrameCount == 3)
                         {
-                            onNotPriority2?.Invoke(DelayTimeNotPriority2 * _accelerationMoltiplier);
+                            onNotPriority2?.Invoke(DelayTimeNotPriority2);
                             DelayTimeNotPriority2 = 0;
                         }
                     }
                     else
                     {
                         GameTimeType = GameTimeType.Normal;
+                        _accelerationMoltiplier = 1f;
+                        onEndAceleration?.Invoke();
                     }
 
 
@@ -295,12 +299,12 @@ public class TimeManager
         }
     }
 
-    public void SetGamePlayAccelerate(float realSecondAccelerate, int frameThatIHave = 300)
+    public void SetGamePlayAccelerate(float realSecondAccelerate, float realSecondAwait)
     {
         GameTimeType = GameTimeType.Accelerate;
+        _realSecondAwait = realSecondAwait;
         _accelerationInGameSecond = realSecondAccelerate / RealSecondToGameSecond;
-        _accelerationMoltiplier = (int)(_accelerationInGameSecond / frameThatIHave);
-
-        //UI con animazione
+        _accelerationMoltiplier = _accelerationInGameSecond / _realSecondAwait;
+        GWM.Instance.UIAcceleratedTime.StartAcceleration(_realSecondAwait);
     }
 }

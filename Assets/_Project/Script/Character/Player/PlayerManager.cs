@@ -75,8 +75,12 @@ public class PlayerManager : MonoBehaviour
 
     public bool TrySelectInteractable { get => _trySelectInteractable; }
     private bool _trySelectInteractable;
+    public bool TryUseInteractable { get => _tryUseInteractable; }
+    private bool _tryUseInteractable;
+
     private bool _isShowScope;
     private bool _isHarvestStart;
+    private bool _isTryUse;
     private Interactable _interactable;
     private Data_Item _dataItem;
 
@@ -166,6 +170,8 @@ public class PlayerManager : MonoBehaviour
             _timeManager = GWM.Instance.TimeManager;
             _timeManager.onPriority += MyUpdatePriority;
             _timeManager.onNotPriority1 += MyUpdateNotPriority1;
+
+            GWM.Instance.UIInventory.UIBed.SetKeyForPlayerManager(Key.GetKey());
         }
     }
 
@@ -175,6 +181,7 @@ public class PlayerManager : MonoBehaviour
         if (GWM.Instance.UIInventory.gameObject.activeSelf)
         {
             _trySelectInteractable = false;
+            _tryUseInteractable = false;
         }
         else
         {
@@ -186,12 +193,21 @@ public class PlayerManager : MonoBehaviour
             {
                 _trySelectInteractable = false;
             }
+
+            if (Input.GetButtonDown(StringConst.MouseRight))
+            {
+                _tryUseInteractable = true;
+            }
+            else if (Input.GetButtonUp(StringConst.MouseRight))
+            {
+                _tryUseInteractable = false;
+            }
         }
     }
 
     private void MyUpdatePriority(float timeDelay)
     {
-        SelectInteractable();
+        SelectOrUseInteractable();
     }
 
     private void MyUpdateNotPriority1(float timeDelay)
@@ -224,7 +240,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private void SelectInteractable()
+    private void SelectOrUseInteractable()
     {
         _interactable = null;
         _dataItem = null;
@@ -251,11 +267,26 @@ public class PlayerManager : MonoBehaviour
                             GWM.Instance.UIScope.StartSelect(_dataItem, HarvestPrefabItem);
                         }
                     }
+                    else if (_tryUseInteractable)
+                    {
+                        if (!_isTryUse)
+                        {
+                            _isTryUse = true;
+                            GWM.Instance.UIScope.StartSelect(_dataItem, UseInteractable);
+                        }
+                    }
                 }
                 //Interactable persistent
                 else
                 {
-
+                    if (_tryUseInteractable)
+                    {
+                        if (!_isTryUse)
+                        {
+                            _isTryUse = true;
+                            GWM.Instance.UIScope.StartSelect(_interactable, UseInteractable);
+                        }
+                    }
                 }
             }
         }
@@ -271,12 +302,17 @@ public class PlayerManager : MonoBehaviour
         {
             _isShowScope = false;
             _isHarvestStart = false;
+            _isTryUse = false;
             GWM.Instance.UIScope.StartShowScope(_isShowScope);
             GWM.Instance.UIScope.OverrideSelectFill();
         }
     }
 
-    public void HarvestFail() => _isHarvestStart = false;
+    public void Fail()
+    {
+        _isHarvestStart = false;
+        _isTryUse = false;
+    }
 
     private void HarvestPrefabItem(Data_Item dataItem)
     {
@@ -294,6 +330,60 @@ public class PlayerManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void UseInteractable(Data_Item dataItem)
+    {
+        if (_isTryUse)
+        {
+            _isTryUse = false;
+            if (_tryUseInteractable && dataItem == _dataItem)
+            {
+                _dataItem.SOItem.Use(this, GWM.Instance, _dataItem.Condition, false);
+
+                if (_mainDebug)
+                {
+                    Debug.Log($"Item {_dataItem.SOItem.Name} used");
+                }
+            }
+        }
+    }
+
+    public void RemoveItem()
+    {
+        if (_dataItem != null)
+        {
+            GWM.Instance.PoolManager.AddDataItemToPool( _dataItem );
+        }
+    }
+
+    private void UseInteractable(Interactable interactable)
+    {
+        if (_isTryUse)
+        {
+            _isTryUse = false;
+            if (_tryUseInteractable && interactable == _interactable)
+            {
+                if (_interactable is Bed bed)
+                {
+                    bed.OpenUI();
+                }
+                else if (_interactable is Campfire campfire)
+                {
+                    campfire.OpenUI();
+                }
+            }
+        }
+    }
+
+    public bool SetIsWakeUp(int key, bool value)
+    {
+        if (key == Key.GetKey())
+        {
+            IsWakeUp = value;
+            return true;
+        }
+        return false;
     }
 
     void OnTriggerEnter(Collider other)

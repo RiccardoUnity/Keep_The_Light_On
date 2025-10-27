@@ -231,7 +231,7 @@ public class UI_InventoryView : MonoBehaviour
         float condition;
         ItemState state;
         soItem = _playerInventory.ViewInventoryItem(_keyItemSelect, out condition, out state);
-        if (soItem.Use(_playerManager, GWM.Instance.TimeManager.RealSecondToGameSecond, condition, _poolManager))
+        if (soItem.Use(_playerManager, GWM.Instance, condition, true))
         {
             if (soItem.RemoveAfterUse)
             {

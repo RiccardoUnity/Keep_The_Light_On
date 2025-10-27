@@ -25,7 +25,9 @@ public class UI_Scope : MonoBehaviour
     private event Action _onLateAnimation;
 
     private Data_Item _dataItem;
-    private Action<Data_Item> _callback;
+    private Action<Data_Item> _callbackDataItem;
+    private Interactable _interactable;
+    private Action<Interactable> _callbackInteractable;
 
     private bool _showScopeVerse;
 
@@ -94,7 +96,22 @@ public class UI_Scope : MonoBehaviour
     public void StartSelect(Data_Item dataItem, Action<Data_Item> callback)
     {
         _dataItem = dataItem;
-        _callback = callback;
+        _callbackDataItem = callback;
+        if (_animation == null)
+        {
+            SecureStartSelect();
+        }
+        //If the animation hasn't finished
+        else
+        {
+            _onLateAnimation += SecureStartSelect;
+        }
+    }
+
+    public void StartSelect(Interactable interactable, Action<Interactable> callback)
+    {
+        _interactable = interactable;
+        _callbackInteractable = callback;
         if (_animation == null)
         {
             SecureStartSelect();
@@ -117,29 +134,61 @@ public class UI_Scope : MonoBehaviour
         _onAnimation = SetFill;
         _onLateAnimation = CallbackReference;
         _onLateAnimation += EndSelect;
-        _animation = Animation(_dataItem.SOItem.HarvestTime);
+        if (_dataItem != null)
+        {
+            _animation = Animation(_dataItem.SOItem.HarvestTime);
+        }
+        else
+        {
+            _animation = Animation(0.5f);
+        }
         StartCoroutine(_animation);
     }
 
-    private void CallbackReference() => _callback?.Invoke(_dataItem);
+    private void CallbackReference()
+    {
+        if (_dataItem != null)
+        {
+            _callbackDataItem?.Invoke(_dataItem);
+        }
+        else if (_interactable != null)
+        {
+            _callbackInteractable?.Invoke(_interactable);
+        }
+    }
 
     private void SetFill()
     {
         _fill.fillAmount = _currentTime;
-        if (GWM.Instance.PlayerManager.TrySelectInteractable)
+        if (_dataItem != null)
         {
-            _animationVerse = true;
+            if (GWM.Instance.PlayerManager.TrySelectInteractable || GWM.Instance.PlayerManager.TryUseInteractable)
+            {
+                _animationVerse = true;
+            }
+            else
+            {
+                _animationVerse = false;
+            }
         }
         else
         {
-            _animationVerse = false;
-            if (_currentTime == 0f)
+            if (GWM.Instance.PlayerManager.TryUseInteractable)
             {
-                _isInAnimation = false;
-                _onLateAnimation -= CallbackReference;
-                GWM.Instance.PlayerManager.HarvestFail();
-                EndSelect();
+                _animationVerse = true;
             }
+            else
+            {
+                _animationVerse = false;
+            }
+        }
+
+        if (_currentTime == 0f)
+        {
+            _isInAnimation = false;
+            _onLateAnimation -= CallbackReference;
+            GWM.Instance.PlayerManager.Fail();
+            EndSelect();
         }
     }
 
@@ -149,6 +198,11 @@ public class UI_Scope : MonoBehaviour
         _mask.gameObject.SetActive(false);
         _fill.gameObject.SetActive(false);
         _fill.fillAmount = 0f;
+
+        _dataItem = null;
+        _callbackDataItem = null;
+        _interactable = null;
+        _callbackInteractable = null;
     }
 
     public void OverrideSelectFill()
@@ -184,6 +238,13 @@ public class UI_Scope : MonoBehaviour
         _animation = null;
 
         _onLateAnimation?.Invoke();
-        //_onLateAnimation = null;
+    }
+
+    void OnEnable()
+    {
+        if (_animation != null)
+        {
+            StartCoroutine(_animation);
+        }
     }
 }

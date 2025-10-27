@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_Inventory : MonoBehaviour
 {
@@ -18,6 +19,12 @@ public class UI_Inventory : MonoBehaviour
     [SerializeField] private UI_Craft _craft;
     [SerializeField] private RectTransform _statistics;
 
+    [Header("Others")]
+    [SerializeField] private Image _background;
+    [SerializeField] private Image _background2;
+    public UI_Bed UIBed { get => _uiBed; }
+    [SerializeField] private UI_Bed _uiBed;
+
     public void MyAwake()
     {
         if (_isMyAwake)
@@ -35,31 +42,48 @@ public class UI_Inventory : MonoBehaviour
             _illnesses.MyAwake();
             _inventory.MyAwake();
             _craft.MyAwake();
+            _uiBed.MyAwake();
 
+            _background.gameObject.SetActive(true);
+            _background2.gameObject.SetActive(true);
+            _navigationButton.gameObject.SetActive(true);
             gameObject.SetActive(false);
         }
     }
 
     void OnEnable()
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        if (_isMyAwake)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            GameWorldManager.Instance.UIStats.gameObject.SetActive(false);
+        }
     }
 
     void OnDisable()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        Stats();
-        ResetNavigationButton();
+        if (_isMyAwake)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            DeactiveAllPanels();
+            Stats();
+            ResetNavigationButton();
+            GameWorldManager.Instance.UIStats.gameObject.SetActive(true);
+        }
     }
 
     public void DeactiveAllPanels()
     {
+        _background.gameObject.SetActive(true);
+        _background2.gameObject.SetActive(true);
+        _navigationButton.gameObject.SetActive(true);
         _illnesses.gameObject.SetActive(false);
         _inventory.gameObject.SetActive(false);
         _craft.gameObject.SetActive(false);
         _statistics.gameObject.SetActive(false);
+        _uiBed.gameObject.SetActive(false);
     }
 
     public void Stats()
@@ -96,4 +120,15 @@ public class UI_Inventory : MonoBehaviour
         _buttonIllnesses.OnEnter();
         _buttonIllnesses.OnHover(1f);
     }
+
+    public void OpenUIBed()
+    {
+        _background.gameObject.SetActive(false);
+        _background2.gameObject.SetActive(false);
+        _navigationButton.gameObject.SetActive(false);
+        _illnesses.gameObject.SetActive(false);
+        _uiBed.gameObject.SetActive(true);
+    }
+
+    public void CloseUIBed() => gameObject.SetActive(false);
 }

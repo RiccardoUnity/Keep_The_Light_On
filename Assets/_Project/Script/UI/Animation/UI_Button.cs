@@ -27,6 +27,11 @@ public class UI_Button : MonoBehaviour
 
     void Awake()
     {
+        Reference();
+    }
+
+    private void Reference()
+    {
         _image = GetComponent<Image>();
         _normalColorImage = _image.color;
         _text = GetComponentInChildren<TMP_Text>();
@@ -44,10 +49,18 @@ public class UI_Button : MonoBehaviour
         _active = value;
         if (value)
         {
+            if (_text == null)
+            {
+                Reference();
+            }
             _text.color = _activeColorText;
         }
         else
         {
+            if (_text == null)
+            {
+                Reference();
+            }
             _text.color = _deactiveColorText;
         }
     }

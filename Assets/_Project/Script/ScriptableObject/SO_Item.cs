@@ -106,7 +106,7 @@ public class SO_Item : ScriptableObject
     public SO_Item[] SOItemUse { get => _soItemUse; }
     [SerializeField] private SO_Item[] _soItemUse;
 
-    public bool Use(PlayerManager playerManager, float realSecondToGameSecond, float condition, PoolManager pool)
+    public bool Use(PlayerManager playerManager, GameWorldManager gwm, float condition, bool isInInventory)
     {
         if (_canUse)
         {
@@ -117,7 +117,7 @@ public class SO_Item : ScriptableObject
             }
             else if (ItemType == ItemType.Tool && ItemTool == ItemTool.SleepingBag)
             {
-                Sleep();
+                Sleep(gwm);
                 return true;
             }
             else
@@ -126,15 +126,21 @@ public class SO_Item : ScriptableObject
                 {
                     foreach (Modifier mod in _modifiers)
                     {
-                        mod.Apply(playerManager, realSecondToGameSecond, condition);
+                        mod.Apply(playerManager, gwm.TimeManager.RealSecondToGameSecond, condition);
                     }
 
                     Data_Item dataItem;
                     foreach (SO_Item item in _soItemUse)
                     {
-                        dataItem = pool.RemoveDataItemFromPool(item, condition, ItemState.New);
+                        dataItem = gwm.PoolManager.RemoveDataItemFromPool(item, condition, ItemState.New);
                         playerManager.PlayerInventory.AddItemInventory(dataItem);
                     }
+
+                    if (!isInInventory)
+                    {
+                        playerManager.RemoveItem();
+                    }
+
                     return true;
                 }
             }
@@ -147,8 +153,10 @@ public class SO_Item : ScriptableObject
 
     }
 
-    private void Sleep()
+    private void Sleep(GameWorldManager gwm)
     {
-
+        gwm.UIInventory.gameObject.SetActive(true);
+        gwm.UIInventory.OpenUIBed();
+        gwm.UIStats.gameObject.SetActive(false);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,6 @@ public class UI_AcceleratedTime : MonoBehaviour
     private bool _isMyAwake;
 
     [SerializeField] private Image _fill;
-    private int _frameThatIHave = 300;
     private float _fillUnit;
 
     public void MyAwake()
@@ -20,25 +20,25 @@ public class UI_AcceleratedTime : MonoBehaviour
         else
         {
             _isMyAwake = true;
-
-            _fillUnit = 1f / _frameThatIHave;
         }
     }
 
-    public void StartAcceleration()
+    public void StartAcceleration(float realSecondAwait)
     {
-
+        gameObject.SetActive(true);
+        StartCoroutine(Acceleration(realSecondAwait));
     }
 
-    private IEnumerator Acceleration()
+    private IEnumerator Acceleration(float realSecondAwait)
     {
         _fill.fillAmount = 0f;
-        int count = 0;
-        while (_fill.fillAmount < 1f)
+        float time = 0;
+        while (time < realSecondAwait)
         {
             yield return null;
-            ++count;
-            _fill.fillAmount += _fillUnit;
+            time += Time.deltaTime;
+            _fill.fillAmount = time / realSecondAwait;
         }
+        gameObject.SetActive(false);
     }
 }
