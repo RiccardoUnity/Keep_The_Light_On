@@ -54,29 +54,34 @@ public class UI_Campfire : MonoBehaviour
     {
         if (_isMyAwake)
         {
-            if (_playerManager.Campfire == null)
+            SetActiveGameObject();
+        }
+    }
+
+    private void SetActiveGameObject()
+    {
+        if (_playerManager.Campfire == null)
+        {
+            _noCampfire.gameObject.SetActive(true);
+            _campfireOff.gameObject.SetActive(false);
+            _campfireOn.gameObject.SetActive(false);
+        }
+        else
+        {
+            _campfire = _playerManager.Campfire;
+            if (_campfire.IsOn)
             {
-                _noCampfire.gameObject.SetActive(true);
+                _noCampfire.gameObject.SetActive(false);
                 _campfireOff.gameObject.SetActive(false);
-                _campfireOn.gameObject.SetActive(false);
+                _campfireOn.gameObject.SetActive(true);
+                SetUpCampfireOn();
             }
             else
             {
-                _campfire = _playerManager.Campfire;
-                if (_campfire.IsOn)
-                {
-                    _noCampfire.gameObject.SetActive(false);
-                    _campfireOff.gameObject.SetActive(false);
-                    _campfireOn.gameObject.SetActive(true);
-                    SetUpCampfireOn();
-                }
-                else
-                {
-                    _noCampfire.gameObject.SetActive(false);
-                    _campfireOff.gameObject.SetActive(true);
-                    _campfireOn.gameObject.SetActive(false);
-                    SetUpCampfireOff();
-                }
+                _noCampfire.gameObject.SetActive(false);
+                _campfireOff.gameObject.SetActive(true);
+                _campfireOn.gameObject.SetActive(false);
+                SetUpCampfireOff();
             }
         }
     }
@@ -90,12 +95,33 @@ public class UI_Campfire : MonoBehaviour
         {
             SO_Item soItem = _playerInventory.ViewInventoryItem(_fuelKeys[_fuelIndexSelect]);
             _addTime.text = $"{soItem.MinutesFuel.ToString("F1")} minutes";
+            _add.gameObject.SetActive(true);
         }
         else
         {
             _addTime.text = "0 minutes";
+            _add.gameObject.SetActive(false);
         }
-        _totalTime.text = $"{_campfire.TotalMinutes.ToString("F1")} minutes";
+    }
+
+    private void UpdateCampfire(float timeDelay)
+    {
+        if (GWM.Instance.IsGamePause)
+        {
+
+        }
+        else
+        {
+            if (_campfire.TotalMinutes > 0f)
+            {
+                _totalTime.text = $"{_campfire.TotalMinutes.ToString("F1")} minutes";
+            }
+            else
+            {
+                _totalTime.text = "0 minutes";
+                GWM.Instance.TimeManager.onNotPriority1 -= UpdateCampfire;
+            }
+        }
     }
 
     private void SetUpCampfireOff()
@@ -125,6 +151,10 @@ public class UI_Campfire : MonoBehaviour
             if (indexSelect >= keys.Length)
             {
                 indexSelect = keys.Length - 1;
+            }
+            else if (indexSelect < 0)
+            {
+                indexSelect = 0;
             }
             button.Text.text = _playerInventory.GetNameInventoryItem(keys[indexSelect]);
             button.Less.gameObject.SetActive(true);
@@ -202,12 +232,22 @@ public class UI_Campfire : MonoBehaviour
         SetIndexSelect(ref _triggerIndexSelect, ref _triggerKeys, ref _trigger);
         SetIndexSelect(ref _fuseIndexSelect, ref _fuseKeys, ref _fuse);
         SetIndexSelect(ref _fuelIndexSelect, ref _fuelKeys, ref _fuel);
+
+        _noCampfire.gameObject.SetActive(false);
+        _campfireOff.gameObject.SetActive(false);
+        _campfireOn.gameObject.SetActive(true);
+
+        SetUpCampfireOn();
+        GWM.Instance.TimeManager.onNotPriority1 += UpdateCampfire;
     }
 
     public void AddFuelCampfire()
     {
-        _campfire.AddFuel(_fuelKeys[_fuelIndexSelect]);
-        ResizeArray(ref _fuelIndexSelect, ref _fuelKeys);
-        SetIndexSelect(ref _fuelIndexSelect, ref _fuelKeys, ref _fuelAdd);
+        if (_fuelKeys.Length > 0)
+        {
+            _campfire.AddFuel(_fuelKeys[_fuelIndexSelect]);
+            ResizeArray(ref _fuelIndexSelect, ref _fuelKeys);
+            SetUpCampfireOn();
+        }
     }
 }

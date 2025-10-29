@@ -14,12 +14,16 @@ public class Prefab_Item : Interactable
     public SO_Item SOItem { get => _soItem; }
     [SerializeField] private SO_Item _soItem;
 
+    [SerializeField] private Vector3 _offsetLeaves;
+    [SerializeField] private bool _startOnGround = true;
+
     [Header("Only New Game")]
     [Range(0f, 1f)][SerializeField] private float _limitConditionZero = 0.5f;
     [Range(0f, 1f)][SerializeField] private float _limitConditionOne = 1f;
     private float _condition;
     [SerializeField] private ItemState _state = ItemState.New;
 
+    private RaycastHit _hit;
     void Awake()
     {
         if (SOItem == null)
@@ -69,6 +73,10 @@ public class Prefab_Item : Interactable
 
                 }
             }
+            if (_startOnGround)
+            {
+                Leaves();
+            }
             if (_debug)
             {
                 Debug.Log($"End Start - {typeof(Prefab_Item)}", gameObject);
@@ -112,4 +120,10 @@ public class Prefab_Item : Interactable
         }
     }
     #endregion
+
+    public void Leaves()
+    {
+        Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out _hit, 1f, GWM.Instance.GroundLayerMask, GWM.Instance.Qti);
+        transform.position = _hit.point + _offsetLeaves;
+    }
 }

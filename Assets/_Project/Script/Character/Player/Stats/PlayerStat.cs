@@ -26,6 +26,7 @@ public abstract class PlayerStat
             _duration -= timeDelay;
             if (_duration <= 0)
             {
+                GWM.Instance.TimeManager.onPriority -= UpdateNormalPriority;
                 _onDestroy?.Invoke(this);
             }
         }
@@ -189,6 +190,10 @@ public abstract class PlayerStat
     private void RemoveModifier(Modifier modifier)
     {
         _modifiers.Remove(modifier);
+        if (_debug)
+        {
+            Debug.Log($"{Name} - Modificatore distrutto, rimanenti " + _modifiers.Count);
+        }
     }
 
     private void SetModifier(float timeDelay)

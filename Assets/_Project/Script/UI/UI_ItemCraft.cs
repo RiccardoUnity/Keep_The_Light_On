@@ -14,6 +14,7 @@ public class UI_ItemCraft : MonoBehaviour
     private UI_Craft _uiCraft;
 
     [SerializeField] private Image _background;
+    [SerializeField] private Image _icon;
     [SerializeField] private TMP_Text _name;
     [SerializeField] private TMP_Text _element0;
     [SerializeField] private TMP_Text _element1;
@@ -48,6 +49,8 @@ public class UI_ItemCraft : MonoBehaviour
             _colorNormal = _background.color;
 
             _name.text = GWM.Instance.SOItemManager.SOItemCraft[index].SOItemToCraft[0].name;
+            _icon.sprite = GWM.Instance.SOItemManager.SOItemCraft[index].SOItemToCraft[0].Icon;
+            _icon.color = GWM.Instance.SOItemManager.SOItemCraft[index].SOItemToCraft[0].Color;
 
             _arrayElement = new TMP_Text[] { _element0, _element1, _element2, _element3 };
             _resources = GWM.Instance.SOItemManager.SOItemCraft[index].SOItemResources;

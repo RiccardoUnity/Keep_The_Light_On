@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Jar Coffee (Open)
   _description: 
-  _icon: {fileID: 164896113, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _icon: {fileID: -1552898812, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _color: {r: 0.5019608, g: 0.23921569, b: 0.078431375, a: 1}
   _prefab: {fileID: 2105620681438000957, guid: 92234df3dddfc494f91f3580d2ba0a48, type: 3}
   _harvestTime: 0.5
   _weight: 0.3

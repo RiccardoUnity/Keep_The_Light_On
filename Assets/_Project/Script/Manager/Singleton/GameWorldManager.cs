@@ -3,6 +3,7 @@ using UnityEngine;
 using StringConst = StaticData.S_GameManager.StringConst;
 
 //Connect class / static class / asset / gameObject in scene
+[RequireComponent(typeof(AudioManager))]
 public class GameWorldManager : Singleton_Generic<GameWorldManager>
 {
     #region Singleton
@@ -38,12 +39,19 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     [Header("Main GameObject")]
     [SerializeField] private Light _mainLight;
     public Transform MainLight { get => _mainLight.transform; }
+    [SerializeField] private Gradient _gradientFog;
+    [SerializeField] private Gradient _gradientFilter;
+
+    public LayerMask GroundLayerMask {  get => _groundLayerMask; }
+    [SerializeField] private LayerMask _groundLayerMask = (1 << 0);
 
     public QueryTriggerInteraction Qti { get => _qti; }
     private QueryTriggerInteraction _qti = QueryTriggerInteraction.Ignore;
 
     public PlayerManager PlayerManager { get => _playerManager; }
     [SerializeField] private PlayerManager _playerManager;
+
+    public AudioManager AudioManager { get; private set; }
 
     [Header("UI")]
     private bool _null;
@@ -57,6 +65,9 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     [SerializeField] private UI_Inventory _uiInventory;
     public UI_AcceleratedTime UIAcceleratedTime { get => _uiAcceleratedTime; }
     [SerializeField] private UI_AcceleratedTime _uiAcceleratedTime;
+
+    public UI_End UIEnd { get => _uiEnd; }
+    [SerializeField] private UI_End _uiEnd;
 
     [Header("Asset")]
     private bool _null2;
@@ -109,6 +120,7 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             //Create Manager
             TimeManager = TimeManager.Instance(Key.GetKey(), _debugTime);
             PoolManager = PoolManager.Instance(Key.GetKey());
+            AudioManager = GetComponent<AudioManager>();
 
             //Load data
             if (S_SaveSystem.HasALoading)
@@ -122,6 +134,7 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
             //Awake Manager
             TimeManager.MyAwake(_mainLight, out _time);
+            AudioManager.MyAwake();
 
             //Player (included Player Load in MyAwake)
             _playerManager.MyAwake();
@@ -132,6 +145,9 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
             _uiScope.MyAwake();
             _uiInventory.MyAwake();
             _uiAcceleratedTime.MyAwake();
+            _uiEnd.MyAwake();
+
+            TimeManager.onNotPriority2 += MainLightSet;
         }
     }
 
@@ -165,25 +181,32 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
     void Update()
     {
-        if (Input.GetButtonDown(StringConst.Escape))
+        if (PlayerManager.IsDead)
         {
-            if (_uiInventory.gameObject.activeSelf && TimeManager.GameTimeType == GameTimeType.Normal)
-            {
-                _uiInventory.gameObject.SetActive(false);
-            }
-            else
-            {
-                if (TimeManager.GameTimeType != GameTimeType.Accelerate)
-                {
-                    _uiPause.gameObject.SetActive(!_uiPause.gameObject.activeSelf);
-                    IsGamePause = _uiPause.gameObject.activeSelf;
-                }
-            }  
+            IsGamePause = true;
         }
-
-        if (Input.GetButtonDown(StringConst.Inventory) && TimeManager.GameTimeType == GameTimeType.Normal)
+        else
         {
-            _uiInventory.gameObject.SetActive(!_uiInventory.gameObject.activeSelf);
+            if (Input.GetButtonDown(StringConst.Escape))
+            {
+                if (_uiInventory.gameObject.activeSelf && TimeManager.GameTimeType == GameTimeType.Normal)
+                {
+                    _uiInventory.gameObject.SetActive(false);
+                }
+                else
+                {
+                    if (TimeManager.GameTimeType != GameTimeType.Accelerate)
+                    {
+                        _uiPause.gameObject.SetActive(!_uiPause.gameObject.activeSelf);
+                        IsGamePause = _uiPause.gameObject.activeSelf;
+                    }
+                }
+            }
+
+            if (Input.GetButtonDown(StringConst.Inventory) && TimeManager.GameTimeType == GameTimeType.Normal)
+            {
+                _uiInventory.gameObject.SetActive(!_uiInventory.gameObject.activeSelf);
+            }
         }
     }
 
@@ -198,5 +221,30 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     }
 
     public void SetGameInPauseFalse() => IsGamePause = false;
+
+    private void MainLightSet(float delayTime)
+    {
+        float lerp;
+        if (MainLight.eulerAngles.x >= 90f && MainLight.eulerAngles.x <= 270f)
+        {
+            lerp = MainLight.eulerAngles.x - 90f;
+        }
+        else
+        {
+            if (MainLight.eulerAngles.x < 90f)
+            {
+                lerp = 90f - MainLight.eulerAngles.x;
+            }
+            else
+            {
+                lerp = 180 - (MainLight.eulerAngles.x - 270f);
+            }
+        }
+        lerp /= 180f;
+
+        //RenderSettings.fogColor = _gradientFog.Evaluate(lerp);
+        _mainLight.color = _gradientFilter.Evaluate(lerp);
+        RenderSettings.ambientIntensity = (1 - lerp) / 2f;
+    }
 
 }

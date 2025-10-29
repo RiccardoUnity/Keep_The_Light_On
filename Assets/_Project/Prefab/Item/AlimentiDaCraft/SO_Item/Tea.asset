@@ -15,6 +15,7 @@ MonoBehaviour:
   _name: 
   _description: 
   _icon: {fileID: -706239883, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _color: {r: 1, g: 0.72156864, b: 0, a: 1}
   _prefab: {fileID: 7683084465236933246, guid: 1e59fd1903e73c349b2bfc7c67f93fec, type: 3}
   _harvestTime: 0.5
   _weight: 0.1

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using InfoScene = StaticData.S_GameManager.InfoScene;
 
 public class UI_Option : MonoBehaviour
@@ -13,9 +14,9 @@ public class UI_Option : MonoBehaviour
     [SerializeField] private UI_Toggle _invertMouseX;
     public float MouseSensitivity { get => _mouseSensitivity.Slider.value; }
     [SerializeField] private UI_Slider _mouseSensitivity;
-    public float VolumeMaster { get => _volumeMaster.Slider.value; }
+    public Slider VolumeMaster { get => _volumeMaster.Slider; }
     [SerializeField] private UI_Slider _volumeMaster;
-    public float VolumeMusic { get => _volumeMusic.Slider.value; }
+    public Slider VolumeMusic { get => _volumeMusic.Slider; }
     [SerializeField] private UI_Slider _volumeMusic;
     public float VolumeVFX { get => _volumeVFX.Slider.value; }
     [SerializeField] private UI_Slider _volumeVFX;

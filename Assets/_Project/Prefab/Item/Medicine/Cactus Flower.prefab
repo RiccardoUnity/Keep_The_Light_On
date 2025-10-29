@@ -289,6 +289,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4936107954642446976, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4936107954642446976, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4936107954642446976, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4936107954642446976, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -337,10 +352,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4936107954642446976, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8983994849177167332, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
         type: 3}
       propertyPath: m_Name
-      value: CactusFiore
+      value: Cactus Flower
       objectReference: {fileID: 0}
     - target: {fileID: 8983994849177167332, guid: 0bbabeb5fbd87364891feaf84b2d0ddd,
         type: 3}

@@ -15,6 +15,7 @@ MonoBehaviour:
   _name: Canned Tuna
   _description: 
   _icon: {fileID: -340000785, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _color: {r: 0.18431373, g: 0.5568628, b: 0.7490196, a: 1}
   _prefab: {fileID: 5275665304216457904, guid: 5f02b8ad35432714a968ab44c166990e, type: 3}
   _harvestTime: 0.5
   _weight: 0.3

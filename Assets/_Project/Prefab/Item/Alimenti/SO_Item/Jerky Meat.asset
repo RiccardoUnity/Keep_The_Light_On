@@ -15,6 +15,7 @@ MonoBehaviour:
   _name: Jerky Meat
   _description: 
   _icon: {fileID: 260362052, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _color: {r: 0.49411765, g: 0.06666667, b: 0, a: 1}
   _prefab: {fileID: 21748959433054404, guid: 77dd96fd7fc032c4eac84f6f38575903, type: 3}
   _harvestTime: 0.5
   _weight: 0.2

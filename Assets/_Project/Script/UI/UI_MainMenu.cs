@@ -35,10 +35,12 @@ public class UI_MainMenu : MonoBehaviour
 
             //Resume Init
             _lastSlot = S_SaveSystem.LastSlotUsed();
-            if (_lastSlot < 0)
-            {
-                _resume.SetActive(false);
-            }
+            //if (_lastSlot < 0)
+            //{
+            //    _resume.SetActive(false);
+            //}
+            _resume.SetActive(false);
+            _loadGame.SetActive(false);
 
             //Load Option
             MainMenuManager.Instance.UIOption.MyAwake(true);

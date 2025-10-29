@@ -15,6 +15,7 @@ MonoBehaviour:
   _name: Lifesaver
   _description: 
   _icon: {fileID: 565297983, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _color: {r: 1, g: 0.7019608, b: 0.8627451, a: 1}
   _prefab: {fileID: 5366966452411260614, guid: 6deb4a7c4dd73254aa78a85d562e0c79, type: 3}
   _harvestTime: 0.5
   _weight: 0.2
@@ -29,7 +30,7 @@ MonoBehaviour:
   - _lessOrEqualToCondition: 1
     _stat: 0
     _isIncrease: 1
-    _minutesRealTimeActive: 120
+    _minutesRealTimeActive: 480
     _value: 1
   - _lessOrEqualToCondition: 1
     _stat: 2
@@ -39,6 +40,6 @@ MonoBehaviour:
   - _lessOrEqualToCondition: 1
     _stat: 8
     _isIncrease: 0
-    _minutesRealTimeActive: 60
+    _minutesRealTimeActive: 360
     _value: 1
   _soItemUse: []

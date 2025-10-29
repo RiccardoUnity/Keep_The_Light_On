@@ -17,4 +17,4 @@ MonoBehaviour:
   _soItemResources:
   - {fileID: 11400000, guid: 7467af1dd2e49ae468a2e0362aebda06, type: 2}
   - {fileID: 11400000, guid: 409f544ec804098498bac4f9cdeba01d, type: 2}
-  _useCampfire: 0
+  _useCampfire: 1

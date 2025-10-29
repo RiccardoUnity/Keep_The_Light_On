@@ -15,6 +15,7 @@ MonoBehaviour:
   _name: Cactus Pulp
   _description: 
   _icon: {fileID: 476768924, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _color: {r: 0.654902, g: 1, b: 0.74509805, a: 1}
   _prefab: {fileID: 4956084992086060556, guid: 6737a3e5865aea7429812265e7ed05d5, type: 3}
   _harvestTime: 0.5
   _weight: 0.3

@@ -86,7 +86,7 @@ public class TimeManager
         }
     }
 
-    //In Awake of GameSceneManager
+    //In Awake of GameWorldManager
     public bool MyAwake(Light mainLight, out IEnumerator time)
     {
         if (_isMyAwake)
@@ -147,15 +147,15 @@ public class TimeManager
         {
             DayTime = DayTime.Night;
         }
-        else if (CurrentDay < _daylyBand[1])
+        else if (CurrentSecondDay < _daylyBand[1])
         {
             DayTime = DayTime.Dawn;
         }
-        else if (CurrentDay < _daylyBand[2])
+        else if (CurrentSecondDay < _daylyBand[2])
         {
             DayTime = DayTime.Day;
         }
-        else if (CurrentDay < _daylyBand[3])
+        else if (CurrentSecondDay < _daylyBand[3])
         {
             DayTime = DayTime.Dusk;
         }
@@ -214,6 +214,11 @@ public class TimeManager
                     {
                         onPriority?.Invoke(DelayTimePriority);
                         DelayTimePriority = 0f;
+
+                        if (_debug)
+                        {
+                            Debug.Log($"SecondDay {CurrentSecondDay} - Day {CurrentDay} - DayTime {DayTime} - GameTimeType {GameTimeType}");
+                        }
                     }
                     else if (_delayFrameCount == _delayFrameNotPriority1)
                     {
@@ -240,6 +245,11 @@ public class TimeManager
                         {
                             onPriority?.Invoke(DelayTimePriority);
                             DelayTimePriority = 0f;
+
+                            if (_debug)
+                            {
+                                Debug.Log($"SecondDay {CurrentSecondDay} - Day {CurrentDay} - DayTime {DayTime} - GameTimeType {GameTimeType}");
+                            }
                         }
                         else if (_delayFrameCount == 1)
                         {
@@ -264,35 +274,30 @@ public class TimeManager
                 }
             }
             yield return null;
-
-            if (_debug)
-            {
-                Debug.Log($"SecondDay {CurrentSecondDay} - Day {CurrentDay} - DayTime {DayTime} - GameTimeType {GameTimeType}");
-            }
         }
     }
 
     //Main Light change direction
     private void SetMainLightDay(float timeDelay)
     {
-         _angleMainLight += _angleSecondLightV3 * timeDelay;
+         _angleMainLight -= _angleSecondLightV3 * timeDelay;
         _mainLight.eulerAngles = _angleMainLight;
-        if (DayTime == DayTime.Night && CurrentSecondDay > _daylyBand[0])
+        if (DayTime != DayTime.Dawn && CurrentSecondDay > _daylyBand[0] && CurrentSecondDay < _daylyBand[1])
         {
             DayTime = DayTime.Dawn;
             onDawn?.Invoke();
         }
-        else if (DayTime == DayTime.Dawn && CurrentSecondDay > _daylyBand[1])
+        else if (DayTime != DayTime.Day && CurrentSecondDay > _daylyBand[1] && CurrentSecondDay < _daylyBand[2])
         {
             DayTime = DayTime.Day;
             onDay?.Invoke();
         }
-        else if (DayTime == DayTime.Day && CurrentSecondDay > _daylyBand[2])
+        else if (DayTime != DayTime.Dusk && CurrentSecondDay > _daylyBand[2] && CurrentSecondDay < _daylyBand[3])
         {
             DayTime = DayTime.Dusk;
             onDusk?.Invoke();
         }
-        else if (DayTime == DayTime.Dusk && CurrentSecondDay > _daylyBand[3])
+        else if (DayTime != DayTime.Night && (CurrentSecondDay > _daylyBand[3] || CurrentSecondDay < _daylyBand[0]))
         {
             DayTime = DayTime.Night;
             onNight?.Invoke();

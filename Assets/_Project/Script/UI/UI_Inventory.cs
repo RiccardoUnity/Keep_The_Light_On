@@ -16,8 +16,9 @@ public class UI_Inventory : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private UI_Illnesses _illnesses;
     [SerializeField] private UI_InventoryView _inventory;
+    public UI_Craft UICraft { get => _craft; }
     [SerializeField] private UI_Craft _craft;
-    [SerializeField] private RectTransform _statistics;
+    [SerializeField] private UI_Statistics _statistics;
 
     [Header("Others")]
     [SerializeField] private Image _background;
@@ -42,6 +43,7 @@ public class UI_Inventory : MonoBehaviour
             _illnesses.MyAwake();
             _inventory.MyAwake();
             _craft.MyAwake();
+            _statistics.MyAwake();
             _uiBed.MyAwake();
 
             _background.gameObject.SetActive(true);

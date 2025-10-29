@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Jar Cardiac (Open)
   _description: 
-  _icon: {fileID: 565297983, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _icon: {fileID: 1701075891, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _color: {r: 1, g: 0.7019608, b: 0.8627451, a: 1}
   _prefab: {fileID: 3078931212826002432, guid: 3ce08fbd101c0184a80956b6ad1cfdd7, type: 3}
   _harvestTime: 0.5
   _weight: 0.6
@@ -29,7 +30,7 @@ MonoBehaviour:
   - _lessOrEqualToCondition: 1
     _stat: 0
     _isIncrease: 1
-    _minutesRealTimeActive: 120
+    _minutesRealTimeActive: 480
     _value: 1
   - _lessOrEqualToCondition: 1
     _stat: 2
@@ -39,7 +40,7 @@ MonoBehaviour:
   - _lessOrEqualToCondition: 1
     _stat: 8
     _isIncrease: 0
-    _minutesRealTimeActive: 60
+    _minutesRealTimeActive: 360
     _value: 1
   - _lessOrEqualToCondition: 1
     _stat: 4
@@ -51,5 +52,10 @@ MonoBehaviour:
     _isIncrease: 1
     _minutesRealTimeActive: 5
     _value: 0.05
+  - _lessOrEqualToCondition: 1
+    _stat: 1
+    _isIncrease: 1
+    _minutesRealTimeActive: 60
+    _value: 0.25
   _soItemUse:
   - {fileID: 11400000, guid: ab44440f0a753c64cb0d497f9da81bc8, type: 2}

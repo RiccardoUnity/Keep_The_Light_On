@@ -12,10 +12,13 @@ public class Campfire : Interactable
 
     [SerializeField] private GameObject[] _wood;
     [SerializeField] private ParticleSystem _fire;
+    [SerializeField] private Light _light;
 
     void Start()
     {
         _playerInventory = GWM.Instance.PlayerManager.PlayerInventory;
+
+        SetOff();
     }
 
     public void OpenUI()
@@ -30,15 +33,20 @@ public class Campfire : Interactable
         AddFuel(keyFuel);
         IsOn = true;
         GWM.Instance.TimeManager.onNotPriority1 += UpdateNotPriority;
+        GWM.Instance.TimeManager.onPause += Pause;
+        GWM.Instance.TimeManager.onResume += Resume;
 
         _playerInventory.RemoveItemInventory(keyTrigger, true);
         _playerInventory.RemoveItemInventory(keyFuse, true);
 
+        _light.gameObject.SetActive(true);
         _fire.gameObject.SetActive(true);
         foreach (GameObject gameObject in _wood)
         {
             gameObject.SetActive(true);
         }
+
+        GWM.Instance.UIInventory.UICraft.ReCheckAll();
     }
 
     public void AddFuel(int keyFuel)
@@ -57,11 +65,24 @@ public class Campfire : Interactable
         }
     }
 
+    private void Pause()
+    {
+        _fire.Pause();
+    }
+
+    private void Resume()
+    {
+        _fire.Play();
+    }
+
     private void SetOff()
     {
         IsOn = false;
         GWM.Instance.TimeManager.onNotPriority1 -= UpdateNotPriority;
+        GWM.Instance.TimeManager.onPause -= Pause;
+        GWM.Instance.TimeManager.onResume -= Resume;
 
+        _light.gameObject.SetActive(false);
         _fire.gameObject.SetActive(false);
         foreach (GameObject gameObject in _wood)
         {

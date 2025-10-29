@@ -17,17 +17,17 @@ PrefabInstance:
     - target: {fileID: 3537654271877302251, guid: 84fce67d1089237439be0fb84d888968,
         type: 3}
       propertyPath: m_Size.x
-      value: 0.07
+      value: 0.13999999
       objectReference: {fileID: 0}
     - target: {fileID: 3537654271877302251, guid: 84fce67d1089237439be0fb84d888968,
         type: 3}
       propertyPath: m_Size.y
-      value: 0.2
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 3537654271877302251, guid: 84fce67d1089237439be0fb84d888968,
         type: 3}
       propertyPath: m_Size.z
-      value: 0.033
+      value: 0.06
       objectReference: {fileID: 0}
     - target: {fileID: 3537654271877302251, guid: 84fce67d1089237439be0fb84d888968,
         type: 3}
@@ -37,12 +37,12 @@ PrefabInstance:
     - target: {fileID: 3537654271877302251, guid: 84fce67d1089237439be0fb84d888968,
         type: 3}
       propertyPath: m_Center.y
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 3537654271877302251, guid: 84fce67d1089237439be0fb84d888968,
         type: 3}
       propertyPath: m_Center.z
-      value: 0.016
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 5375735537914093745, guid: 84fce67d1089237439be0fb84d888968,
         type: 3}
@@ -102,7 +102,7 @@ PrefabInstance:
     - target: {fileID: 8266191373511012309, guid: 84fce67d1089237439be0fb84d888968,
         type: 3}
       propertyPath: m_Name
-      value: CactusPolpa
+      value: Cactus Pulp
       objectReference: {fileID: 0}
     - target: {fileID: 8352387077689359792, guid: 84fce67d1089237439be0fb84d888968,
         type: 3}

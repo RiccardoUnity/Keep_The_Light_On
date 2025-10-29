@@ -33,9 +33,9 @@ MonoBehaviour:
     _minutesRealTimeActive: 5
     _value: 0.5
   - _lessOrEqualToCondition: 1
-    _stat: 6
-    _isIncrease: 0
-    _minutesRealTimeActive: 10
-    _value: 0.1
+    _stat: 1
+    _isIncrease: 1
+    _minutesRealTimeActive: 60
+    _value: 0.25
   _soItemUse:
   - {fileID: 11400000, guid: c2feee2d84260e14d91e702eaf13593d, type: 2}

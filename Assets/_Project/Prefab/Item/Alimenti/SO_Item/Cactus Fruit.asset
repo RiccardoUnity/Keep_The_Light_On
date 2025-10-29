@@ -15,6 +15,7 @@ MonoBehaviour:
   _name: Cactus Fruit
   _description: 
   _icon: {fileID: 476768924, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _color: {r: 1, g: 0.7019608, b: 0.8627451, a: 1}
   _prefab: {fileID: 8352387077689359792, guid: 84fce67d1089237439be0fb84d888968, type: 3}
   _harvestTime: 0.5
   _weight: 0.3

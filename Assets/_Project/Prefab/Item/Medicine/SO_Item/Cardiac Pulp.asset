@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Cardiac Pulp
   _description: 
-  _icon: {fileID: 476768924, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _icon: {fileID: -1548041376, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _color: {r: 1, g: 0.7019608, b: 0.8627451, a: 1}
   _prefab: {fileID: 1506364768222113568, guid: 646f747ae9cd7bb4db3a666cd639723f, type: 3}
   _harvestTime: 0.5
   _weight: 0.3

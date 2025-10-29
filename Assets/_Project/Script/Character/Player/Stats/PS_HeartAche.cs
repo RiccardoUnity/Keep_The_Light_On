@@ -42,7 +42,11 @@ public class PS_HeartAche : PlayerStat
         else
         {
             _isIncrease = true;
-            if (!_playerManager.IsWakeUp)
+            if (_playerManager.IsWakeUp)
+            {
+                _extra = 0;
+            }
+            else
             {
                 _extra = -_decrease * timeDelay / 2f;
             }

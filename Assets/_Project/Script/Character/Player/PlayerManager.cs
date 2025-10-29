@@ -69,6 +69,7 @@ public class PlayerManager : MonoBehaviour
     private RaycastHit _hit;
 
     //Other
+    public bool IsDead { get; private set; }
     public bool IsUnderTheSun { get; private set; }
     public bool IsWakeUp { get; private set; }
     public Campfire Campfire { get; private set; }
@@ -172,7 +173,13 @@ public class PlayerManager : MonoBehaviour
             _timeManager.onNotPriority1 += MyUpdateNotPriority1;
 
             GWM.Instance.UIInventory.UIBed.SetKeyForPlayerManager(Key.GetKey());
+            Life.onValueBecomesZero += Death;
         }
+    }
+
+    private void Death()
+    {
+        IsDead = true;
     }
 
     //Input
@@ -219,14 +226,13 @@ public class PlayerManager : MonoBehaviour
     {
         if (_timeManager.DayTime == DayTime.Day)
         {
-            Ray ray = new Ray(_head.position, GWM.Instance.MainLight.rotation * Vector3.forward);
-            if (Physics.Raycast(ray, _distanceMainLight, _blockMainLight, GWM.Instance.Qti))
+            if (Physics.Raycast(_head.position, -GWM.Instance.MainLight.forward, _distanceMainLight, _blockMainLight, GWM.Instance.Qti))
             {
-                IsUnderTheSun = true;
+                IsUnderTheSun = false;
             }
             else
             {
-                IsUnderTheSun = false;
+                IsUnderTheSun = true;
             }
         }
         else
@@ -408,8 +414,11 @@ public class PlayerManager : MonoBehaviour
     {
         if (_gizmosDebug)
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.blue;
             Gizmos.DrawLine(_head.position, _head.position + (_head.forward * _distanceRayInteractable));
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(_head.position, -GWM.Instance.MainLight.forward * _distanceMainLight);
         }
     }
 }

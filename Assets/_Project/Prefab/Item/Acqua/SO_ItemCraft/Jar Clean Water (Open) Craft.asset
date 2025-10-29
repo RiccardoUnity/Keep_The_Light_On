@@ -15,6 +15,5 @@ MonoBehaviour:
   _soItemToCraft:
   - {fileID: 11400000, guid: 7467af1dd2e49ae468a2e0362aebda06, type: 2}
   _soItemResources:
-  - {fileID: 11400000, guid: ab44440f0a753c64cb0d497f9da81bc8, type: 2}
   - {fileID: 11400000, guid: 0e37aecf5b3a42f4aa4746c4047c3cdb, type: 2}
   _useCampfire: 1

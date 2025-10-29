@@ -117,6 +117,7 @@ public class PlayerInventory
             {
                 Vector2 random = Random.insideUnitCircle * _playerRadius;
                 _items[index].PrefabItem.transform.position = _playerManager.transform.position + new Vector3 (random.x, 0f, random.y);
+                _items[index].PrefabItem.Leaves();
             }
 
             bool hasItem = false;

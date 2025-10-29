@@ -15,8 +15,8 @@ MonoBehaviour:
   _name: SleepingBag
   _description: 
   _icon: {fileID: -1961717979, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
-  _color: {r: 1, g: 1, b: 1, a: 1}
-  _prefab: {fileID: 1858710128886933954, guid: 4454a9eafdb4b6247add1943bb52f3db, type: 3}
+  _color: {r: 0.2784314, g: 1, b: 0.85490197, a: 1}
+  _prefab: {fileID: 7828919365936863567, guid: 3a9d98ee60ae08c42af99611f6be1d62, type: 3}
   _harvestTime: 0.5
   _weight: 1
   _itemType: 5

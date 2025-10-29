@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76a27bac2d84f8447b071531d45587d4, type: 3}
-  m_Name: Fiammiferi
+  m_Name: EschrementoSecco
   m_EditorClassIdentifier: 
-  _name: 
+  _name: Dry Fuel
   _description: 
-  _icon: {fileID: -846003239, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
-  _prefab: {fileID: 4101142041150941536, guid: 487d3e8a0a554fd438d2438723a921fb, type: 3}
+  _icon: {fileID: 726397305, guid: 0bb60eea593691f4ab9991e8b7101e1a, type: 3}
+  _color: {r: 0.9607843, g: 0.5686275, b: 0.20392157, a: 1}
+  _prefab: {fileID: 8628783794050669242, guid: 4af8f2983dd775d4a854b1d7102570f2, type: 3}
   _harvestTime: 0.5
   _weight: 0.1
-  _itemType: 0
+  _itemType: 6
   _itemTool: 0
-  _itemCampfire: 0
-  _minutesFuel: 0
+  _itemCampfire: 3
+  _minutesFuel: 60
   _canUse: 0
   _removeAfterUse: 0
   _itemToolCanUse: 0

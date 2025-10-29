@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cardiac Pulp Craft
   m_EditorClassIdentifier: 
   _soItemToCraft:
-  - {fileID: 11400000, guid: abe509155603db54ab0cfe1493cb2748, type: 2}
+  - {fileID: 11400000, guid: e08f3915f4fcbf04e870b407486d3c5b, type: 2}
   - {fileID: 11400000, guid: 729dc26041db90d40b16968950f73eb1, type: 2}
   _soItemResources:
   - {fileID: 11400000, guid: abe509155603db54ab0cfe1493cb2748, type: 2}

@@ -569,6 +569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _background: {fileID: 9120653798261094731}
+  _icon: {fileID: 6470938956880068488}
   _name: {fileID: 4017334377929657118}
   _element0: {fileID: 5498325999303267648}
   _element1: {fileID: 2378883056830450472}

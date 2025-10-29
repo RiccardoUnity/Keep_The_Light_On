@@ -33,7 +33,11 @@ public class PS_Thirst : PlayerStat
 
     protected override void CheckValue(float timeDelay)
     {
-        if (_modifier != 0)
+        if (_modifier == 0)
+        {
+            _isIncrease = false;
+        }
+        else
         {
             _isIncrease = _modifier > 0 ? true : false;
         }
