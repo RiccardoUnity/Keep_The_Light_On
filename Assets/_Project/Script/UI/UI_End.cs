@@ -1,4 +1,3 @@
-using StaticData;
 using TMPro;
 using UnityEngine;
 using static StaticData.S_GameManager;

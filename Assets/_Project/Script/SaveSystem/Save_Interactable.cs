@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System;
-using Save;
+﻿using System;
 
 public static partial class S_SaveSystem
 {

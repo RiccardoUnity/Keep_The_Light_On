@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public abstract class Singleton_Generic<T> : MonoBehaviour where T : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public abstract class Singleton_Generic<T> : MonoBehaviour where T : MonoBehavio
     {
         get
         {
-            if (_instance == null && !_isApplicationQuitting)
+            if (_instance == null && !_isApplicationQuitting && !_isSceneUnloaded)
             {
                 Debug.LogWarning($"-- Nuovo Singleton {typeof(T)} generato --");
                 if (_useResources)
@@ -35,6 +36,7 @@ public abstract class Singleton_Generic<T> : MonoBehaviour where T : MonoBehavio
 
     protected static bool _useResources;
     protected static string _resourcesPath;
+    private static bool _isSceneUnloaded;
     private static bool _correctInstantiate;
     [Tooltip("Awake into Singleton ...")]
     [SerializeField] private bool _bypass;
@@ -46,7 +48,12 @@ public abstract class Singleton_Generic<T> : MonoBehaviour where T : MonoBehavio
             if (_useResources && _correctInstantiate || !_useResources || _bypass)
             {
                 _instance = this as T;
-                if (!ShouldBeDestroyOnLoad())
+
+                if (ShouldBeDestroyOnLoad())
+                {
+                    SceneManager.sceneUnloaded += OnSceneUnloaded;
+                }
+                else
                 {
                     Debug.LogWarning($"-- Singleton {typeof(T)} inserito in DontDestroyOnLoad --");
                     DontDestroyOnLoad(gameObject);
@@ -67,8 +74,15 @@ public abstract class Singleton_Generic<T> : MonoBehaviour where T : MonoBehavio
     {
         if (_instance == this as T)
         {
+            Debug.LogWarning($"-- Singleton {typeof(T)} resettato --");
             _instance = null;
         }
+    }
+
+    private void OnSceneUnloaded(Scene scene)
+    {
+        _isSceneUnloaded = true;
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
 
     void OnApplicationQuit()

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using InfoScene = StaticData.S_GameManager.InfoScene;
 
 public class UI_Option : MonoBehaviour
 {

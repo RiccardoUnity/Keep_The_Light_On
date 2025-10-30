@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using GWM = GameWorldManager;
 
@@ -59,7 +57,7 @@ public class UI_Bed : MonoBehaviour
         GWM.Instance.TimeManager.SetGamePlayAccelerate(realSecond, 5f);
     }
 
-    public void Exit() => GWM.Instance.UIInventory.CloseUIBed();
+    public void Exit() => GWM.Instance.UIInventory.CloseUIInventory();
 
     private void WakeUpPlayer()
     {

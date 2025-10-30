@@ -16,6 +16,7 @@ public class Fader : Singleton_Generic<Fader>
 
     [SerializeField] private Image _background;
     [SerializeField] private Image _foreground;
+    private Canvas _canvas;
     public float TimeCoroutine { get => _timeCoroutine; }
     [Range(1f, 5f)] [SerializeField] private float _timeCoroutine = 2f;
 
@@ -40,6 +41,7 @@ public class Fader : Singleton_Generic<Fader>
     {
         _background.color = _alpha1;
         _foreground.color = _alpha1;
+        _canvas = GetComponent<Canvas>();
         ToScene(0, true);
     }
 
@@ -60,6 +62,11 @@ public class Fader : Singleton_Generic<Fader>
 
     IEnumerator Effect(int indexMax)
     {
+        if (_canvas == null)
+        {
+            _canvas = GetComponent<Canvas>();
+        }
+        _canvas.sortingOrder = 100;
         for (int i = 0; i < indexMax; ++i)
         {
             _isInAnimation = true;
@@ -113,5 +120,6 @@ public class Fader : Singleton_Generic<Fader>
         }
 
         _effect = null;
+        _canvas.sortingOrder = -100;
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using UnityEngine;
-using GWM = GameWorldManager;
 
 public class PS_Rest : PlayerStat
 {

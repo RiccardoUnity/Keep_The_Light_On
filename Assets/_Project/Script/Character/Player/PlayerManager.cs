@@ -1,7 +1,5 @@
 using Cinemachine;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using GWM = GameWorldManager;
 using StringConst = StaticData.S_GameManager.StringConst;

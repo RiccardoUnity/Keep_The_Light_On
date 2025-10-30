@@ -25,6 +25,8 @@ public class UI_Inventory : MonoBehaviour
     [SerializeField] private Image _background2;
     public UI_Bed UIBed { get => _uiBed; }
     [SerializeField] private UI_Bed _uiBed;
+    public UI_Start UIStart { get => _uiStart; }
+    [SerializeField] private UI_Start _uiStart;
 
     public void MyAwake()
     {
@@ -45,11 +47,7 @@ public class UI_Inventory : MonoBehaviour
             _craft.MyAwake();
             _statistics.MyAwake();
             _uiBed.MyAwake();
-
-            _background.gameObject.SetActive(true);
-            _background2.gameObject.SetActive(true);
-            _navigationButton.gameObject.SetActive(true);
-            gameObject.SetActive(false);
+            _uiStart.MyAwake();
         }
     }
 
@@ -86,6 +84,7 @@ public class UI_Inventory : MonoBehaviour
         _craft.gameObject.SetActive(false);
         _statistics.gameObject.SetActive(false);
         _uiBed.gameObject.SetActive(false);
+        _uiStart.gameObject.SetActive(false);
     }
 
     public void Stats()
@@ -132,5 +131,14 @@ public class UI_Inventory : MonoBehaviour
         _uiBed.gameObject.SetActive(true);
     }
 
-    public void CloseUIBed() => gameObject.SetActive(false);
+    public void CloseUIInventory() => gameObject.SetActive(false);
+
+    public void OpenUIStart()
+    {
+        _background.gameObject.SetActive(false);
+        _background2.gameObject.SetActive(false);
+        _navigationButton.gameObject.SetActive(false);
+        _illnesses.gameObject.SetActive(false);
+        _uiStart.gameObject.SetActive(true);
+    }
 }

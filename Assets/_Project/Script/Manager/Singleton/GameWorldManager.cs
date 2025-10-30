@@ -115,7 +115,11 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
         }
 
         //Safe execute
-        if (!_hasAnError)
+        if (_hasAnError)
+        {
+            Destroy(gameObject);
+        }
+        else
         {
             //Create Manager
             TimeManager = TimeManager.Instance(Key.GetKey(), _debugTime);

@@ -15,6 +15,8 @@ public class UI_Pause : MonoBehaviour
     [SerializeField] private UI_Button _option;
     [SerializeField] private UI_Button _mainMenu;
 
+    private UI_Stats _uiStats;
+
     public void MyAwake()
     {
         if (_isMyAwake)
@@ -25,6 +27,7 @@ public class UI_Pause : MonoBehaviour
         {
             _isMyAwake = true;
 
+            _uiStats = GWM.Instance.UIStats;
             _uiOption.MyAwake(false);
             Resume();
         }
@@ -35,7 +38,7 @@ public class UI_Pause : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         Physics.simulationMode = SimulationMode.Script;
-        GWM.Instance.UIStats.gameObject.SetActive(false);
+        _uiStats.gameObject.SetActive(false);
     }
 
     void OnDisable()
@@ -44,7 +47,7 @@ public class UI_Pause : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         Physics.simulationMode = SimulationMode.FixedUpdate;
-        GWM.Instance.UIStats.gameObject.SetActive(true);
+        _uiStats.gameObject.SetActive(true);
     }
 
     public void DeactiveAllPanels()

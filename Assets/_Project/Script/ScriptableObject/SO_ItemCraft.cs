@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = (nameof(SO_ItemCraft)), menuName = "Data/" + (nameof(SO_ItemCraft)))]
