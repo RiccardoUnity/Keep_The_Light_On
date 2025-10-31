@@ -16,7 +16,9 @@ public class AudioManager : MonoBehaviour
     private float _volumeMax;
     private float _volumeMaster;
     private float _volumeMusic;
+    private float _volumeVFX;
     private AudioSource _audioSource;
+    public event Action<float> onVomuneVFXChange;
 
     private IEnumerator _animation;
     private bool _isInAnimation;
@@ -40,10 +42,12 @@ public class AudioManager : MonoBehaviour
             _volumeMax = _audioSource.volume;
             _volumeMaster = GWM.Instance.UIPause.UIOption.VolumeMaster.value;
             _volumeMusic = GWM.Instance.UIPause.UIOption.VolumeMusic.value;
-            SetVolume();
+            _volumeVFX = GWM.Instance.UIPause.UIOption.VolumeVFX.value;
+            SetVolumeMusic();
 
             GWM.Instance.UIPause.UIOption.VolumeMaster.onValueChanged.AddListener(ChangeVolumeMasterOption);
             GWM.Instance.UIPause.UIOption.VolumeMusic.onValueChanged.AddListener(ChangeVolumeMusicOption);
+            GWM.Instance.UIPause.UIOption.VolumeVFX.onValueChanged.AddListener(ChangeVolumeVFXOption);
             GWM.Instance.TimeManager.onDawn += PlayOnDawnDusk;
             GWM.Instance.TimeManager.onDusk += PlayOnDawnDusk;
             GWM.Instance.TimeManager.onDay += PlayOnDayNight;
@@ -57,6 +61,8 @@ public class AudioManager : MonoBehaviour
             {
                 PlayOnDawnDusk();
             }
+
+            _onLateAnimation += SetVolumeVFX;
         }
     }
 
@@ -136,20 +142,33 @@ private void PutAudioDawnDusk()
 
     private void ChangeVolumeMasterOption(float value)
     {
-        _volumeMaster = GWM.Instance.UIPause.UIOption.VolumeMaster.value;
-        SetVolume();
+        _volumeMaster = value;
+        SetVolumeMusic();
+        SetVolumeVFX();
     }
 
     private void ChangeVolumeMusicOption(float value)
     {
-        _volumeMusic = GWM.Instance.UIPause.UIOption.VolumeMusic.value;
-        SetVolume();
+        _volumeMusic = value;
+        SetVolumeMusic();
     }
 
-    private void SetVolume()
+    private void ChangeVolumeVFXOption(float value)
+    {
+        _volumeVFX = value;
+        SetVolumeVFX();
+    }
+
+    private void SetVolumeMusic()
     {
         float lerpMusic = Mathf.Lerp(0f, _volumeMaster, _volumeMusic);
         _volume = Mathf.Lerp(0f, _volumeMax, lerpMusic);
         _audioSource.volume = _volume;
+    }
+
+    private void SetVolumeVFX()
+    {
+        float lerpVFX = Mathf.Lerp(0f, _volumeMaster, _volumeVFX);
+        onVomuneVFXChange?.Invoke(lerpVFX);
     }
 }

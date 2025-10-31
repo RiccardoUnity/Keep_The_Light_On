@@ -10,4 +10,7 @@ public class SO_ItemCraft : ScriptableObject
 
     public bool UseCampfire { get => _useCampfire; }
     [SerializeField] private bool _useCampfire;
+
+    public float RealSecondsToCraft { get => _realMinutesToCraft * 60f; }
+    [SerializeField] private float _realMinutesToCraft = 10;
 }

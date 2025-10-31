@@ -17,7 +17,7 @@ public class UI_Option : MonoBehaviour
     [SerializeField] private UI_Slider _volumeMaster;
     public Slider VolumeMusic { get => _volumeMusic.Slider; }
     [SerializeField] private UI_Slider _volumeMusic;
-    public float VolumeVFX { get => _volumeVFX.Slider.value; }
+    public Slider VolumeVFX { get => _volumeVFX.Slider; }
     [SerializeField] private UI_Slider _volumeVFX;
 
     [Header("Navigation Button")]

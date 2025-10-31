@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -24,10 +25,20 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
     public UI_Credits Credits { get =>  _uiCredits; }
     [SerializeField] private UI_Credits _uiCredits;
 
+    private AudioSource _audioSource;
+    private float _volumeMax;
+    private float _volume;
+
     protected override void Awake()
     {
         base.Awake();
         Debug.Log(Application.persistentDataPath);
+
+        _audioSource = GetComponent<AudioSource>();
+        _volumeMax = _audioSource.volume;
+        ChangeVolume(0f);
+        UIOption.VolumeMaster.onValueChanged.AddListener(ChangeVolume);
+        UIOption.VolumeMusic.onValueChanged.AddListener(ChangeVolume);
 
         //Generate keys for class in the game
         SceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -81,4 +92,31 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
     public void ActiveOption() => _uiOption.gameObject.SetActive(true);
 
     public void ActiveCredits() => _uiCredits.gameObject.SetActive(true);
+
+    private void ChangeVolume(float notUse)
+    {
+        float lerpMusic = Mathf.Lerp(0f, UIOption.VolumeMaster.value, UIOption.VolumeMusic.value);
+        _volume = Mathf.Lerp(0f, _volumeMax, lerpMusic);
+        _audioSource.volume = _volume;
+    }
+
+    public void SwichOffMusic()
+    {
+        StartCoroutine(StopMusic());
+    }
+
+    private IEnumerator StopMusic()
+    {
+        float maxTime = 2f;
+        float currentTime = 0f;
+        while (currentTime < maxTime)
+        {
+            currentTime += Time.deltaTime;
+            _audioSource.volume = Mathf.Lerp(0f, _volume, 1f -  currentTime / maxTime);
+
+            yield return null;
+        }
+
+        _audioSource.Stop();
+    }
 }

@@ -34,9 +34,9 @@ public class UI_Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     {
         _keyItem = keyItem;
         _name.text = soItem.Name;
-        _condition.text = condition.ToString("F1");
+        _condition.text = (condition * 100f).ToString("F1") + "%";
         _state.text = state.ToString();
-        _weight.text = soItem.Weight.ToString();
+        _weight.text = soItem.Weight.ToString() + " Kg";
 
         if (soItem.Icon == null)
         {

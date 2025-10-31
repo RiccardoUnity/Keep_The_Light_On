@@ -39,7 +39,6 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
     [Header("Main GameObject")]
     [SerializeField] private Light _mainLight;
     public Transform MainLight { get => _mainLight.transform; }
-    [SerializeField] private Gradient _gradientFog;
     [SerializeField] private Gradient _gradientFilter;
 
     public LayerMask GroundLayerMask {  get => _groundLayerMask; }

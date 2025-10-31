@@ -66,6 +66,9 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private LayerMask _interactableLayerMask = (1 << 6) | (1 << 7);
     private RaycastHit _hit;
 
+    public AudioClip ItemAudio { get => _itemAudio; }
+    [SerializeField] private AudioClip _itemAudio;
+
     //Other
     public bool IsDead { get; private set; }
     public bool IsUnderTheSun { get; private set; }
@@ -183,7 +186,7 @@ public class PlayerManager : MonoBehaviour
     //Input
     void Update()
     {
-        if (GWM.Instance.UIInventory.gameObject.activeSelf)
+        if (GWM.Instance.UIInventory.gameObject.activeSelf || GWM.Instance.TimeManager.GameTimeType == GameTimeType.Accelerate)
         {
             _trySelectInteractable = false;
             _tryUseInteractable = false;
@@ -375,6 +378,10 @@ public class PlayerManager : MonoBehaviour
                 else if (_interactable is Campfire campfire)
                 {
                     campfire.OpenUI();
+                }
+                else if (_interactable is CactusDrop littleCactus)
+                {
+                    littleCactus.Check();
                 }
             }
         }

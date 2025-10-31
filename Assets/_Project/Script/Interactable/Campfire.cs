@@ -1,4 +1,6 @@
+using StaticData;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using GWM = GameWorldManager;
 
 public class Campfire : Interactable
@@ -7,6 +9,8 @@ public class Campfire : Interactable
     public float TotalMinutes { get; private set; }
 
     private PlayerInventory _playerInventory;
+    private AudioSource _audioSource;
+    private float _volumeMax;
 
     [SerializeField] private GameObject[] _wood;
     [SerializeField] private ParticleSystem _fire;
@@ -14,9 +18,22 @@ public class Campfire : Interactable
 
     void Start()
     {
-        _playerInventory = GWM.Instance.PlayerManager.PlayerInventory;
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.loop = true;
+        _volumeMax = _audioSource.volume;
 
-        SetOff();
+        if (SceneManager.GetActiveScene().buildIndex == S_GameManager.InfoScene.GameWorld)
+        {
+            GWM.Instance.AudioManager.onVomuneVFXChange += ChangeVolume;
+            _playerInventory = GWM.Instance.PlayerManager.PlayerInventory;
+
+            SetOff();
+        }
+        else if (SceneManager.GetActiveScene().buildIndex == S_GameManager.InfoScene.MainMenu)
+        {
+            //It's not entirely correct
+            MainMenuManager.Instance.UIOption.VolumeVFX.onValueChanged.AddListener(ChangeVolume);
+        }
     }
 
     public void OpenUI()
@@ -30,6 +47,7 @@ public class Campfire : Interactable
     {
         AddFuel(keyFuel);
         IsOn = true;
+        _audioSource.Play();
         GWM.Instance.TimeManager.onNotPriority1 += UpdateNotPriority;
         GWM.Instance.TimeManager.onPause += Pause;
         GWM.Instance.TimeManager.onResume += Resume;
@@ -66,16 +84,25 @@ public class Campfire : Interactable
     private void Pause()
     {
         _fire.Pause();
+        if (IsOn)
+        {
+            _audioSource.Stop();
+        }
     }
 
     private void Resume()
     {
         _fire.Play();
+        if (IsOn)
+        {
+            _audioSource.Play();
+        }
     }
 
     private void SetOff()
     {
         IsOn = false;
+        _audioSource.Stop();
         GWM.Instance.TimeManager.onNotPriority1 -= UpdateNotPriority;
         GWM.Instance.TimeManager.onPause -= Pause;
         GWM.Instance.TimeManager.onResume -= Resume;
@@ -87,4 +114,6 @@ public class Campfire : Interactable
             gameObject.SetActive(false);
         }
     }
+
+    private void ChangeVolume(float value) => _audioSource.volume = Mathf.Lerp(0f, _volumeMax, value);
 }

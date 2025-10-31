@@ -123,7 +123,7 @@ public class Prefab_Item : Interactable
 
     public void Leaves()
     {
-        Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out _hit, 1f, GWM.Instance.GroundLayerMask, GWM.Instance.Qti);
+        Physics.Linecast(transform.position + Vector3.up, transform.position + Vector3.down, out _hit, GWM.Instance.GroundLayerMask, GWM.Instance.Qti);
         transform.position = _hit.point + _offsetLeaves;
     }
 }

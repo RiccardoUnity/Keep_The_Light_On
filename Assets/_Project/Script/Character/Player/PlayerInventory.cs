@@ -77,6 +77,7 @@ public class PlayerInventory
         {
             ++_countKeyItems;
             _items.Add(_countKeyItems, datatItem);
+            PlayAudio();
 
             bool hasItem = false;
             foreach (SO_Item soItem in _soItemInInventory)
@@ -117,6 +118,7 @@ public class PlayerInventory
                 Vector2 random = Random.insideUnitCircle * _playerRadius;
                 _items[index].PrefabItem.transform.position = _playerManager.transform.position + new Vector3 (random.x, 0f, random.y);
                 _items[index].PrefabItem.Leaves();
+                PlayAudio();
             }
 
             bool hasItem = false;
@@ -214,5 +216,12 @@ public class PlayerInventory
             }
         }
         return keys.ToArray();
+    }
+
+    private void PlayAudio()
+    {
+        _playerManager.PlayerController.AudioSource.loop = false;
+        _playerManager.PlayerController.AudioSource.clip = _playerManager.ItemAudio;
+        _playerManager.PlayerController.AudioSource.Play();
     }
 }

@@ -3,11 +3,18 @@ using UnityEngine;
 using GWM = GameWorldManager;
 using StringConst = StaticData.S_GameManager.StringConst;
 
+[RequireComponent(typeof(AudioSource))]
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody _rb;
     private PlayerManager _playerManager;
     private UI_Option _option;
+
+    public AudioSource AudioSource { get => _audioSource; }
+    private AudioSource _audioSource;
+    private float _volumeMax;
+    [SerializeField] private AudioClip _audioWalk;
+    [SerializeField] private AudioClip _audioRun;
 
     public bool IsCrouch { get; private set; }
     public bool IsRun { get; private set; }
@@ -59,6 +66,11 @@ public class PlayerController : MonoBehaviour
             _playerManager = GWM.Instance.PlayerManager;
             _option = GWM.Instance.UIPause.UIOption;
 
+            _audioSource = GetComponent<AudioSource>();
+            _volumeMax = _audioSource.volume;
+            _audioSource.loop = true;
+            GWM.Instance.AudioManager.onVomuneVFXChange += ChangeVolume;
+
             _playerManager.PlayerGroundCheck.onGroundedChange += SetCanJump;
             GWM.Instance.TimeManager.onPriority += EnergyToProcessInNormalPriority;
         }
@@ -76,7 +88,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (GWM.Instance.UIInventory.gameObject.activeSelf)
+            if (GWM.Instance.UIInventory.gameObject.activeSelf || GWM.Instance.TimeManager.GameTimeType == GameTimeType.Accelerate)
             {
                 _right = 0f;
                 _forward = 0f;
@@ -145,6 +157,7 @@ public class PlayerController : MonoBehaviour
                 if (_keyJumpPress)
                 {
                     Jump();
+                    StopAudio();
                 }
                 else if (_isMoveOn)
                 {
@@ -154,6 +167,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 Move();
+                StopAudio();
             }
         }
     }
@@ -172,10 +186,12 @@ public class PlayerController : MonoBehaviour
             _direction = new Vector3(_right, 0f, _forward);
 
             Move();
+            PlayAudio();
         }
         else
         {
             _direction = Vector3.zero;
+            StopAudio();
         }
     }
 
@@ -234,5 +250,31 @@ public class PlayerController : MonoBehaviour
         //Run
         EnergyToProcess += (RunTime - _runTimeProcessed) * 2f;
         _runTimeProcessed = RunTime;
+    }
+
+    private void ChangeVolume(float value) => _audioSource.volume = Mathf.Lerp(0f, _volumeMax, value);
+
+    private void PlayAudio()
+    {
+        if (IsRun && (_audioSource.isPlaying && _audioSource.clip != _audioRun) || !_audioSource.isPlaying)
+        {
+            _audioSource.loop = true;
+            _audioSource.clip = _audioRun;
+            _audioSource.Play();
+        }
+        else if (!IsRun && (_audioSource.isPlaying && _audioSource.clip != _audioWalk) || !_audioSource.isPlaying)
+        {
+            _audioSource.loop = true;
+            _audioSource.clip = _audioWalk;
+            _audioSource.Play();
+        }
+    }
+
+    private void StopAudio()
+    {
+        if (_audioSource.isPlaying && (_audioSource.clip == _audioRun || _audioSource.clip == _audioWalk))
+        {
+            _audioSource.Stop();
+        }
     }
 }

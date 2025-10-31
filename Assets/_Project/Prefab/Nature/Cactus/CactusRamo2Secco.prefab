@@ -37,7 +37,7 @@ PrefabInstance:
     - target: {fileID: 7612301778205139638, guid: 257f961049ff8544eaeacc655d51208a,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 7612301778205139638, guid: 257f961049ff8544eaeacc655d51208a,
         type: 3}
@@ -52,7 +52,7 @@ PrefabInstance:
     - target: {fileID: 7612301778205139638, guid: 257f961049ff8544eaeacc655d51208a,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 7612301778205139638, guid: 257f961049ff8544eaeacc655d51208a,
         type: 3}
@@ -67,7 +67,7 @@ PrefabInstance:
     - target: {fileID: 7612301778205139638, guid: 257f961049ff8544eaeacc655d51208a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 8900467125395089957, guid: 257f961049ff8544eaeacc655d51208a,
         type: 3}
@@ -76,13 +76,18 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: d7eaf48a867171b439681d3495857638, type: 2}
     m_RemovedComponents:
     - {fileID: 1307841657710708204, guid: 257f961049ff8544eaeacc655d51208a, type: 3}
+    - {fileID: 8384385501594730169, guid: 257f961049ff8544eaeacc655d51208a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5875314728312008146, guid: 257f961049ff8544eaeacc655d51208a,
         type: 3}
-      insertIndex: 3
+      insertIndex: -1
       addedObject: {fileID: 2436015431667509662}
+    - targetCorrespondingSourceObject: {fileID: 5875314728312008146, guid: 257f961049ff8544eaeacc655d51208a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5956671539355634636}
   m_SourcePrefab: {fileID: 100100000, guid: 257f961049ff8544eaeacc655d51208a, type: 3}
 --- !u!1 &5614320417608229465 stripped
 GameObject:
@@ -112,3 +117,17 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8441929299364308462, guid: b061f034e319389468c469ed2a0f1902, type: 3}
+--- !u!114 &5956671539355634636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5614320417608229465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b189b58bb7123048aa4575d15753a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soItemInside: {fileID: 11400000, guid: d5a16663b60001b4c9718c1bbf837cd8, type: 2}
+  _cactusDrop: 2

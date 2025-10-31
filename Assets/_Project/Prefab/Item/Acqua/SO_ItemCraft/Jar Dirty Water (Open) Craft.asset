@@ -19,3 +19,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ab44440f0a753c64cb0d497f9da81bc8, type: 2}
   - {fileID: 11400000, guid: 26bf8ba1949b15b4297a19a3f08ec1c1, type: 2}
   _useCampfire: 0
+  _realMinutesToCraft: 1

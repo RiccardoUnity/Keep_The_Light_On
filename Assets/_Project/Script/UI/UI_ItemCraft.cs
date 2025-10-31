@@ -18,6 +18,7 @@ public class UI_ItemCraft : MonoBehaviour
     [SerializeField] private TMP_Text _element1;
     [SerializeField] private TMP_Text _element2;
     [SerializeField] private TMP_Text _element3;
+    [SerializeField] private TMP_Text _time;
     [SerializeField] private UI_Button _button;
     private TMP_Text[] _arrayElement;
 
@@ -29,6 +30,7 @@ public class UI_ItemCraft : MonoBehaviour
 
     private SO_Item[] _resources;
     private bool _useCampfire;
+    private float _realSecondsToCraft;
 
     public void MyAwake(int index, UI_Craft uiCraft)
     {
@@ -64,6 +66,8 @@ public class UI_ItemCraft : MonoBehaviour
                 }
             }
             _useCampfire = GWM.Instance.SOItemManager.SOItemCraft[index].UseCampfire;
+            _realSecondsToCraft = GWM.Instance.SOItemManager.SOItemCraft[index].RealSecondsToCraft;
+            _time.text = (_realSecondsToCraft / 60f).ToString("F0") + " Minutes";
 
             gameObject.SetActive(false);
         }
@@ -124,6 +128,13 @@ public class UI_ItemCraft : MonoBehaviour
 
     public void Craft()
     {
+        GWM.Instance.TimeManager.onEndAceleration += RealCraft;
+        GWM.Instance.TimeManager.SetGamePlayAccelerate(_realSecondsToCraft, 3f);
+    }
+
+    private void RealCraft()
+    {
+        GWM.Instance.TimeManager.onEndAceleration -= RealCraft;
         _playerInventory.CraftItemInInventory(GWM.Instance.SOItemManager.SOItemCraft[_index].SOItemToCraft, _resources);
         _uiCraft.ReCheckAll();
     }

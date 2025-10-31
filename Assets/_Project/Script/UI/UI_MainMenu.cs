@@ -55,6 +55,7 @@ public class UI_MainMenu : MonoBehaviour
         S_SaveSystem.NewSlot();
         //Load scene
         Fader.Instance.ToScene(InfoScene.GameWorld);
+        MainMenuManager.Instance.SwichOffMusic();
     }
 
     public void LoadGame()
