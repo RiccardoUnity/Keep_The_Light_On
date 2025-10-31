@@ -124,6 +124,10 @@ public class UI_ItemCraft : MonoBehaviour
             }
             gameObject.SetActive(active);
         }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     public void Craft()
