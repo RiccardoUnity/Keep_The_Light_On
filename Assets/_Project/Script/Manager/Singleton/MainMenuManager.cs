@@ -25,6 +25,8 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
     public UI_Credits Credits { get =>  _uiCredits; }
     [SerializeField] private UI_Credits _uiCredits;
 
+    [SerializeField] private GameObject _imageExit;
+
     private AudioSource _audioSource;
     private float _volumeMax;
     private float _volume;
@@ -33,6 +35,7 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
     {
         base.Awake();
         Debug.Log(Application.persistentDataPath);
+        _imageExit.SetActive(false);
 
         _audioSource = GetComponent<AudioSource>();
         _volumeMax = _audioSource.volume;
@@ -118,5 +121,10 @@ public class MainMenuManager : Singleton_Generic<MainMenuManager>
         }
 
         _audioSource.Stop();
+    }
+
+    private void OnApplicationQuit()
+    {
+        _imageExit.SetActive(true);
     }
 }

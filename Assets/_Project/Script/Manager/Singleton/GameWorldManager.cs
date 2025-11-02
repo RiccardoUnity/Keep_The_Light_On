@@ -52,6 +52,9 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
     public AudioManager AudioManager { get; private set; }
 
+    public TheShadow TheShadow { get => _theShadow; }
+    [SerializeField] private TheShadow _theShadow;
+
     [Header("UI")]
     private bool _null;
     public UI_Pause UIPause { get => _uiPause; }
@@ -121,6 +124,7 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
         else
         {
             //Create Manager
+            _mainLight.gameObject.SetActive(true);
             TimeManager = TimeManager.Instance(Key.GetKey(), _debugTime);
             PoolManager = PoolManager.Instance(Key.GetKey());
             AudioManager = GetComponent<AudioManager>();
@@ -141,6 +145,7 @@ public class GameWorldManager : Singleton_Generic<GameWorldManager>
 
             //Player (included Player Load in MyAwake)
             _playerManager.MyAwake();
+            _theShadow.MyAwake();
 
             //UI
             _uiPause.MyAwake();

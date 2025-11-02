@@ -132,6 +132,7 @@ public class UI_ItemCraft : MonoBehaviour
 
     public void Craft()
     {
+        gameObject.SetActive(false);
         GWM.Instance.TimeManager.onEndAceleration += RealCraft;
         GWM.Instance.TimeManager.SetGamePlayAccelerate(_realSecondsToCraft, 3f);
     }

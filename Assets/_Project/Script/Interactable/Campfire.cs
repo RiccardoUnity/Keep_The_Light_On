@@ -11,6 +11,8 @@ public class Campfire : Interactable
     private PlayerInventory _playerInventory;
     private AudioSource _audioSource;
     private float _volumeMax;
+    private float _volumeMaster;
+    private float _volumeVFX;
 
     [SerializeField] private GameObject[] _wood;
     [SerializeField] private ParticleSystem _fire;
@@ -31,8 +33,7 @@ public class Campfire : Interactable
         }
         else if (SceneManager.GetActiveScene().buildIndex == S_GameManager.InfoScene.MainMenu)
         {
-            //It's not entirely correct
-            MainMenuManager.Instance.UIOption.VolumeVFX.onValueChanged.AddListener(ChangeVolume);
+            MainMenuManager.Instance.UIOption.VolumeVFX.onValueChanged.AddListener(ChangeVolumeInMainMenu);
         }
     }
 
@@ -116,4 +117,12 @@ public class Campfire : Interactable
     }
 
     private void ChangeVolume(float value) => _audioSource.volume = Mathf.Lerp(0f, _volumeMax, value);
+
+    private void ChangeVolumeInMainMenu(float value)
+    {
+        _volumeMaster = MainMenuManager.Instance.UIOption.VolumeMaster.value;
+        _volumeVFX = MainMenuManager.Instance.UIOption.VolumeVFX.value;
+        value = Mathf.Lerp(0f, _volumeMaster, _volumeVFX);
+        ChangeVolume(value);
+    }
 }

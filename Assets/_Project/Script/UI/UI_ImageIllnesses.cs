@@ -18,13 +18,13 @@ public class UI_ImageIllnesses : MonoBehaviour
     void Awake()
     {
         _image = GetComponent<Image>();
-        _normalColorImage = _image.color;
+        _normalColorImage = new Color(_normalColorImage.r, _normalColorImage.g, _normalColorImage.b, _image.color.a);
+        OnExit();
     }
 
     void OnEnable()
     {
         OnExit();
-        OnHover(0f);
     }
 
     public void SetActive(bool value)

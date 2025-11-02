@@ -39,6 +39,7 @@ public class UI_Illnesses : MonoBehaviour
             _isMyAwake = true;
 
             GameWorldManager.Instance.TimeManager.onPriority += MyUpdate;
+            //GameWorldManager.Instance.TimeManager.onNotPriority2 += ChangeColorStart;
             _playerManager = GameWorldManager.Instance.PlayerManager;
             _sunStroke = _playerManager.SunStroke;
             _stomachAche = _playerManager.StomachAche;
@@ -76,4 +77,13 @@ public class UI_Illnesses : MonoBehaviour
             }
         }
     }
+
+    //private void ChangeColorStart(float timeDelay)
+    //{
+    //    GameWorldManager.Instance.TimeManager.onNotPriority2 -= ChangeColorStart;
+    //    for (int i = 0; i < _uiIllnesses.Length; ++i)
+    //    {
+    //        _uiIllnesses[i].OnExit();
+    //    }
+    //}
 }

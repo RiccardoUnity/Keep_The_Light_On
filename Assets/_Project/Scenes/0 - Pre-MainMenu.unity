@@ -396,10 +396,16 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Questo gioco \xE8 un\u2019opera di finzione.\r\n\nQualsiasi riferimento
-    a farmaci, piante medicinali, tecniche di sopravvivenza o condizioni fisiche
-    sono puramente narrativo.\r\n\nNon replicare in alcun modo i comportamenti descritti
-    o mostrati in gioco nella realt\xE0.\r"
+  m_text: 'This game is a work of fiction.
+
+
+    Any references to medicines, medicinal
+    plants, survival techniques, or physical conditions are purely narrative.
+
+
+    Do
+    not attempt to replicate or imitate any behaviors described or depicted in the
+    game in real life.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

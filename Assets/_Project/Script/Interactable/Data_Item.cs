@@ -56,6 +56,7 @@ public class Data_Item
             if (prefabItem == null)
             {
                 _prefabItem = GWM.Instance.PoolManager.RemovePrefabItemFromPool(_soItem);
+                _prefabItem.MyAwake(this, _key);
             }
             else
             {

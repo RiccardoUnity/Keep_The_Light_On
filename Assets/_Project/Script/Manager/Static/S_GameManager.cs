@@ -17,6 +17,9 @@ namespace StaticData
             public static string MouseRight { get => "MouseRight"; }
             public static string Escape { get => "Cancel"; }
             public static string Inventory { get => "Inventory"; }
+
+            //Tag
+            public static string Interactable { get => "Interactable"; }
         }
 
         public static class InfoScene

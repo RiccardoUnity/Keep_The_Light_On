@@ -202,8 +202,17 @@ public class UI_Campfire : MonoBehaviour
     public void SelectNextFuse() => _fuse.Text.text = Select(ref _fuseIndexSelect, _fuseKeys, true);
     public void SelectPreviewFuel() => _fuel.Text.text = Select(ref _fuelIndexSelect, _fuelKeys, false);
     public void SelectNextFuel() => _fuel.Text.text = Select(ref _fuelIndexSelect, _fuelKeys, true);
-    public void SelectPreviewFuelAdd() => _fuelAdd.Text.text = Select(ref _fuelIndexSelect, _fuelKeys, false);
-    public void SelectNextFuelAdd() => _fuelAdd.Text.text = Select(ref _fuelIndexSelect, _fuelKeys, true);
+
+    public void SelectPreviewFuelAdd()
+    {
+        _fuelAdd.Text.text = Select(ref _fuelIndexSelect, _fuelKeys, false);
+        _addTime.text = $"{_playerInventory.ViewInventoryItem(_fuelKeys[_fuelIndexSelect]).MinutesFuel.ToString("F1")} minutes";
+    }
+    public void SelectNextFuelAdd()
+    {
+        _fuelAdd.Text.text = Select(ref _fuelIndexSelect, _fuelKeys, true);
+        _addTime.text = $"{_playerInventory.ViewInventoryItem(_fuelKeys[_fuelIndexSelect]).MinutesFuel.ToString("F1")} minutes";
+    }
 
     private void ResizeArray(ref int indexSelect,ref int[] keys)
     {

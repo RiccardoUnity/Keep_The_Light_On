@@ -30,6 +30,7 @@ public class UI_ButtonAnimation : MonoBehaviour, IPointerEnterHandler, IPointerE
     private bool _animationVerse;
     private ButtonState _targetState = ButtonState.None;
     private ButtonState _currentState = ButtonState.None;
+    private bool _isClicked;
 
     [Header("Events")]
     public UnityEvent onEnter;
@@ -70,6 +71,7 @@ public class UI_ButtonAnimation : MonoBehaviour, IPointerEnterHandler, IPointerE
         }
         _targetState = ButtonState.Click;
         _animationVerse = true;
+        _isClicked = true;
         StartAnimation();
     }
 
@@ -128,6 +130,7 @@ public class UI_ButtonAnimation : MonoBehaviour, IPointerEnterHandler, IPointerE
                         {
                             Debug.Log("Evento Premuto", gameObject);
                         }
+                        _isClicked = false;
                         onDown?.Invoke();
                         break;
                 }
@@ -137,20 +140,20 @@ public class UI_ButtonAnimation : MonoBehaviour, IPointerEnterHandler, IPointerE
                 _currentTime = 1f;
             }
 
-                //Settaggi paramatri animazione
-                switch (_currentState)
-                {
-                    case ButtonState.Hover:
-                        _curveCoroutine = _curveHover;
-                        _timeCoroutine = _timeHover;
-                        _eventCoroutine = onAnimationHover;
-                        break;
-                    case ButtonState.Click:
-                        _curveCoroutine = _curveClick;
-                        _timeCoroutine = _timeClick;
-                        _eventCoroutine = onAnimationClick;
-                        break;
-                }
+            //Settaggi paramatri animazione
+            switch (_currentState)
+            {
+                case ButtonState.Hover:
+                    _curveCoroutine = _curveHover;
+                    _timeCoroutine = _timeHover;
+                    _eventCoroutine = onAnimationHover;
+                    break;
+                case ButtonState.Click:
+                    _curveCoroutine = _curveClick;
+                    _timeCoroutine = _timeClick;
+                    _eventCoroutine = onAnimationClick;
+                    break;
+            }
 
             //Animazione
             _isInAnimation = true;
@@ -166,6 +169,15 @@ public class UI_ButtonAnimation : MonoBehaviour, IPointerEnterHandler, IPointerE
                 else if (_currentTime < 0 && !_animationVerse)
                 {
                     _currentTime = 0f;
+                    _isInAnimation = false;
+                }
+
+                if (_isClicked)
+                {
+                    onDown?.Invoke();
+                    _isClicked = false;
+                    _targetState = ButtonState.None;
+                    _currentState = ButtonState.None;
                     _isInAnimation = false;
                 }
 

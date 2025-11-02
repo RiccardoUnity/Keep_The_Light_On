@@ -23,7 +23,7 @@ public class UI_Bed : MonoBehaviour
 
             for (int i = 1; i < 13; ++i)
             {
-                _hours[i -1] = i.ToString();
+                _hours[i -1] = i.ToString() + (i == 1 ? " Hour" : " Hours");
             }
             _chooseHours.SetUp(_hours, 0);
 

@@ -194,6 +194,7 @@ public class PlayerInventory
         }
         foreach (int key in dataItemsKeyToRemove)
         {
+            //Debug.Log("QUI " + key);
             RemoveItemInventory(key, true);
         }
 

@@ -37,7 +37,7 @@ public class TimeManager
     public float DelayTimeNotPriority2 { get; private set; }
     private bool _isPauseCalled = true;
     private float _accelerationInGameSecond;
-    private float _accelerationMoltiplier = 1f;
+    public float AccelerationMoltiplier { get; private set; }
     private float _realSecondAwait;
     private bool _isStartTimeSetted;
     private bool _isMyAwake;
@@ -100,6 +100,7 @@ public class TimeManager
 
             _gameDayInRealSeconds = GWM.Instance.GameDayInRealMinutes * 60;
             RealSecondToGameSecond = (24 * 60 * 60) / _gameDayInRealSeconds;
+            AccelerationMoltiplier = 1f;
 
             if (!S_SaveSystem.HasALoading)
             {
@@ -190,16 +191,16 @@ public class TimeManager
             else
             {
                 //Time Count
-                CurrentSecondDay += Time.deltaTime * _accelerationMoltiplier;
+                CurrentSecondDay += Time.deltaTime * AccelerationMoltiplier;
                 if (CurrentSecondDay >= _gameDayInRealSeconds)
                 {
                     ++CurrentDay;
                     CurrentSecondDay -= _gameDayInRealSeconds;
                     onDayChange?.Invoke();
                 }
-                DelayTimePriority += Time.deltaTime * _accelerationMoltiplier;
-                DelayTimeNotPriority1 += Time.deltaTime * _accelerationMoltiplier;
-                DelayTimeNotPriority2 += Time.deltaTime * _accelerationMoltiplier;
+                DelayTimePriority += Time.deltaTime * AccelerationMoltiplier;
+                DelayTimeNotPriority1 += Time.deltaTime * AccelerationMoltiplier;
+                DelayTimeNotPriority2 += Time.deltaTime * AccelerationMoltiplier;
                 ++_delayFrameCount;
 
                 if (GameTimeType == GameTimeType.Normal)
@@ -264,7 +265,7 @@ public class TimeManager
                     else
                     {
                         GameTimeType = GameTimeType.Normal;
-                        _accelerationMoltiplier = 1f;
+                        AccelerationMoltiplier = 1f;
                         onEndAceleration?.Invoke();
                     }
 
@@ -308,7 +309,7 @@ public class TimeManager
         GameTimeType = GameTimeType.Accelerate;
         _realSecondAwait = realSecondAwait;
         _accelerationInGameSecond = realSecondAccelerate / RealSecondToGameSecond;
-        _accelerationMoltiplier = _accelerationInGameSecond / _realSecondAwait;
+        AccelerationMoltiplier = _accelerationInGameSecond / _realSecondAwait;
         GWM.Instance.UIAcceleratedTime.StartAcceleration(_realSecondAwait);
     }
 }
